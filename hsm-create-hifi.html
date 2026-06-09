@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create HSM Template — Glific</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex}
+
+/* ── SIDEBAR ── */
+.sidebar{width:180px;min-height:100vh;background:#fff;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:16px 14px 10px}
+.logo-badge{background:#073F24;color:#fff;font-size:13px;font-weight:700;padding:5px 10px;border-radius:6px;letter-spacing:-.3px}
+.wallet-card{margin:6px 10px 12px;background:#f0faf4;border:1px solid #c8e6d0;border-radius:8px;padding:10px 12px}
+.wallet-label{font-size:11px;color:#555;margin-bottom:3px;font-weight:500}
+.wallet-amount{font-size:16px;font-weight:700;color:#119656}
+.nav-section{padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#9ca3af}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 14px;font-size:13px;font-weight:500;color:#4b5563;text-decoration:none;cursor:pointer;border-radius:6px;margin:1px 8px;transition:all .13s}
+.nav-item:hover{background:#f3f4f6;color:#111}
+.nav-item.active{background:#e8f5ee;color:#073F24;font-weight:600}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.nav-item.active svg{opacity:1}
+
+/* ── MAIN ── */
+.main{flex:1;padding:36px 40px;overflow-y:auto}
+.page-header{max-width:1020px;margin-bottom:28px}
+.page-header h1{font-size:26px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.info-icon-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid #d1d5db;background:none;cursor:pointer;font-size:12px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.page-subtitle{font-size:14px;color:#6b7280;line-height:1.5}
+
+/* ── CONTENT GRID ── */
+.content-grid{display:grid;grid-template-columns:1fr 310px;gap:24px;max-width:1020px;align-items:start}
+.form-column{min-width:0}
+
+/* ── FORM CARD ── */
+.form-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;margin-bottom:16px}
+.form-section{padding:28px 32px;border-bottom:1px solid #f0f0f0}
+.form-section:last-child{border-bottom:none}
+.section-heading{font-size:20px;font-weight:700;color:#111;margin-bottom:22px}
+.section-heading-row{display:flex;align-items:center;gap:8px;margin-bottom:22px}
+.section-heading-row h2{font-size:20px;font-weight:700;color:#111}
+
+
+/* ── FIELDS ── */
+.field{margin-bottom:22px}
+.field:last-child{margin-bottom:0}
+.field-label{font-size:14px;font-weight:600;color:#111;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.req{color:#dc2626;margin-left:1px}
+.field-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.field-label-row .field-label{margin-bottom:0}
+.use-existing-link{font-size:13px;font-weight:600;color:#119656;cursor:pointer;text-decoration:none}
+.use-existing-link:hover{text-decoration:underline}
+.field-hint{font-size:12px;color:#6b7280;margin-top:5px;line-height:1.5}
+.field-error{font-size:12px;color:#dc2626;margin-top:4px;display:none;font-weight:500}
+.info-q{width:16px;height:16px;border-radius:50%;border:1.5px solid #d1d5db;background:none;cursor:pointer;font-size:10px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── INPUTS ── */
+.inp{width:100%;height:44px;padding:0 12px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s;appearance:none}
+.inp:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.12)}
+.inp::placeholder{color:#9ca3af}
+.inp.err{border-color:#dc2626!important}
+select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%236b7280' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.textarea-wrap{position:relative}
+.textarea-header{display:flex;align-items:center;border:1.5px solid #d1d5db;border-bottom:none;border-radius:8px 8px 0 0;padding:8px 12px;transition:border-color .15s}
+.textarea-wrap:focus-within .textarea-header{border-color:#119656}
+.textarea-header-label{font-size:13px;font-weight:600;color:#111}
+.body-textarea{width:100%;min-height:130px;padding:12px;border:1.5px solid #d1d5db;border-top:none;border-bottom:none;border-radius:0;font-family:'Heebo',sans-serif;font-size:14px;color:#111;background:#fff;resize:vertical;outline:none;line-height:1.55;transition:border-color .15s,box-shadow .15s;box-sizing:border-box}
+.textarea-wrap:focus-within .body-textarea{border-color:#119656}
+.textarea-toolbar{display:flex;align-items:center;gap:4px;border:1.5px solid #d1d5db;border-top:1px solid #e5e7eb;border-radius:0 0 8px 8px;padding:6px 10px;background:#fafafa;transition:border-color .15s}
+.textarea-wrap:focus-within .textarea-toolbar{border-color:#119656;border-top-color:#e5e7eb}
+.textarea-wrap:focus-within .body-textarea,.textarea-wrap:focus-within .textarea-toolbar{box-shadow:none}
+.fmt-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#6b7280;transition:background .12s,color .12s;flex-shrink:0;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:0}
+.fmt-btn:hover{background:#f0f0ed;color:#111}
+.fmt-btn.active{background:#e8f5ee;color:#119656}
+.fmt-btn-bold{font-weight:800}
+.fmt-btn-italic{font-style:italic;font-weight:600}
+.fmt-btn-strike{text-decoration:line-through}
+.toolbar-counter{font-size:11px;color:#9ca3af;margin-left:auto;white-space:nowrap;transition:color .2s}
+.toolbar-counter.warn{color:#d97706;font-weight:600}
+.toolbar-counter.over{color:#dc2626;font-weight:700}
+.textarea-wrap:focus-within{box-shadow:0 0 0 3px rgba(17,150,86,.12);border-radius:8px}
+.add-var-btn{font-size:12px;font-weight:600;color:#119656;background:none;border:1.5px solid #b9e4cc;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 10px;transition:background .15s,border-color .15s}
+.add-var-btn:hover{background:#f0faf4;border-color:#119656}
+.toolbar-divider{width:1px;height:16px;background:#e5e7eb;margin:0 2px}
+.toolbar-hint{font-size:11px;color:#b0b7c3;margin-left:auto}
+
+/* ── LANGUAGE CHIPS ── */
+.lang-chips-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.lang-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s;white-space:nowrap}
+.lang-chip.approved{background:#f0faf5;border-color:#28a745;color:#073F24}
+.lang-chip.pending{background:#fffbeb;border-color:#ffc107;color:#856404}
+.lang-chip.rejected{background:#fff5f5;border-color:#dc2626;color:#b91c1c}
+.lang-chip.add-new{background:#fff;border:1.5px dashed #d1d5db;color:#6b7280}
+.lang-chip.add-new:hover{border-color:#119656;color:#119656;background:#f0faf5}
+.lang-chip.chip-active{outline:2px solid #073F24;outline-offset:2px}
+.lang-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#28a745}
+.dot-amber{background:#ffc107}
+.dot-red{background:#dc2626}
+
+/* ── ADD LANGUAGE PANEL ── */
+.add-lang-panel{background:#f8fafb;border:1.5px solid #c8e6d0;border-radius:10px;padding:18px;margin-top:12px}
+.add-lang-panel-title{font-size:14px;font-weight:700;color:#073F24;margin-bottom:12px}
+.prefill-note{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin:12px 0}
+.prefill-note-title{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.prefill-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#374151;margin-bottom:5px}
+.prefill-item:last-child{margin-bottom:0}
+.prefill-check{color:#119656;font-size:14px;font-weight:700}
+.prefill-clear{color:#9ca3af;font-size:13px}
+.add-lang-actions{display:flex;align-items:center;gap:12px;margin-top:14px}
+.btn-green-solid{background:#119656;color:#fff;border:none;border-radius:100px;padding:9px 20px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-green-solid:hover{background:#0e7a47}
+.btn-green-solid:disabled{background:#d1d5db;cursor:not-allowed}
+.btn-text-cancel{background:none;border:none;font-family:'Heebo',sans-serif;font-size:13px;color:#6b7280;cursor:pointer}
+.btn-text-cancel:hover{color:#111}
+
+
+/* ── CTA BUTTON ROWS ── */
+.cta-btn-row{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:10px;position:relative}
+.cta-type-toggle{display:flex;gap:6px;margin-bottom:12px}
+.cta-type-btn{height:28px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:100px;font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;color:#6b7280;background:#fff;cursor:pointer;transition:all .13s;display:inline-flex;align-items:center;gap:5px}
+.cta-type-btn:hover{border-color:#a7d8be;color:#073F24}
+.cta-type-btn.selected{border-color:#119656;background:#f0faf4;color:#073F24}
+.cta-fields{display:grid;gap:10px}
+.cta-fields.two-col{grid-template-columns:1fr 1fr}
+.cta-static-toggle{margin-top:10px;display:flex;align-items:center;gap:6px;cursor:pointer;width:fit-content}
+.cta-static-toggle input{accent-color:#119656;cursor:pointer}
+.cta-static-toggle span{font-size:12px;color:#6b7280}
+/* ── VARIABLE ROWS ── */
+.vars-section{border:1.5px solid #119656;border-top:none;border-radius:0 0 8px 8px;overflow:hidden}
+.vars-list{padding:8px 12px 4px}
+.var-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.var-tag{font-family:monospace;font-size:12px;font-weight:700;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:4px;padding:6px 10px;white-space:nowrap;min-width:52px;text-align:center}
+.var-name-inp{flex:1;height:36px;padding:0 10px;border:1.5px solid #e5e7eb;border-radius:6px;font-family:'Heebo',sans-serif;font-size:13px;outline:none;transition:border-color .15s}
+.var-name-inp:focus{border-color:#119656}
+.var-remove{background:none;border:none;cursor:pointer;color:#ef4444;font-size:16px;line-height:1;padding:4px;flex-shrink:0}
+.vars-info{background:#f9fafb;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#374151;border-top:1px solid #f0f0f0}
+
+/* ── CATEGORY CARDS ── */
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cat-card{border:1.5px solid #e5e7eb;border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;display:flex;gap:10px;align-items:flex-start}
+.cat-card:hover{border-color:#a7d8be;background:#fafffe}
+.cat-card.selected{border-color:#119656;background:#f4fbf7}
+.cat-radio{width:18px;height:18px;border:2px solid #d1d5db;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cat-card.selected .cat-radio{border-color:#119656;background:#119656}
+.cat-card.selected .cat-radio::after{content:'';width:7px;height:7px;background:#fff;border-radius:50%}
+.cat-card-body h4{font-size:14px;font-weight:700;color:#111;margin-bottom:4px}
+.cat-card-body p{font-size:12px;color:#6b7280;line-height:1.5}
+.cat-card.locked{cursor:default;opacity:.8}
+.cat-lock-badge{font-size:10px;font-weight:600;color:#119656;background:#e8f5ee;padding:2px 7px;border-radius:100px;margin-left:6px}
+
+/* ── BUTTON TYPES ── */
+.btn-type-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.btn-type-seg{flex:1;min-width:120px;padding:11px 16px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;color:#374151;background:#fff;cursor:pointer;text-align:center;transition:all .15s}
+.btn-type-seg:hover{border-color:#a7d8be;color:#073F24}
+.btn-type-seg.selected{border-color:#073F24;color:#073F24;font-weight:600}
+.clear-btn-link{font-size:13px;font-weight:600;color:#dc2626;cursor:pointer;margin-bottom:14px;display:inline-block}
+.btn-content-area{background:#f9fafb;border-radius:8px;padding:16px}
+.btn-subheading{font-size:13px;font-weight:700;color:#111;margin-bottom:10px}
+.btn-limit-note{font-size:12px;color:#6b7280;margin-bottom:14px}
+.url-btn-row{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative}
+.url-type-row{display:flex;gap:16px;margin-bottom:12px;align-items:center}
+.url-type-label{font-size:12px;font-weight:600;color:#374151;margin-right:4px}
+.radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#374151}
+.radio-opt input{accent-color:#119656;width:15px;height:15px;cursor:pointer}
+.url-btn-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-mini-label{font-size:12px;font-weight:600;color:#374151;margin-bottom:4px}
+.remove-btn-abs{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:#ef4444;font-size:16px;padding:2px}
+.qr-btn-row{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.form-btn-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.green-pill-btn{display:inline-flex;align-items:center;gap:6px;background:#119656;color:#fff;border:none;border-radius:100px;padding:9px 18px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.green-pill-btn:hover{background:#0e7a47}
+
+/* ── MEDIA ── */
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.media-card{border:1.5px solid #e5e7eb;border-radius:10px;padding:20px 12px;cursor:pointer;text-align:center;transition:all .15s}
+.media-card:hover{border-color:#a7d8be;background:#fafffe}
+.media-card.selected{border-color:#119656;background:#f4fbf7}
+.media-icon{margin-bottom:8px;color:#6b7280}
+.media-card.selected .media-icon{color:#119656}
+.media-card h4{font-size:14px;font-weight:600;color:#111;margin-bottom:2px}
+.media-card p{font-size:12px;color:#9ca3af}
+.media-size-limit{font-size:11px;color:#c4c9d1;margin-top:2px!important}
+.media-method-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.method-btn{padding:11px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;color:#374151;background:#fff;cursor:pointer;text-align:center;transition:all .15s}
+.method-btn:hover{border-color:#a7d8be}
+.method-btn.selected{border-color:#119656;background:#f4fbf7;color:#073F24;font-weight:600}
+.upload-zone{border:2px dashed #d1d5db;border-radius:10px;padding:36px;text-align:center;cursor:pointer;transition:all .15s}
+.upload-zone:hover{border-color:#119656;background:#fafffe}
+.upload-icon{margin-bottom:12px;color:#119656}
+.upload-zone h4{font-size:14px;font-weight:600;color:#374151;margin-bottom:4px}
+.upload-zone p{font-size:12px;color:#9ca3af}
+
+/* ── TAGS ── */
+.tag-dropdown-wrap{position:relative}
+.tag-dropdown-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #d1d5db;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:50;overflow:hidden;max-height:220px;overflow-y:auto}
+.tag-dropdown-option{padding:9px 14px;font-size:13px;color:#374151;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s}
+.tag-dropdown-option:hover,.tag-dropdown-option.focused{background:#f4fbf7;color:#073F24}
+.tag-dropdown-option .tag-dot{width:8px;height:8px;border-radius:50%;background:#c8e6d0;flex-shrink:0}
+.tag-dropdown-create{padding:9px 14px;font-size:13px;font-weight:600;color:#119656;cursor:pointer;display:flex;align-items:center;gap:7px;border-top:1px solid #f0f0f0;transition:background .1s}
+.tag-dropdown-create:hover{background:#f0faf5}
+.selected-tags-row{margin-top:8px;display:flex;align-items:center;gap:6px}
+.tag-chip{display:inline-flex;align-items:center;gap:5px;background:#e8f5ee;border:1px solid #c8e6d0;color:#073F24;font-size:12px;font-weight:600;padding:4px 10px;border-radius:100px}
+.tag-chip-remove{background:none;border:none;cursor:pointer;color:#6b7280;font-size:14px;line-height:1;padding:0;margin-left:2px}
+.suggested-tags{font-size:12px;color:#6b7280;margin-top:6px}
+.suggested-tags strong{color:#374151}
+
+/* ── SUBMIT ROW ── */
+.form-submit-row{padding:24px 32px;display:flex;align-items:center;gap:16px;border-top:1px solid #f0f0f0}
+.submit-btn{height:48px;padding:0 32px;background:#0d6e53;color:#fff;border:none;border-radius:100px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+.submit-btn:hover:not(:disabled){background:#0a5a44}
+.submit-btn:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
+.cancel-btn{background:none;border:none;font-family:'Heebo',sans-serif;font-size:15px;color:#6b7280;cursor:pointer}
+.cancel-btn:hover{color:#111}
+
+/* ── LIVE PREVIEW ── */
+.preview-panel{position:sticky;top:24px}
+.preview-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.preview-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #f0f0f0}
+.preview-title{font-size:15px;font-weight:700;color:#111}
+.preview-emoji-btn{background:none;border:1px solid #e5e7eb;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.preview-bg{background:linear-gradient(170deg,#1a7a65 0%,#0a5742 100%);min-height:380px;padding:16px;display:flex;flex-direction:column;align-items:flex-end}
+.wa-bubble{background:#e4f7b0;border-radius:10px 2px 10px 10px;padding:10px 12px;max-width:90%;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.wa-placeholder{color:#a8d4a0;font-size:13px;font-style:italic}
+.wa-msg-body{font-size:13px;color:#111;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.wa-msg-footer{font-size:11px;color:#6b7280;margin-top:5px;padding-top:5px;border-top:1px solid rgba(0,0,0,.1)}
+.wa-msg-time{font-size:10px;color:#92a88a;text-align:right;margin-top:4px}
+.wa-btn-list{margin-top:7px;border-top:1px solid rgba(0,0,0,.12);padding-top:7px;display:flex;flex-direction:column;gap:5px}
+.wa-btn-item{text-align:center;font-size:12px;font-weight:600;color:#0d6e53;padding:7px;background:rgba(255,255,255,.6);border-radius:6px;border:1px solid rgba(13,110,83,.25)}
+
+/* ── VALIDATION STATES ── */
+.field-error{font-size:12px;color:#dc2626;margin-top:5px;font-weight:500;display:flex;align-items:center;gap:5px}
+.field-error svg{flex-shrink:0}
+.field-warning{font-size:12px;color:#d97706;margin-top:5px;font-weight:500;display:flex;align-items:center;gap:5px;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:7px 10px}
+.field-checking{font-size:12px;color:#6b7280;margin-top:5px;display:flex;align-items:center;gap:5px}
+.char-counter{font-size:12px;color:#9ca3af;text-align:right;margin-top:4px;transition:color .2s}
+.char-counter.warn{color:#d97706;font-weight:600}
+.char-counter.over{color:#dc2626;font-weight:700}
+.qr-char-counter{font-size:11px;color:#9ca3af;flex-shrink:0;min-width:36px;text-align:right}
+.qr-char-counter.warn{color:#d97706;font-weight:600}
+.qr-char-counter.over{color:#dc2626;font-weight:700}
+.submit-error-banner{display:none;margin:0 32px 16px;padding:12px 14px;background:#fff5f5;border:1.5px solid #fca5a5;border-radius:8px;font-size:13px;color:#b91c1c;font-weight:500;align-items:center;gap:8px}
+.submit-error-banner.show{display:flex}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ── READ-ONLY FORM STATE ── */
+.field-readonly .inp,
+.field-readonly .body-textarea{background:#f9fafb!important;color:#374151!important;cursor:default!important;pointer-events:none;border-color:#e5e7eb!important;box-shadow:none!important}
+.field-readonly .textarea-header{background:#f9fafb;border-color:#e5e7eb!important}
+.field-readonly .textarea-toolbar{background:#f9fafb;border-color:#e5e7eb!important;pointer-events:none}
+.field-readonly .add-var-btn{display:none}
+.field-readonly .fmt-btn{display:none}
+.field-readonly .toolbar-hint{display:none}
+.cat-card.readonly{pointer-events:none;opacity:.85}
+.form-section.readonly .btn-type-seg{pointer-events:none;cursor:default}
+.form-section.readonly .btn-content-area input,
+.form-section.readonly .btn-content-area select{background:#f9fafb;pointer-events:none;border-color:#e5e7eb}
+.form-section.readonly .clear-btn-link{display:none}
+.form-section.readonly .green-pill-btn{display:none}
+.form-section.readonly .remove-btn-abs{display:none}
+.tags-readonly input{pointer-events:none}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:999}
+.modal-overlay{display:none}
+.modal{background:#fff;border-radius:16px;padding:40px 36px 32px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-check{width:60px;height:60px;background:#119656;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;color:#fff}
+.modal h2{font-size:22px;font-weight:700;margin-bottom:10px}
+.modal p{font-size:14px;color:#6b7280;line-height:1.6;margin-bottom:20px}
+.modal-chip{background:#f4f3ef;border:1px solid #e5e7eb;border-radius:10px;padding:14px 20px;margin-bottom:24px}
+.modal-id{font-family:monospace;font-size:15px;font-weight:700;color:#073F24;margin-bottom:5px}
+.modal-meta{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:#6b7280}
+.badge-pending{background:#fef9c3;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px}
+.modal-btns{display:flex;justify-content:center;gap:12px}
+
+/* ── TEMPLATE PICKER MODAL (Meta library style) ── */
+.tpl-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:998;display:none;align-items:center;justify-content:center}
+.tpl-picker-overlay.open{display:flex}
+.tpl-picker-modal{background:#fff;border-radius:14px;width:min(96vw,1060px);height:min(88vh,720px);display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.22);overflow:hidden}
+/* top bar */
+.tpl-topbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #e5e7eb;flex-shrink:0;background:#fff}
+.tpl-search-wrap{flex:1;position:relative}
+.tpl-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none;display:flex}
+.tpl-topbar-search{width:100%;height:40px;padding:0 14px 0 38px;border:1.5px solid #d1d5db;border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;outline:none;transition:border-color .15s}
+.tpl-topbar-search:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
+.tpl-topbar-search::placeholder{color:#9ca3af}
+.tpl-lang-select{height:40px;min-width:190px;padding:0 32px 0 12px;border:1.5px solid #d1d5db;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#374151;outline:none;cursor:pointer;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 12px center;flex-shrink:0;transition:border-color .15s}
+.tpl-lang-select:focus{border-color:#119656}
+.tpl-picker-close{background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.tpl-picker-close:hover{background:#f3f4f6;color:#374151}
+/* body */
+.tpl-picker-body{display:flex;flex:1;min-height:0}
+/* sidebar */
+.tpl-sidebar{width:210px;flex-shrink:0;border-right:1px solid #e5e7eb;overflow-y:auto;background:#fff}
+.tpl-filter-group{padding:16px 16px 12px;border-bottom:1px solid #f0f0f0}
+.tpl-filter-group-title{font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;letter-spacing:.2px}
+.tpl-filter-radio-label{display:flex;align-items:center;gap:9px;font-size:13px;color:#374151;cursor:pointer;padding:4px 0;user-select:none}
+.tpl-filter-radio-label input[type=radio]{accent-color:#119656;width:15px;height:15px;cursor:pointer}
+.tpl-collapsible-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;font-size:13px;font-weight:500;color:#374151;border-bottom:1px solid #f5f5f5;transition:background .1s}
+.tpl-collapsible-hdr:hover{background:#fafafa}
+.tpl-collapsible-hdr svg{color:#9ca3af;flex-shrink:0;transition:transform .2s}
+.tpl-collapsible-hdr.open svg{transform:rotate(180deg)}
+/* card area */
+.tpl-card-area{flex:1;display:flex;flex-direction:column;min-width:0;background:#f5f6f8}
+.tpl-card-topbar{padding:12px 18px 6px;font-size:12px;color:#6b7280;flex-shrink:0}
+.tpl-card-grid{flex:1;overflow-y:auto;padding:8px 16px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-content:start}
+/* template cards */
+.tpl-meta-card{cursor:pointer;text-align:left;padding:0;background:transparent;border:none;border-radius:12px;outline:none;transition:transform .1s}
+.tpl-meta-card:hover{transform:translateY(-1px)}
+.tpl-meta-card-inner{background:#e2ddd5;border-radius:12px;padding:10px 10px 0;border:2.5px solid transparent;transition:border-color .12s}
+.tpl-meta-card.selected .tpl-meta-card-inner,.tpl-meta-card:focus .tpl-meta-card-inner{border-color:#119656}
+.tpl-meta-card:hover:not(.selected) .tpl-meta-card-inner{border-color:#c8e6d0}
+/* WA bubble inside card */
+.tpl-meta-bubble{background:#fff;border-radius:8px 2px 8px 8px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.tpl-meta-bubble-title{font-size:13px;font-weight:700;color:#111;margin-bottom:5px}
+.tpl-meta-bubble-body{font-size:12px;color:#111;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.tpl-var{color:#128C7E;font-weight:500}
+.tpl-meta-bubble-footer{font-size:11px;color:#6b7280;margin-top:5px;padding-top:5px;border-top:1px solid rgba(0,0,0,.08);font-style:italic}
+.tpl-meta-bubble-time{font-size:10px;color:#9caa90;text-align:right;margin-top:6px}
+.tpl-meta-bubble-btn{margin-top:8px;padding:7px 12px;border-top:1px solid rgba(0,0,0,.08);font-size:12px;font-weight:600;color:#128C7E;display:flex;align-items:center;gap:6px}
+.tpl-meta-id-row{padding:7px 10px;font-size:11px;color:#9ca3af;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* footer */
+.tpl-picker-footer{padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0;background:#fff}
+.tpl-picker-cancel{background:none;border:none;font-family:'Heebo',sans-serif;font-size:14px;color:#6b7280;cursor:pointer;padding:0}
+.tpl-picker-cancel:hover{color:#111}
+.tpl-picker-apply{height:40px;padding:0 24px;background:#119656;color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}
+.tpl-picker-apply:hover{background:#0e7a47}
+.tpl-picker-apply:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><span class="logo-badge">Glific</span></div>
+  <div class="wallet-card">
+    <div class="wallet-label">Wallet balance</div>
+    <div class="wallet-amount">$10</div>
+  </div>
+  <div class="nav-section">Quick tools</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Interactive msg
+  </a>
+  <a class="nav-item active" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Templates
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>Triggers
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Searches
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Speed sends
+  </a>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="page-header">
+    <button onclick="window.location.href='hsm-list.html'" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;padding:0;margin-bottom:14px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to templates
+    </button>
+    <h1 id="page-heading">Create HSM Template <button class="info-icon-btn" title="Templates are reviewed by Meta/WhatsApp before use">i</button></h1>
+    <p class="page-subtitle" id="page-subtitle">Fill in the details below to create a new template for WhatsApp Business messaging</p>
+  </div>
+
+  <div class="content-grid">
+    <div class="form-column">
+      <div class="form-card">
+
+        <!-- ── SECTION 1: Template Details ── -->
+        <div class="form-section">
+          <h2 class="section-heading">Template Details</h2>
+
+
+          <!-- Element Name -->
+          <div class="field">
+            <div class="field-label-row">
+              <label class="field-label" for="element-name">Element Name<span class="req">*</span></label>
+              <a class="use-existing-link" onclick="toggleExistingDD()">Use existing template</a>
+            </div>
+            <input type="text" id="element-name" class="inp" placeholder="e.g., order_confirmation" autocomplete="off" oninput="onElementInput(this)" onblur="onElementBlur(this)">
+            <div id="element-name-checking" class="field-checking" style="display:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Checking availability…
+            </div>
+            <div id="element-name-error" class="field-error" style="display:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="element-name-error-text"></span>
+            </div>
+            <div id="element-name-ok" style="display:none;font-size:12px;color:#119656;margin-top:5px;font-weight:500;display:none;align-items:center;gap:5px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Template ID is available
+            </div>
+            <!-- existing-dd replaced by template picker modal -->
+            <div class="field-hint">Only lowercase letters, numbers, and underscores allowed.</div>
+          </div>
+
+          <!-- Language — simple dropdown (new template) -->
+          <div class="field" id="lang-new-field">
+            <label class="field-label" for="language">Language<span class="req">*</span></label>
+            <select id="language" class="inp" onchange="onLangSelect(this.value)">
+              <option value="">Select language...</option>
+              <option value="en">English</option>
+              <option value="hi">Hindi</option>
+              <option value="mr">Marathi</option>
+              <option value="te">Telugu</option>
+              <option value="ta">Tamil</option>
+              <option value="bn">Bengali</option>
+              <option value="gu">Gujarati</option>
+            </select>
+          </div>
+
+          <!-- Language — chips (existing template) -->
+          <div class="field" id="lang-existing-field" style="display:none">
+            <label class="field-label">Language versions</label>
+            <div class="lang-chips-wrap" id="lang-chips-wrap">
+              <!-- populated by JS -->
+            </div>
+            <!-- Read-only notice (shown when viewing a language) -->
+            <div id="readonly-notice" style="display:none;margin-top:10px;padding:8px 12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;display:none;align-items:center;gap:7px;font-size:12px;color:#6b7280">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span id="readonly-notice-text">Viewing English version — read only</span>
+            </div>
+
+            <!-- Add language panel -->
+            <div id="add-lang-panel" class="add-lang-panel" style="display:none">
+              <div class="add-lang-panel-title">Pick a language</div>
+              <select id="new-lang-select" class="inp" style="margin-bottom:0" onchange="onNewLangSelect(this.value)">
+                <option value="">Choose a language...</option>
+              </select>
+
+              <!-- Three CTAs — shown after a language is selected -->
+              <div id="add-lang-ctas" style="display:none;margin-top:14px;display:none;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <button class="btn-green-solid" id="btn-add-lang" onclick="addLanguageManual()">Add language</button>
+                  <button class="btn-green-solid" id="btn-add-lang-translate" onclick="addLanguageWithTranslate()" style="display:flex;align-items:center;gap:6px;background:#073F24">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                    Add language with auto-translate
+                  </button>
+                  <button class="btn-text-cancel" onclick="closeAddLangPanel()">Cancel</button>
+                </div>
+                <div style="font-size:11px;color:#9ca3af">Auto-translate fills all fields from the English version. Everything stays editable — fields can't be left empty.</div>
+              </div>
+
+              <!-- Fallback cancel when no language selected yet -->
+              <div id="add-lang-cancel-only" style="margin-top:12px">
+                <button class="btn-text-cancel" onclick="closeAddLangPanel()">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="field" id="field-category">
+            <label class="field-label">Category<span class="req">*</span></label>
+            <div class="category-grid" id="category-grid">
+              <div class="cat-card" id="cat-utility" onclick="selectCategory('utility')">
+                <div class="cat-radio" id="cat-radio-utility"></div>
+                <div class="cat-card-body"><h4>Utility</h4><p>Account updates, order confirmations, shipping notifications, alerts, and transactional messages</p></div>
+              </div>
+              <div class="cat-card" id="cat-marketing" onclick="selectCategory('marketing')">
+                <div class="cat-radio" id="cat-radio-marketing"></div>
+                <div class="cat-card-body"><h4>Marketing</h4><p>Promotional content, offers, announcements, product launches, and sales campaigns</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SECTION 2: Message Content ── -->
+        <div class="form-section">
+          <h2 class="section-heading">Message Content</h2>
+
+          <!-- Body -->
+          <div class="field">
+            <div class="textarea-wrap">
+              <div class="textarea-header">
+                <span class="textarea-header-label">Message Body<span class="req" style="margin-left:2px">*</span></span>
+              </div>
+              <textarea id="body" class="body-textarea" placeholder="Enter your message template here..." oninput="updatePreview();checkValidity();updateBodyCounter();checkVarMismatch()"></textarea>
+              <div class="textarea-toolbar">
+                <!-- Formatting buttons -->
+                <button type="button" class="fmt-btn fmt-btn-bold" onclick="applyFormat('bold')" title="Bold (*text*)">B</button>
+                <button type="button" class="fmt-btn fmt-btn-italic" onclick="applyFormat('italic')" title="Italic (_text_)">I</button>
+                <button type="button" class="fmt-btn fmt-btn-strike" onclick="applyFormat('strike')" title="Strikethrough (~text~)">S</button>
+                <div class="toolbar-divider"></div>
+                <!-- Add Variable -->
+                <button type="button" class="add-var-btn" onclick="addVariable()">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Variable
+                </button>
+                <!-- Counter pushed to the right -->
+                <span id="body-counter" class="toolbar-counter">0 / 1024</span>
+              </div>
+              <div id="body-var-warning" class="field-warning" style="display:none">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="body-var-warning-text"></span>
+              </div>
+              <div id="vars-section" class="vars-section" style="display:none">
+                <div class="vars-list" id="vars-list"></div>
+                <div class="vars-info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span><strong>Use variables for dynamic content:</strong> Click "Add Variable" to automatically insert placeholders like {{1}}, {{2}} into your message. Name each variable to describe what it represents.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="field">
+            <label class="field-label">Footer <button class="info-q" title="Short text shown below the message. Variables not supported here.">?</button></label>
+            <input type="text" id="footer" class="inp" placeholder="e.g., Powered by YourCompany | Reply STOP to unsubscribe" maxlength="60" oninput="updatePreview();updateFooterCounter()">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+              <span class="field-hint" style="margin:0">Common uses: company name, opt-out instructions, or legal disclaimers</span>
+              <span id="footer-counter" class="char-counter" style="margin:0;flex-shrink:0;margin-left:8px">0 / 60</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SECTION 3: Interactive Buttons ── -->
+        <div class="form-section">
+          <div class="section-heading-row">
+            <h2>Interactive Buttons</h2>
+            <button class="info-q" title="Buttons appear below your message and recipients can tap them.">?</button>
+          </div>
+          <div class="field">
+            <label class="field-label" style="margin-bottom:10px">Button Type</label>
+            <div class="btn-type-row">
+              <button class="btn-type-seg" id="btn-cta" onclick="selectBtnType('cta',this)">Call to Action</button>
+              <button class="btn-type-seg" id="btn-qr" onclick="selectBtnType('qr',this)">Quick Reply</button>
+              <button class="btn-type-seg" id="btn-form" onclick="selectBtnType('form',this)">WhatsApp Form</button>
+            </div>
+            <div id="btn-content-cta" style="display:none">
+              <div class="clear-btn-link" onclick="clearBtnType()">Clear button selection</div>
+              <div class="btn-content-area">
+                <div class="btn-limit-note">Up to 2 URL buttons + 1 phone number button per template</div>
+                <div id="cta-btns-list"></div>
+                <button type="button" class="green-pill-btn" id="add-cta-btn-trigger" onclick="addCTABtn()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Button
+                </button>
+              </div>
+            </div>
+            <div id="btn-content-qr" style="display:none">
+              <div class="clear-btn-link" onclick="clearBtnType()">Clear button selection</div>
+              <div class="btn-content-area">
+                <div class="btn-limit-note">Maximum 10 quick reply buttons allowed per template</div>
+                <div id="qr-btns-list"></div>
+                <button type="button" class="green-pill-btn" id="add-qr-btn-trigger" onclick="addQRBtn()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Quick Reply Button
+                </button>
+              </div>
+            </div>
+            <div id="btn-content-form" style="display:none">
+              <div class="clear-btn-link" onclick="clearBtnType()">Clear button selection</div>
+              <div class="btn-content-area">
+                <div class="form-btn-fields">
+                  <div><div class="field-mini-label">Select Form*</div><select class="inp" style="height:40px;font-size:13px"><option>Select form...</option><option>Registration form</option><option>Feedback form</option></select></div>
+                  <div><div class="field-mini-label">Screen Name*</div><input type="text" class="inp" style="height:40px;font-size:13px" placeholder="e.g., contact_us" oninput="updatePreview()"></div>
+                  <div><div class="field-mini-label">Button Title*</div><input type="text" id="form-btn-title" class="inp" style="height:40px;font-size:13px" placeholder="e.g., Fill Form" oninput="updatePreview()"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SECTION 4: Media Attachment ── -->
+        <div class="form-section">
+          <div class="section-heading-row"><h2>Media Attachment</h2></div>
+          <p style="font-size:12px;color:#6b7280;margin-bottom:16px;margin-top:-12px">Supported formats: Image (JPG, PNG), Document (PDF), Video (MP4) &nbsp;·&nbsp; Not supported: Audio, Stickers</p>
+          <div class="field">
+            <label class="field-label" style="margin-bottom:10px">Attachment Type</label>
+            <div class="media-grid">
+              <div class="media-card" id="media-image" onclick="selectMedia('image',this)"><div class="media-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><h4>Image</h4><p>JPG, PNG</p><p class="media-size-limit">Max 5 MB</p></div>
+              <div class="media-card" id="media-document" onclick="selectMedia('document',this)"><div class="media-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h4>Document</h4><p>PDF</p><p class="media-size-limit">Max 16 MB</p></div>
+              <div class="media-card" id="media-video" onclick="selectMedia('video',this)"><div class="media-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><h4>Video</h4><p>MP4</p><p class="media-size-limit">Max 16 MB</p></div>
+            </div>
+            <div id="media-method-area" style="display:none">
+              <div class="clear-btn-link" onclick="clearMedia()">Clear attachment selection</div>
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:10px">How would you like to provide the attachment?</p>
+              <div class="media-method-toggle">
+                <button class="method-btn selected" id="method-url" onclick="selectMethod('url',this)">Provide URL</button>
+                <button class="method-btn" id="method-upload" onclick="selectMethod('upload',this)">Upload File</button>
+              </div>
+              <div id="method-url-content">
+                <label class="field-label" style="font-size:13px;margin-bottom:6px">Attachment URL*</label>
+                <input type="url" class="inp" placeholder="https://example.com/image.jpg">
+                <div class="field-hint">Provide a sample attachment URL for approval. You can send different content when using the template. <span id="url-size-hint" style="font-weight:500;color:#6b7280"></span></div>
+              </div>
+              <div id="method-upload-content" style="display:none">
+                <label class="field-label" style="font-size:13px;margin-bottom:6px">Upload File*</label>
+                <div class="upload-zone"><div class="upload-icon" id="upload-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><h4>Click to upload or drag and drop</h4><p id="upload-hint">JPG or PNG (max 5MB)</p></div>
+                <div class="field-hint" style="margin-top:8px">Upload a sample file for approval. You can send different content when using the template.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SECTION 5: Organization & Tags ── -->
+        <div class="form-section">
+          <div class="section-heading-row"><h2>Organization &amp; Tags</h2></div>
+          <div class="field">
+            <label class="field-label">Tag <span style="font-size:12px;color:#9ca3af;font-weight:400">(optional)</span></label>
+            <div class="tag-dropdown-wrap" id="tag-dropdown-wrap">
+              <input type="text" id="tag-select" class="inp" placeholder="Search or create a tag…" oninput="onTagInput(this.value)" onfocus="openTagDropdown()" autocomplete="off">
+              <div class="tag-dropdown-list" id="tag-dropdown-list" style="display:none">
+                <div class="tag-dropdown-options" id="tag-dropdown-options"></div>
+                <div class="tag-dropdown-create" id="tag-dropdown-create" style="display:none" onclick="confirmNewTag()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Create tag "<span id="tag-create-label"></span>"
+                </div>
+              </div>
+            </div>
+            <div id="tag-locked-note" style="display:none;margin-top:6px;font-size:12px;color:#6b7280;display:none;align-items:center;gap:5px">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              Tag is shared across all language versions and cannot be changed here.
+            </div>
+            <div id="tag-free-hint" class="field-hint" style="margin-top:6px">Pick a suggestion or type your own — tags help you filter and organise templates later.</div>
+          </div>
+        </div>
+
+        <!-- Submit error banner -->
+        <div class="submit-error-banner" id="submit-error-banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="submit-error-text"></span>
+        </div>
+        <!-- Submit -->
+        <div class="form-submit-row">
+          <button class="submit-btn" id="submit-btn" onclick="handleSubmit()" disabled><span id="submit-btn-label">Submit for Approval</span></button>
+          <button class="cancel-btn" onclick="window.location.href='hsm-list.html'">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE PREVIEW -->
+    <div class="preview-panel">
+      <div class="preview-card">
+        <div class="preview-header">
+          <span class="preview-title">Live Preview</span>
+          <button class="preview-emoji-btn">&#128512;</button>
+        </div>
+        <div class="preview-bg">
+          <div class="wa-bubble" id="wa-bubble">
+            <div class="wa-placeholder" id="wa-placeholder">Your message will appear here...</div>
+            <div class="wa-msg-body" id="wa-body" style="display:none"></div>
+            <div class="wa-msg-footer" id="wa-footer-text" style="display:none"></div>
+            <div class="wa-btn-list" id="wa-btn-list" style="display:none"></div>
+            <div class="wa-msg-time">9:41 AM ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- TEMPLATE PICKER MODAL (Meta library style) -->
+<div class="tpl-picker-overlay" id="tpl-picker-overlay" onclick="if(event.target===this)closeTplPicker()">
+  <div class="tpl-picker-modal">
+    <!-- Top bar: search + language + close -->
+    <div class="tpl-topbar">
+      <div class="tpl-search-wrap">
+        <span class="tpl-search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input class="tpl-topbar-search" id="tpl-search" type="text" placeholder="Search Utility templates" oninput="filterMetaTplGrid()" autocomplete="off">
+      </div>
+      <select class="tpl-lang-select" id="tpl-lang-filter" onchange="filterMetaTplGrid()">
+        <option value="en">🌐 English (US) templates</option>
+        <option value="hi">Hindi templates</option>
+        <option value="mr">Marathi templates</option>
+        <option value="ta">Tamil templates</option>
+        <option value="te">Telugu templates</option>
+        <option value="bn">Bengali templates</option>
+      </select>
+      <button class="tpl-picker-close" onclick="closeTplPicker()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Body: sidebar + grid -->
+    <div class="tpl-picker-body">
+      <!-- Sidebar filters -->
+      <div class="tpl-sidebar">
+        <div class="tpl-filter-group">
+          <div class="tpl-filter-group-title">Category</div>
+          <label class="tpl-filter-radio-label"><input type="radio" name="tpl-cat" value="utility" checked onchange="filterMetaTplGrid()"> Utility (154)</label>
+          <label class="tpl-filter-radio-label"><input type="radio" name="tpl-cat" value="authentication" onchange="filterMetaTplGrid()"> Authentication (20)</label>
+        </div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Industry <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Feature <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Account or product protection <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Account updates <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Call permissions <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Customer Feedback <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Event reminder <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Group invite link <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Legal / regulatory compliance <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Order management <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Payments <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Public disruption <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <!-- Card grid -->
+      <div class="tpl-card-area">
+        <div class="tpl-card-topbar" id="tpl-card-count">Showing 12 of 154 results</div>
+        <div class="tpl-card-grid" id="tpl-card-grid"></div>
+      </div>
+    </div>
+    <div class="tpl-picker-footer">
+      <button class="tpl-picker-cancel" onclick="closeTplPicker()">Cancel</button>
+      <button class="tpl-picker-apply" id="tpl-picker-apply" disabled onclick="applyTplSelection()">Use this template</button>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-check">&#10003;</div>
+    <h2 id="modal-heading">Template submitted for approval</h2>
+    <p id="modal-body">Meta/WhatsApp will review your template — usually within 24–48 hours. You'll receive a notification when the status changes.</p>
+    <div class="modal-chip">
+      <div class="modal-id" id="modal-id">—</div>
+      <div class="modal-meta"><span class="badge-pending">Pending review</span><span id="modal-meta"></span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="submit-btn" onclick="window.location.href='hsm-list.html'" style="height:44px">Back to templates</button>
+      <button class="cancel-btn" id="modal-secondary-btn" onclick="closeModal()">Create another</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.dd-option{padding:10px 14px;font-size:13px;font-family:monospace;color:#111;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background .1s}
+.dd-option:last-child{border-bottom:none}
+.dd-option:hover{background:#f0faf5}
+</style>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const TEMPLATES = {
+  welcome_message:{
+    category:'utility',
+    languages:[{code:'en',name:'English',status:'approved'},{code:'hi',name:'Hindi',status:'approved'},{code:'mr',name:'Marathi',status:'pending'}],
+    variables:['name','programme_name'],btnType:'qr',buttons:['Yes, sign me up','No, thanks'],tags:'welcome',
+    langContent:{
+      en:{body:"Hi {{1}}, welcome to {{2}}! We're so glad to have you here.\n\nYour journey starts today — feel free to reach out if you have any questions.",footer:'Powered by Glific'},
+      hi:{body:"नमस्ते {{1}}, {{2}} में आपका स्वागत है! 🎉\n\nआपकी यात्रा आज से शुरू होती है। कोई भी सवाल हो तो हमें बताएं।",footer:'Glific द्वारा संचालित'},
+      mr:{body:"नमस्कार {{1}}, {{2}} मध्ये आपले स्वागत आहे!\n\nतुमचा प्रवास आजपासून सुरू होतो. काही प्रश्न असल्यास आम्हाला कळवा.",footer:''}
+    }
+  },
+  otp_verification:{
+    category:'utility',
+    languages:[{code:'en',name:'English',status:'approved'}],
+    variables:['otp'],btnType:'',buttons:[],tags:'transactional',
+    langContent:{
+      en:{body:"Your one-time password is {{1}}.\n\nThis OTP is valid for 10 minutes. Please do not share it with anyone — Glific will never ask for your OTP.",footer:'Glific Security'}
+    }
+  },
+  order_confirmation:{
+    category:'marketing',
+    languages:[{code:'en',name:'English',status:'approved'},{code:'hi',name:'Hindi',status:'approved'}],
+    variables:['name','order_id','amount'],btnType:'cta',buttons:['Track Order'],tags:'transactional',
+    langContent:{
+      en:{body:"Thank you {{1}}! 🛍️\n\nYour order #{{2}} worth ₹{{3}} has been confirmed and is being processed. We'll notify you as soon as it's dispatched.",footer:'Questions? Reply to this message'},
+      hi:{body:"धन्यवाद {{1}}! 🛍️\n\nआपका ऑर्डर #{{2}} जिसकी राशि ₹{{3}} है, कन्फर्म हो गया है। डिस्पैच होते ही हम आपको सूचित करेंगे।",footer:'सवाल? इस संदेश का जवाब दें'}
+    }
+  },
+  shipping_update:{
+    category:'utility',
+    languages:[{code:'en',name:'English',status:'pending'}],
+    variables:['name','tracking_id'],btnType:'',buttons:[],tags:'notification',
+    langContent:{
+      en:{body:"Great news {{1}}! 📦\n\nYour order with tracking ID {{2}} has been shipped and is on its way to you.\n\nExpected delivery: 3–5 business days.",footer:''}
+    }
+  },
+  health_screening_alert:{
+    category:'utility',
+    languages:[
+      {code:'en',name:'English',status:'approved'},{code:'hi',name:'Hindi',status:'approved'},
+      {code:'mr',name:'Marathi',status:'approved'},{code:'te',name:'Telugu',status:'approved'},
+      {code:'ta',name:'Tamil',status:'approved'},{code:'bn',name:'Bengali',status:'pending'}
+    ],
+    variables:['name','date','location'],btnType:'',buttons:[],tags:'health',
+    langContent:{
+      en:{body:"Dear {{1}}, your health screening is scheduled for {{2}} at {{3}}.\n\nPlease bring your ID and previous reports.",footer:'Powered by Glific'},
+      hi:{body:"प्रिय {{1}}, आपकी स्वास्थ्य जांच {{2}} को {{3}} में निर्धारित है।\n\nकृपया अपना ID और पिछली रिपोर्ट लाएं।",footer:'Glific द्वारा संचालित'},
+      te:{body:"ప్రియమైన {{1}}, మీ ఆరోగ్య పరీక్ష {{2}} న {{3}} వద్ద నిర్ణయించబడింది.\n\nమీ ID మరియు మునుపటి నివేదికలు తీసుకురండి.",footer:'Glific ద్వారా నడపబడింది'}
+    }
+  },
+  national_programme_update:{
+    category:'utility',
+    languages:[
+      {code:'en',name:'English',status:'approved'},{code:'hi',name:'Hindi',status:'approved'},
+      {code:'mr',name:'Marathi',status:'approved'},{code:'te',name:'Telugu',status:'approved'},
+      {code:'ta',name:'Tamil',status:'approved'},{code:'bn',name:'Bengali',status:'approved'},
+      {code:'gu',name:'Gujarati',status:'approved'},{code:'pa',name:'Punjabi',status:'approved'},
+      {code:'kn',name:'Kannada',status:'approved'},{code:'ml',name:'Malayalam',status:'pending'},
+      {code:'ur',name:'Urdu',status:'pending'},{code:'od',name:'Odia',status:'rejected'}
+    ],
+    variables:['name','programme_name'],btnType:'',buttons:[],tags:'programme',
+    langContent:{
+      en:{body:"Hi {{1}}, important update on the {{2}} programme.\n\nPlease check your portal for details and next steps.",footer:''},
+      hi:{body:"नमस्ते {{1}}, {{2}} कार्यक्रम के बारे में महत्वपूर्ण अपडेट।\n\nविवरण और अगले चरणों के लिए अपना पोर्टल देखें।",footer:''}
+    }
+  }
+};
+const ALL_LANGS={en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati',pa:'Punjabi',kn:'Kannada',ml:'Malayalam',ur:'Urdu',od:'Odia'};
+
+// ── STATE ─────────────────────────────────────────────
+let selectedCategory='', selectedBtnType='', urlBtnCount=0, qrBtnCount=0, phoneAdded=false;
+let selectedLang='', isExistingTemplate=false, currentTemplate=null, addLangMode=false;
+let varCount=0;
+
+// ── VALIDITY CHECK ────────────────────────────────────
+let elementNameValid=true; // tracks server-check result
+function checkValidity(){
+  const id=document.getElementById('element-name').value.trim();
+  const lang=selectedLang||document.getElementById('language').value;
+  const body=document.getElementById('body').value.trim();
+  const bodyLen=body.length;
+  const ok=id&&lang&&selectedCategory&&body&&bodyLen<=1024&&elementNameValid;
+  document.getElementById('submit-btn').disabled=!ok;
+}
+
+// ── ELEMENT NAME ──────────────────────────────────────
+let nameCheckTimer=null;
+const TAKEN_IDS=Object.keys(TEMPLATES); // simulate already-taken IDs
+
+function onElementInput(el){
+  el.value=el.value.toLowerCase().replace(/[^a-z0-9_]/g,'');
+  document.getElementById('existing-dd').style.display='none';
+  hideNameFeedback();
+  clearTimeout(nameCheckTimer);
+  elementNameValid=true;
+  if(!el.value){resetExistingMode();checkValidity();return;}
+  // debounce server check by 600ms
+  nameCheckTimer=setTimeout(()=>checkNameAvailability(el.value),600);
+  checkValidity();
+}
+
+function onElementBlur(el){
+  if(!el.value||isExistingTemplate)return;
+  hideNameFeedback();
+  checkNameAvailability(el.value);
+}
+
+function checkNameAvailability(name){
+  if(isExistingTemplate)return;
+  hideNameFeedback();
+  document.getElementById('element-name-checking').style.display='flex';
+  setTimeout(()=>{
+    document.getElementById('element-name-checking').style.display='none';
+    if(TAKEN_IDS.includes(name)){
+      elementNameValid=false;
+      showNameError('This template ID is already taken. Choose a different name.');
+      document.getElementById('element-name').classList.add('err');
+    } else {
+      elementNameValid=true;
+      document.getElementById('element-name').classList.remove('err');
+      const okEl=document.getElementById('element-name-ok');
+      okEl.style.display='flex';
+    }
+    checkValidity();
+  },800);
+}
+
+function hideNameFeedback(){
+  document.getElementById('element-name-checking').style.display='none';
+  document.getElementById('element-name-error').style.display='none';
+  document.getElementById('element-name-ok').style.display='none';
+  document.getElementById('element-name').classList.remove('err');
+}
+
+function showNameError(msg){
+  document.getElementById('element-name-error-text').textContent=msg;
+  document.getElementById('element-name-error').style.display='flex';
+}
+
+// ── BODY COUNTER ──────────────────────────────────────
+const BODY_MAX=1024;
+function updateBodyCounter(){
+  const len=document.getElementById('body').value.length;
+  const el=document.getElementById('body-counter');
+  el.textContent=`${len} / ${BODY_MAX}`;
+  el.className='toolbar-counter'+(len>BODY_MAX?' over':len>900?' warn':'');
+}
+
+// ── VARIABLE MISMATCH ─────────────────────────────────
+function checkVarMismatch(){
+  const body=document.getElementById('body').value;
+  const warn=document.getElementById('body-var-warning');
+  // Find highest {{N}} used in body
+  const matches=[...body.matchAll(/\{\{(\d+)\}\}/g)];
+  if(!matches.length){warn.style.display='none';return;}
+  const maxInBody=Math.max(...matches.map(m=>parseInt(m[1])));
+  if(maxInBody>varCount){
+    document.getElementById('body-var-warning-text').textContent=
+      `Your message uses {{${maxInBody}}} but only ${varCount} variable${varCount===1?'':'s'} ${varCount===1?'is':'are'} defined. Add the missing variable${maxInBody-varCount>1?'s':''} below.`;
+    warn.style.display='flex';
+  } else if(varCount>0&&maxInBody<varCount){
+    document.getElementById('body-var-warning-text').textContent=
+      `${varCount} variable${varCount>1?'s are':' is'} defined but only {{${maxInBody}}} is used in the body. Check for unused variables.`;
+    warn.style.display='flex';
+  } else {
+    warn.style.display='none';
+  }
+}
+
+// ── FOOTER COUNTER ────────────────────────────────────
+function updateFooterCounter(){
+  const len=document.getElementById('footer').value.length;
+  const el=document.getElementById('footer-counter');
+  el.textContent=`${len} / 60`;
+  el.className='char-counter'+(len>=60?' over':len>50?' warn':'');
+}
+// ── META TEMPLATE LIBRARY ─────────────────────────────────
+const META_TEMPLATES=[
+  {id:'account_creation_confirmation_3',title:'Finalize account set-up',category:'utility',feature:'account_updates',
+    body:'Hi {{text}},\n\nYour new account has been created successfully.\n\nPlease verify {{text}} to complete your profile.',
+    footer:'',button:{label:'Verify account'},vars:['name','verification_link']},
+  {id:'address_update',title:'Address update',category:'utility',feature:'account_updates',
+    body:'Hi {{text}}, your delivery address has been successfully updated to {{text}}. Contact {{text}} for any inquiries.',
+    footer:'',button:null,vars:['name','address','support_number']},
+  {id:'appointment_cancelled_v1',title:'Your appointment was canceled',category:'utility',feature:'event_reminder',
+    body:'Hello {{text}},\n\nYour upcoming appointment with {{business name}} on {{date}} at {{text}} has been canceled.\n\nLet us know if you have any questions or need to reschedule.',
+    footer:'',button:null,vars:['name','time']},
+  {id:'appointment_cancelled',title:'Appointment cancelled',category:'utility',feature:'event_reminder',
+    body:'Hi {{text}},\nYour appointment on {{text}} has been cancelled. We hope to see you another time.',
+    footer:'',button:null,vars:['name','date']},
+  {id:'order_shipped_notification',title:'Order shipped',category:'utility',feature:'order_management',
+    body:'Hi {{text}}, your order #{{text}} has been shipped!\n\nTrack your package with ID {{text}}.\nExpected delivery: {{text}}.',
+    footer:'',button:{label:'Track order'},vars:['name','order_id','tracking_id','delivery_date']},
+  {id:'payment_confirmation',title:'Payment confirmation',category:'utility',feature:'payments',
+    body:"Hi {{text}}, we've received your payment of {{text}} on {{text}}.\n\nTransaction ID: {{text}}. Keep this for your records.",
+    footer:'',button:null,vars:['name','amount','date','transaction_id']},
+  {id:'event_registration_confirmed',title:'Event registration confirmed',category:'utility',feature:'event_reminder',
+    body:"Hello {{text}}!\n\nYour registration for {{text}} on {{text}} at {{text}} is confirmed.\n\nWe look forward to seeing you there.",
+    footer:'Reply CANCEL to unregister',button:{label:'Add to calendar'},vars:['name','event_name','date','venue']},
+  {id:'document_verification_required',title:'Document verification required',category:'utility',feature:'account_updates',
+    body:"Dear {{text}},\n\nTo complete your profile, please submit the following documents by {{text}}:\n\n• Government-issued ID\n• Proof of address",
+    footer:'',button:{label:'Submit documents'},vars:['name','deadline']},
+  {id:'programme_welcome',title:'Programme welcome',category:'utility',feature:'account_updates',
+    body:"Hi {{text}}, welcome to the {{text}} programme!\n\nYour registration is confirmed. We'll share more details soon.",
+    footer:'',button:{label:'Learn more'},vars:['name','programme_name']},
+  {id:'feedback_survey_request',title:'Share your feedback',category:'utility',feature:'customer_feedback',
+    body:"Hi {{text}},\n\nWe hope your recent experience with {{text}} was positive! Help us improve — take our 2-minute survey.",
+    footer:'',button:{label:'Start survey'},vars:['name','programme_name']},
+  {id:'group_community_invite',title:'Community group invite',category:'utility',feature:'group_invite',
+    body:"Hi {{text}},\n\nYou've been invited to join the {{text}} WhatsApp group.\n\nClick the link to join the community.",
+    footer:'',button:{label:'Join group'},vars:['name','group_name']},
+  {id:'service_disruption_alert',title:'Service disruption notice',category:'utility',feature:'public_disruption',
+    body:"Dear {{text}},\n\nWe're experiencing temporary disruption to {{text}} services. Our team is working to resolve this.\n\nExpected restoration: {{text}}.",
+    footer:'Apologies for any inconvenience.',button:null,vars:['name','service_name','restore_time']},
+  {id:'otp_login_verification',title:'Login verification code',category:'authentication',feature:'auth',
+    body:'{{text}} is your verification code.\n\nDo not share this code with anyone. This code expires in 10 minutes.',
+    footer:'',button:{label:'Verify now'},vars:['otp']},
+  {id:'account_security_alert',title:'Security alert',category:'authentication',feature:'auth',
+    body:"Hi {{text}}, we noticed a sign-in attempt to your account from {{text}}.\n\nIf this wasn't you, please secure your account immediately.",
+    footer:'',button:{label:'Secure account'},vars:['name','device_location']},
+];
+
+// ── TEMPLATE PICKER MODAL ────────────────────────────────
+let tplPickerSelected=null;
+
+function toggleExistingDD(){openTplPicker();}
+
+function openTplPicker(){
+  tplPickerSelected=null;
+  document.getElementById('tpl-picker-overlay').classList.add('open');
+  document.getElementById('tpl-search').value='';
+  document.getElementById('tpl-picker-apply').disabled=true;
+  // default to utility
+  document.querySelector('input[name="tpl-cat"][value="utility"]').checked=true;
+  filterMetaTplGrid();
+}
+function closeTplPicker(){
+  document.getElementById('tpl-picker-overlay').classList.remove('open');
+}
+function filterMetaTplGrid(){
+  const q=(document.getElementById('tpl-search').value||'').toLowerCase();
+  const cat=document.querySelector('input[name="tpl-cat"]:checked').value;
+  let filtered=META_TEMPLATES.filter(t=>t.category===cat);
+  if(q) filtered=filtered.filter(t=>t.title.toLowerCase().includes(q)||t.id.includes(q));
+  const total=META_TEMPLATES.filter(t=>t.category===cat).length;
+  document.getElementById('tpl-card-count').textContent=`Showing ${filtered.length} of ${total} results`;
+  renderMetaTplGrid(filtered);
+}
+function renderMetaTplGrid(templates){
+  const grid=document.getElementById('tpl-card-grid');
+  if(!templates.length){
+    grid.innerHTML=`<div style="grid-column:span 2;padding:60px 20px;text-align:center;font-size:13px;color:#9ca3af">No templates match your search</div>`;
+    return;
+  }
+  grid.innerHTML=templates.map(t=>{
+    const bodyHtml=t.body
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\{\{[^}]+\}\}/g,m=>`<span class="tpl-var">${m}</span>`)
+      .replace(/\n/g,'<br>');
+    const btnHtml=t.button?`<div class="tpl-meta-bubble-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${t.button.label}</div>`:'';
+    const footHtml=t.footer?`<div class="tpl-meta-bubble-footer">${t.footer}</div>`:'';
+    const isSelected=tplPickerSelected===t.id;
+    return `<button class="tpl-meta-card${isSelected?' selected':''}" onclick="selectMetaCard('${t.id}')">
+      <div class="tpl-meta-card-inner">
+        <div class="tpl-meta-bubble">
+          <div class="tpl-meta-bubble-title">${t.title}</div>
+          <div class="tpl-meta-bubble-body">${bodyHtml}</div>
+          ${footHtml}
+          <div class="tpl-meta-bubble-time">12:29 PM</div>
+          ${btnHtml}
+        </div>
+      </div>
+      <div class="tpl-meta-id-row">${t.id}</div>
+    </button>`;
+  }).join('');
+}
+function selectMetaCard(id){
+  tplPickerSelected=id;
+  document.getElementById('tpl-picker-apply').disabled=false;
+  document.querySelectorAll('.tpl-meta-card').forEach(el=>{
+    const isThis=el.getAttribute('onclick')===`selectMetaCard('${id}')`;
+    el.classList.toggle('selected',isThis);
+  });
+}
+function applyTplSelection(){
+  if(!tplPickerSelected)return;
+  const meta=META_TEMPLATES.find(t=>t.id===tplPickerSelected);
+  closeTplPicker();
+  if(TEMPLATES[tplPickerSelected]){
+    document.getElementById('element-name').value=tplPickerSelected;
+    loadExistingTemplate(tplPickerSelected);
+  } else if(meta){
+    document.getElementById('element-name').value=meta.id;
+    prefillFromMeta(meta);
+  }
+}
+function prefillFromMeta(meta){
+  // Pre-fill the body with the meta template content
+  resetExistingMode();
+  selectCategory(meta.category,true);
+  const bodyEl=document.getElementById('body');
+  if(bodyEl) bodyEl.value=meta.body;
+  if(meta.footer){const fe=document.getElementById('footer');if(fe)fe.value=meta.footer;}
+  if(meta.button){
+    selectBtnType('cta',document.getElementById('btn-cta'));
+    addURLBtn();
+    const inp=document.querySelector('#url-btns-list .url-btn-row input[placeholder="Visit Website"]');
+    if(inp) inp.value=meta.button.label;
+  }
+  updatePreview&&updatePreview();
+  updateBodyCounter&&updateBodyCounter();
+}
+function selectExisting(name){
+  document.getElementById('element-name').value=name;
+  loadExistingTemplate(name);
+}
+
+// ── EXISTING TEMPLATE MODE ────────────────────────────
+function loadExistingTemplate(name){
+  const tpl=TEMPLATES[name];
+  if(!tpl){resetExistingMode();return;}
+  isExistingTemplate=true;currentTemplate=tpl;
+  // Lock element name — it's permanent once submitted
+  const inp=document.getElementById('element-name');
+  inp.readOnly=true;
+  inp.style.background='#f9fafb';
+  inp.style.color='#6b7280';
+  inp.style.cursor='default';
+  inp.style.borderColor='#e5e7eb';
+  // Category
+  selectCategory(tpl.category,true);
+  // Language chips
+  document.getElementById('lang-new-field').style.display='none';
+  document.getElementById('lang-existing-field').style.display='block';
+  renderLangChips(tpl,null);
+  // Tags — lock if template already has one
+  if(tpl.tags){lockTag(tpl.tags);}else{unlockTag();}
+  checkValidity();
+}
+
+function renderLangChips(tpl,activeCode){
+  const wrap=document.getElementById('lang-chips-wrap');
+  const DOT={approved:'dot-green',pending:'dot-amber',rejected:'dot-red'};
+  const ICON={approved:'✓',pending:'⏳',rejected:'✕'};
+  let html=tpl.languages.map(l=>`
+    <div class="lang-chip ${l.status}${activeCode===l.code?' chip-active':''}" onclick="selectLangChip('${l.code}')">
+      <span class="lang-status-dot ${DOT[l.status]}"></span>
+      ${l.code.toUpperCase()} — ${ICON[l.status]} ${l.name}
+    </div>`).join('');
+  html+=`<div class="lang-chip add-new" onclick="openAddLangPanel()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add language
+  </div>`;
+  wrap.innerHTML=html;
+}
+
+function selectLangChip(code){
+  if(!currentTemplate)return;
+  selectedLang=code;
+  renderLangChips(currentTemplate,code);
+  showLangView(code);
+  checkValidity();
+}
+
+function showLangView(code){
+  const tpl=currentTemplate;
+  const content=tpl.langContent&&tpl.langContent[code];
+  const lang=tpl.languages.find(l=>l.code===code);
+  if(!lang||!content)return;
+
+  // 1. Category
+  selectCategory(tpl.category, true);
+
+  // 2. Variables
+  varCount=0;
+  document.getElementById('vars-list').innerHTML='';
+  if(tpl.variables&&tpl.variables.length){
+    tpl.variables.forEach(vName=>{
+      varCount++;
+      const list=document.getElementById('vars-list');
+      const row=document.createElement('div');
+      row.className='var-row'; row.id='var-row-'+varCount;
+      row.innerHTML=`<span class="var-tag">{{${varCount}}}</span><input type="text" class="var-name-inp" value="${vName}" readonly style="background:#f9fafb;color:#6b7280;cursor:default"><button type="button" class="var-remove" style="display:none">&times;</button>`;
+      list.appendChild(row);
+    });
+    document.getElementById('vars-section').style.display='block';
+  } else {
+    document.getElementById('vars-section').style.display='none';
+  }
+
+  // 3. Body (after variables so preview renders correctly)
+  document.getElementById('body').value=content.body;
+
+  // 4. Footer
+  document.getElementById('footer').value=content.footer||'';
+
+  // 5. Buttons
+  clearBtnType();
+  if(tpl.btnType&&tpl.buttons.length){
+    selectBtnType(tpl.btnType,document.getElementById('btn-'+tpl.btnType));
+    if(tpl.btnType==='qr'){
+      tpl.buttons.forEach(b=>{addQRBtn();const inputs=document.querySelectorAll('#qr-btns-list .qr-btn-row input');inputs[inputs.length-1].value=b;});
+    }
+    if(tpl.btnType==='cta'){
+      tpl.buttons.forEach(b=>{addURLBtn();const inputs=document.querySelectorAll('#url-btns-list .url-btn-row input[placeholder="Visit Website"]');inputs[inputs.length-1].value=b;});
+    }
+  }
+
+  // 6. Tags
+  if(tpl.tags) selectTag(tpl.tags);
+
+  updatePreview();
+
+  // 7. Lock all fields
+  setFormLocked(true);
+
+  // 8. Show notice
+  const statusColors={approved:'#119656',pending:'#d97706',rejected:'#dc2626'};
+  const notice=document.getElementById('readonly-notice');
+  document.getElementById('readonly-notice-text').innerHTML=
+    `Viewing <strong>${lang.name}</strong> &nbsp;·&nbsp; `+
+    `<span style="color:${statusColors[lang.status]||'#6b7280'};font-weight:700">${lang.status.charAt(0).toUpperCase()+lang.status.slice(1)}</span>`+
+    ` &nbsp;·&nbsp; <span style="display:inline-flex;align-items:center;gap:3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> read only</span>`;
+  notice.style.display='flex';
+}
+
+function setFormLocked(lock){
+  // Body textarea
+  const bodyEl=document.getElementById('body');
+  const footerEl=document.getElementById('footer');
+  bodyEl.readOnly=lock;
+  footerEl.readOnly=lock;
+  [bodyEl,footerEl].forEach(el=>{
+    el.style.background=lock?'#f9fafb':'';
+    el.style.color=lock?'#374151':'';
+    el.style.cursor=lock?'default':'';
+    el.style.borderColor=lock?'#e5e7eb':'';
+  });
+  // Textarea header (Add Variable button)
+  const addVarBtn=document.querySelector('.add-var-btn');
+  if(addVarBtn) addVarBtn.style.display=lock?'none':'';
+  // Category cards
+  document.querySelectorAll('.cat-card').forEach(c=>{
+    c.style.pointerEvents=lock?'none':'';
+    c.style.opacity=lock?'0.85':'';
+  });
+  // Button type segments + add buttons
+  document.querySelectorAll('.btn-type-seg').forEach(b=>b.style.pointerEvents=lock?'none':'');
+  document.querySelectorAll('#btn-content-qr .qr-btn-row input, #btn-content-cta .cta-btn-row input, #btn-content-cta select').forEach(el=>{
+    el.readOnly=lock; el.style.background=lock?'#f9fafb':''; el.style.pointerEvents=lock?'none':'';
+  });
+  document.querySelectorAll('.remove-btn-abs,.clear-btn-link,.green-pill-btn').forEach(el=>el.style.display=lock?'none':'');
+  // Tags input
+  const tagsInp=document.getElementById('tags-inp');
+  if(tagsInp){tagsInp.readOnly=lock;tagsInp.style.background=lock?'#f9fafb':'';}
+}
+
+function clearViewMode(){
+  document.getElementById('readonly-notice').style.display='none';
+  setFormLocked(false);
+  document.getElementById('body').value='';
+  document.getElementById('footer').value='';
+  document.getElementById('vars-section').style.display='none';
+  document.getElementById('vars-list').innerHTML='';
+  varCount=0;
+  clearBtnType();
+}
+
+function resetExistingMode(){
+  isExistingTemplate=false;currentTemplate=null;selectedLang='';
+  document.getElementById('lang-new-field').style.display='block';
+  document.getElementById('lang-existing-field').style.display='none';
+
+  document.getElementById('language').value='';
+  // Unlock element name
+  const inp=document.getElementById('element-name');
+  inp.readOnly=false;
+  inp.style.background='';
+  inp.style.color='';
+  inp.style.cursor='';
+  inp.style.borderColor='';
+  clearViewMode();
+  unlockTag();
+  checkValidity();
+}
+
+// ── ADD LANGUAGE PANEL ────────────────────────────────
+function openAddLangPanel(){
+  if(!currentTemplate)return;
+  clearViewMode();
+  selectedLang='';
+  renderLangChips(currentTemplate,null);
+  const panel=document.getElementById('add-lang-panel');
+  panel.style.display='block';
+  // Populate available languages (exclude existing)
+  const existing=currentTemplate.languages.map(l=>l.code);
+  const sel=document.getElementById('new-lang-select');
+  sel.innerHTML='<option value="">Choose a language...</option>';
+  Object.entries(ALL_LANGS).forEach(([code,name])=>{
+    if(!existing.includes(code))sel.innerHTML+=`<option value="${code}">${name}</option>`;
+  });
+  document.getElementById('add-lang-ctas').style.display='none';
+  document.getElementById('add-lang-cancel-only').style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function onNewLangSelect(code){
+  const ctas=document.getElementById('add-lang-ctas');
+  const cancelOnly=document.getElementById('add-lang-cancel-only');
+  if(!code){
+    ctas.style.display='none';
+    cancelOnly.style.display='block';
+    return;
+  }
+  ctas.style.display='flex';
+  cancelOnly.style.display='none';
+}
+
+function _commitAddLanguage(code, translated){
+  selectedLang=code;
+  addLangMode=true;
+  currentTemplate.languages.push({code,name:ALL_LANGS[code],status:'new'});
+  renderLangChips(currentTemplate,code);
+  document.getElementById('add-lang-panel').style.display='none';
+  const tplId=document.getElementById('element-name').value;
+
+
+  currentTemplate._pendingTranslation=translated||'';
+  prefillFromExisting(code);
+  checkValidity();
+}
+
+function addLanguageManual(){
+  const code=document.getElementById('new-lang-select').value;
+  if(!code||!currentTemplate)return;
+  _commitAddLanguage(code, ''); // body left blank — user must fill it
+}
+
+function addLanguageWithTranslate(){
+  const code=document.getElementById('new-lang-select').value;
+  if(!code||!currentTemplate)return;
+  const btn=document.getElementById('btn-add-lang-translate');
+  const btnManual=document.getElementById('btn-add-lang');
+  btn.disabled=true; btnManual.disabled=true;
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg> Translating…`;
+  setTimeout(()=>{
+    const content=currentTemplate.langContent&&currentTemplate.langContent[code];
+    const translated=content?content.body:'';
+    btn.innerHTML='Add language with auto-translate';
+    btn.disabled=false; btnManual.disabled=false;
+    _commitAddLanguage(code, translated);
+  },1400);
+}
+
+function prefillFromExisting(newCode){
+  const tpl=currentTemplate;
+  // Category
+  selectCategory(tpl.category,true);
+  // Use auto-translated body if available, otherwise leave blank for manual translation
+  const translated=tpl._pendingTranslation||'';
+  document.getElementById('body').value=translated;
+  tpl._pendingTranslation=null;
+  document.getElementById('vars-section').style.display='none';
+  document.getElementById('vars-list').innerHTML='';
+  varCount=0;
+  // Pre-fill variables
+  if(tpl.variables.length){
+    tpl.variables.forEach(vName=>{
+      varCount++;
+      const list=document.getElementById('vars-list');
+      const row=document.createElement('div');
+      row.className='var-row';row.id='var-row-'+varCount;
+      const n=varCount;
+      row.innerHTML=`<span class="var-tag">{{${n}}}</span><input type="text" class="var-name-inp" value="${vName}" oninput="updatePreview()"><button type="button" class="var-remove" onclick="removeVariable(${n})">&times;</button>`;
+      list.appendChild(row);
+    });
+    document.getElementById('vars-section').style.display='block';
+    // Add variable placeholders to body
+    document.getElementById('body').value=tpl.variables.map((_,i)=>`{{${i+1}}}`).join(' ');
+  }
+  // Pre-fill buttons
+  clearBtnType();
+  if(tpl.btnType&&tpl.buttons.length){
+    selectBtnType(tpl.btnType,document.getElementById('btn-'+tpl.btnType));
+    if(tpl.btnType==='qr'){tpl.buttons.forEach(b=>{addQRBtn();const rows=document.querySelectorAll('#qr-btns-list .qr-btn-row input');rows[rows.length-1].value=b;});}
+    if(tpl.btnType==='cta'){tpl.buttons.forEach(b=>{addURLBtn();const rows=document.querySelectorAll('#url-btns-list .url-btn-row input[placeholder="Visit Website"]');rows[rows.length-1].value=b;});}
+  }
+  // Pre-fill tags
+  if(tpl.tags){selectTag(tpl.tags);}
+  updatePreview();
+}
+
+function closeAddLangPanel(){
+  // If opened from the list via URL param, go back to the list
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('action')==='add-language'){
+    window.location.href='hsm-list.html';
+    return;
+  }
+  document.getElementById('add-lang-panel').style.display='none';
+}
+
+function exitAddLanguageMode(){
+  addLangMode=false;selectedLang='';
+
+  // Remove the "new" language from chips
+  if(currentTemplate)currentTemplate.languages=currentTemplate.languages.filter(l=>l.status!=='new');
+  if(currentTemplate)renderLangChips(currentTemplate,null);
+  // Clear pre-filled content
+  document.getElementById('body').value='';
+  document.getElementById('footer').value='';
+  document.getElementById('vars-section').style.display='none';
+  document.getElementById('vars-list').innerHTML='';varCount=0;
+  clearBtnType();clearTag();clearMedia();
+  updatePreview();checkValidity();
+}
+
+// ── LANGUAGE (new template) ───────────────────────────
+function onLangSelect(val){selectedLang=val;checkValidity();}
+
+// ── CATEGORY ──────────────────────────────────────────
+function selectCategory(cat,locked){
+  selectedCategory=cat;
+  ['utility','marketing'].forEach(c=>{
+    const el=document.getElementById('cat-'+c);
+    el.classList.toggle('selected',c===cat);
+    if(locked){el.classList.add('locked');el.onclick=null;}
+    else{el.classList.remove('locked');el.onclick=()=>selectCategory(c);}
+  });
+  checkValidity();
+}
+
+// ── VARIABLES ─────────────────────────────────────────
+function addVariable(){
+  varCount++;const n=varCount;
+  const list=document.getElementById('vars-list');
+  const row=document.createElement('div');row.className='var-row';row.id='var-row-'+n;
+  row.innerHTML=`<span class="var-tag">{{${n}}}</span><input type="text" class="var-name-inp" placeholder="Variable name" oninput="updatePreview()"><button type="button" class="var-remove" onclick="removeVariable(${n})">&times;</button>`;
+  list.appendChild(row);
+  const ta=document.getElementById('body');
+  const s=ta.selectionStart,insert=`{{${n}}}`;
+  ta.value=ta.value.substring(0,s)+insert+ta.value.substring(ta.selectionEnd);
+  ta.selectionStart=ta.selectionEnd=s+insert.length;ta.focus();
+  document.getElementById('vars-section').style.display='block';
+  updatePreview();checkValidity();
+}
+function removeVariable(n){
+  const el=document.getElementById('var-row-'+n);if(el)el.remove();
+  if(!document.querySelectorAll('.var-row').length)document.getElementById('vars-section').style.display='none';
+  updatePreview();
+}
+
+// ── BUTTON TYPES ──────────────────────────────────────
+function selectBtnType(type,el){
+  selectedBtnType=type;
+  ['cta','qr','form'].forEach(t=>{document.getElementById('btn-'+t).classList.toggle('selected',t===type);document.getElementById('btn-content-'+t).style.display=t===type?'block':'none';});
+  updatePreview();
+}
+function clearBtnType(){
+  selectedBtnType='';urlBtnCount=0;phoneAdded=false;qrBtnCount=0;ctaBtnCount=0;ctaPhoneAdded=false;
+  const ctaList=document.getElementById('cta-btns-list');if(ctaList)ctaList.innerHTML='';
+  const addBtn=document.getElementById('add-cta-btn-trigger');if(addBtn)addBtn.style.display='inline-flex';
+  ['cta','qr','form'].forEach(t=>{document.getElementById('btn-'+t).classList.remove('selected');document.getElementById('btn-content-'+t).style.display='none';});
+  document.getElementById('url-btns-list').innerHTML='';
+  document.getElementById('qr-btns-list').innerHTML='';
+  document.getElementById('phone-btn-area').innerHTML=`<button type="button" class="green-pill-btn" onclick="addPhoneBtn()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Phone Button</button>`;
+  updatePreview();
+}
+// ── CTA BUTTONS (unified URL + Phone) ────────────────
+let ctaBtnCount=0, ctaPhoneAdded=false;
+function addCTABtn(){
+  const urlCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="url"]').length;
+  const phoneCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="phone"]').length;
+  if(urlCount>=2&&phoneCount>=1)return; // at max
+  ctaBtnCount++;
+  const n=ctaBtnCount;
+  const list=document.getElementById('cta-btns-list');
+  const row=document.createElement('div');
+  row.className='cta-btn-row';
+  row.id='cta-btn-'+n;
+  // default to url unless 2 url already added
+  const defaultType=urlCount>=2?'phone':'url';
+  row.setAttribute('data-type',defaultType);
+  row.innerHTML=buildCTARowHTML(n,defaultType);
+  list.appendChild(row);
+  refreshAddCTABtn();
+  updatePreview();
+}
+function buildCTARowHTML(n,type){
+  const urlCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="url"]').length;
+  const phoneCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="phone"]').length;
+  const urlDisabled=urlCount>=2&&type!=='url'?'disabled style="opacity:.4;pointer-events:none"':'';
+  const phoneDisabled=phoneCount>=1&&type!=='phone'?'disabled style="opacity:.4;pointer-events:none"':'';
+  const urlSel=type==='url'?'selected':'';
+  const phoneSel=type==='phone'?'selected':'';
+  const fields=type==='url'
+    ?`<div class="cta-fields two-col">
+        <div><div class="field-mini-label">Button label</div><input type="text" class="inp" style="height:40px;font-size:13px" placeholder="e.g., Track Order" oninput="updatePreview()"></div>
+        <div><div class="field-mini-label">URL</div><input type="url" class="inp" style="height:40px;font-size:13px" placeholder="https://example.com" oninput="updatePreview()"></div>
+      </div>
+      <details style="margin-top:8px">
+        <summary style="font-size:11px;color:#9ca3af;cursor:pointer;list-style:none;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>Advanced</summary>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <label class="radio-opt"><input type="radio" name="url-type-${n}" value="static" checked> Static URL</label>
+          <label class="radio-opt"><input type="radio" name="url-type-${n}" value="dynamic"> Dynamic URL <span style="font-size:10px;color:#9ca3af">(variable appended at send time)</span></label>
+        </div>
+      </details>`
+    :`<div class="cta-fields two-col">
+        <div><div class="field-mini-label">Button label</div><input type="text" class="inp" style="height:40px;font-size:13px" placeholder="e.g., Call Us" oninput="updatePreview()"></div>
+        <div><div class="field-mini-label">Phone number</div><input type="tel" class="inp" style="height:40px;font-size:13px" placeholder="+91 98765 43210"></div>
+      </div>`;
+  return `<button type="button" class="remove-btn-abs" onclick="removeCTABtn(${n})">&times;</button>
+    <div class="cta-type-toggle">
+      <button type="button" class="cta-type-btn ${urlSel}" ${urlDisabled} onclick="switchCTAType(${n},'url')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        URL
+      </button>
+      <button type="button" class="cta-type-btn ${phoneSel}" ${phoneDisabled} onclick="switchCTAType(${n},'phone')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.18 19.79 19.79 0 01.22 .58 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        Phone number
+      </button>
+    </div>
+    <div id="cta-fields-${n}">${fields}</div>`;
+}
+function switchCTAType(n,type){
+  const row=document.getElementById('cta-btn-'+n);
+  row.setAttribute('data-type',type);
+  row.innerHTML=buildCTARowHTML(n,type);
+  refreshAddCTABtn();
+  updatePreview();
+}
+function removeCTABtn(n){
+  const el=document.getElementById('cta-btn-'+n);
+  if(el)el.remove();
+  refreshAddCTABtn();
+  updatePreview();
+}
+function refreshAddCTABtn(){
+  const urlCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="url"]').length;
+  const phoneCount=document.querySelectorAll('#cta-btns-list .cta-btn-row[data-type="phone"]').length;
+  const btn=document.getElementById('add-cta-btn-trigger');
+  if(!btn)return;
+  const atMax=urlCount>=2&&phoneCount>=1;
+  btn.style.display=atMax?'none':'inline-flex';
+}
+// Legacy stubs (referenced in loadExistingTemplate)
+function addURLBtn(){addCTABtn();}
+function addPhoneBtn(){addCTABtn();}
+function removeURLBtn(n){removeCTABtn(n);}
+function removePhoneBtn(){removeCTABtn(1);}
+function addQRBtn(){
+  if(qrBtnCount>=10)return;qrBtnCount++;const n=qrBtnCount;
+  const list=document.getElementById('qr-btns-list');const row=document.createElement('div');row.className='qr-btn-row';row.id='qr-btn-'+n;
+  row.innerHTML=`<div style="flex:1;display:flex;flex-direction:column;gap:2px;"><input type="text" class="var-name-inp" maxlength="20" placeholder="e.g., Yes, No, More Info" oninput="updateQRCounter(this);updatePreview()"><span class="qr-char-counter">0 / 20</span></div><button type="button" class="var-remove" onclick="removeQRBtn(${n})">&times;</button>`;
+  list.appendChild(row);updatePreview();
+}
+function updateQRCounter(inp){
+  const len=inp.value.length;
+  const counter=inp.parentElement.querySelector('.qr-char-counter');
+  if(!counter)return;
+  counter.textContent=`${len} / 20`;
+  counter.style.color=len>=20?'#dc2626':len>=16?'#d97706':'#9ca3af';
+  counter.style.fontWeight=len>=16?'600':'400';
+}
+function removeQRBtn(n){const el=document.getElementById('qr-btn-'+n);if(el)el.remove();qrBtnCount--;updatePreview();}
+
+// ── MEDIA ─────────────────────────────────────────────
+const MEDIA_HINTS={image:'JPG or PNG (max 5MB)',document:'PDF (max 16MB)',video:'MP4 (max 16MB)'};
+const MEDIA_ICONS={
+  image:'<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+  document:'<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  video:'<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+};
+const MEDIA_SIZE_LIMITS={image:'Max file size: 5 MB',document:'Max file size: 16 MB',video:'Max file size: 16 MB'};
+function selectMedia(type,el){['image','document','video'].forEach(m=>document.getElementById('media-'+m).classList.toggle('selected',m===type));document.getElementById('media-method-area').style.display='block';document.getElementById('upload-icon').innerHTML=MEDIA_ICONS[type];document.getElementById('upload-hint').textContent=MEDIA_HINTS[type];const urlSizeHint=document.getElementById('url-size-hint');if(urlSizeHint)urlSizeHint.textContent=MEDIA_SIZE_LIMITS[type]||'';selectMethod('url',document.getElementById('method-url'));}
+function clearMedia(){['image','document','video'].forEach(m=>document.getElementById('media-'+m).classList.remove('selected'));document.getElementById('media-method-area').style.display='none';}
+function selectMethod(method,el){['url','upload'].forEach(m=>{document.getElementById('method-'+m).classList.toggle('selected',m===method);document.getElementById('method-'+m+'-content').style.display=m===method?'block':'none';});}
+
+// ── TAGS ─────────────────────────────────────────────
+const TAG_OPTIONS=['promotional','transactional','welcome','reminder','notification','onboarding','support','alert'];
+function selectTag(val){const el=document.getElementById('tag-select');if(el&&val!==undefined)el.value=val;closeTagDropdown();}
+function clearTag(){const el=document.getElementById('tag-select');if(el)el.value='';unlockTag();}
+function lockTag(val){
+  const el=document.getElementById('tag-select');
+  if(!el)return;
+  el.value=val||'';
+  el.readOnly=true;
+  el.style.background='#f9fafb';el.style.color='#6b7280';el.style.cursor='default';el.style.borderColor='#e5e7eb';el.style.pointerEvents='none';
+  const note=document.getElementById('tag-locked-note');
+  const hint=document.getElementById('tag-free-hint');
+  if(note)note.style.display='flex';
+  if(hint)hint.style.display='none';
+}
+function unlockTag(){
+  const el=document.getElementById('tag-select');
+  if(!el)return;
+  el.readOnly=false;el.style.background='';el.style.color='';el.style.cursor='';el.style.borderColor='';el.style.pointerEvents='';
+  const note=document.getElementById('tag-locked-note');
+  const hint=document.getElementById('tag-free-hint');
+  if(note)note.style.display='none';
+  if(hint)hint.style.display='block';
+}
+function openTagDropdown(){
+  const el=document.getElementById('tag-select');
+  if(el&&el.readOnly)return;
+  renderTagOptions(el?el.value:'');
+  document.getElementById('tag-dropdown-list').style.display='block';
+}
+function closeTagDropdown(){document.getElementById('tag-dropdown-list').style.display='none';}
+function onTagInput(val){
+  renderTagOptions(val);
+  document.getElementById('tag-dropdown-list').style.display='block';
+}
+function renderTagOptions(query){
+  const q=(query||'').toLowerCase().trim();
+  const opts=document.getElementById('tag-dropdown-options');
+  const createRow=document.getElementById('tag-dropdown-create');
+  const createLabel=document.getElementById('tag-create-label');
+  const filtered=q?TAG_OPTIONS.filter(t=>t.includes(q)):TAG_OPTIONS;
+  opts.innerHTML=filtered.map(t=>`<div class="tag-dropdown-option" onclick="selectTag('${t}')"><span class="tag-dot"></span>${t}</div>`).join('');
+  const exactMatch=TAG_OPTIONS.includes(q);
+  if(q&&!exactMatch){createRow.style.display='flex';createLabel.textContent=q;}
+  else{createRow.style.display='none';}
+}
+function confirmNewTag(){
+  const val=document.getElementById('tag-select').value.trim();
+  if(val){TAG_OPTIONS.push(val);selectTag(val);}
+  closeTagDropdown();
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.tag-dropdown-wrap'))closeTagDropdown();});
+
+// ── LIVE PREVIEW ──────────────────────────────────────
+
+// ── FORMAT HELPERS ────────────────────────────────────
+const FORMAT_MARKERS={bold:'*',italic:'_',strike:'~'};
+function applyFormat(type){
+  const ta=document.getElementById('body');
+  const marker=FORMAT_MARKERS[type];
+  if(!marker)return;
+  const start=ta.selectionStart, end=ta.selectionEnd;
+  const val=ta.value;
+  const selected=val.slice(start,end);
+  if(start===end){
+    // No selection — insert markers and place cursor between them
+    const insertion=marker+marker;
+    ta.value=val.slice(0,start)+insertion+val.slice(end);
+    ta.selectionStart=ta.selectionEnd=start+marker.length;
+  } else {
+    // Wrap selection — toggle off if already wrapped
+    const before=val.slice(start-marker.length>=0?start-marker.length:0,start);
+    const after=val.slice(end,end+marker.length);
+    if(before===marker&&after===marker){
+      // Already wrapped — unwrap
+      ta.value=val.slice(0,start-marker.length)+selected+val.slice(end+marker.length);
+      ta.selectionStart=start-marker.length;
+      ta.selectionEnd=end-marker.length;
+    } else {
+      ta.value=val.slice(0,start)+marker+selected+marker+val.slice(end);
+      ta.selectionStart=start+marker.length;
+      ta.selectionEnd=end+marker.length;
+    }
+  }
+  ta.focus();
+  updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
+}
+
+function updatePreview(){
+  const body=document.getElementById('body').value;
+  const footer=document.getElementById('footer').value;
+  const msgEl=document.getElementById('wa-body'),footEl=document.getElementById('wa-footer-text'),plEl=document.getElementById('wa-placeholder'),btnEl=document.getElementById('wa-btn-list');
+  if(body.trim()){msgEl.textContent=body;msgEl.style.display='block';plEl.style.display='none';}else{msgEl.style.display='none';plEl.style.display='block';}
+  footEl.textContent=footer;footEl.style.display=footer.trim()?'block':'none';
+  const btns=[];
+  if(selectedBtnType==='cta'){document.querySelectorAll('#cta-btns-list .cta-btn-row').forEach(r=>{const t=r.querySelector('input[type=text]');btns.push(t&&t.value?t.value:(r.getAttribute('data-type')==='phone'?'Call Us':'Visit Website'));});}
+  else if(selectedBtnType==='qr'){document.querySelectorAll('#qr-btns-list .qr-btn-row input').forEach(i=>btns.push(i.value||'Button'));}
+  else if(selectedBtnType==='form'){const t=document.getElementById('form-btn-title');btns.push(t&&t.value?t.value:'Form Button');}
+  if(btns.length){btnEl.innerHTML=btns.map(b=>`<div class="wa-btn-item">${b}</div>`).join('');btnEl.style.display='block';}else{btnEl.style.display='none';}
+}
+
+// ── SUBMIT ────────────────────────────────────────────
+function handleSubmit(){
+  const id=document.getElementById('element-name').value.trim();
+  const lang=selectedLang||document.getElementById('language').value;
+  const langName=ALL_LANGS[lang]||lang;
+  const btn=document.getElementById('submit-btn');
+  const errBanner=document.getElementById('submit-error-banner');
+  const errText=document.getElementById('submit-error-text');
+
+  // Hide any previous error
+  errBanner.classList.remove('show');
+
+  // Loading state
+  btn.disabled=true;
+  btn.innerHTML=`<svg class="spin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 0.8s linear infinite;margin-right:6px"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Submitting…`;
+  const submitLabel=document.getElementById('submit-btn-label');if(submitLabel)submitLabel.textContent='';
+
+  setTimeout(()=>{
+    // Simulate server check: if name is taken and this is a brand new template, show error
+    if(!isExistingTemplate && TAKEN_IDS.includes(id)){
+      btn.disabled=false;
+      btn.innerHTML=`<span id="submit-btn-label">${addLangMode?'Add Language':'Submit for Approval'}</span>`;
+      checkValidity();
+      errText.textContent='A template with this ID already exists. Please choose a different Template ID.';
+      errBanner.classList.add('show');
+      errBanner.scrollIntoView({behavior:'smooth',block:'nearest'});
+      return;
+    }
+    // Success
+    btn.innerHTML=`<span id="submit-btn-label">${addLangMode?'Add Language':'Submit for Approval'}</span>`;
+    document.getElementById('modal-id').textContent=id;
+    document.getElementById('modal-meta').textContent=langName+' · '+(selectedCategory.charAt(0).toUpperCase()+selectedCategory.slice(1));
+    if(addLangMode){
+      document.getElementById('modal-heading').textContent='Language added successfully';
+      document.getElementById('modal-body').textContent='The new language translation has been submitted to Meta/WhatsApp for review. You\'ll be notified when it\'s approved.';
+      const secBtn=document.getElementById('modal-secondary-btn');
+      if(secBtn){secBtn.textContent='Add another language';secBtn.onclick=()=>{closeModal();window.location.href='hsm-list.html';};}
+    } else {
+      document.getElementById('modal-heading').textContent='Template submitted for approval';
+      document.getElementById('modal-body').textContent='Meta/WhatsApp will review your template — usually within 24–48 hours. You\'ll receive a notification when the status changes.';
+      const secBtn=document.getElementById('modal-secondary-btn');
+      if(secBtn){secBtn.textContent='Create another';secBtn.onclick=closeModal;}
+    }
+    document.getElementById('success-modal').style.display='flex';
+  },1800);
+}
+function closeModal(){document.getElementById('success-modal').style.display='none';}
+
+// ── URL PARAM INIT ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  const params = new URLSearchParams(window.location.search);
+  const templateId = params.get('template');
+  const action = params.get('action');
+
+  if(templateId && action === 'add-language' && TEMPLATES[templateId]){
+    // Set add-language mode
+    addLangMode = true;
+
+    // Update page labels
+    const h1 = document.getElementById('page-heading');
+    if(h1) h1.innerHTML = `Add Language — <span style="color:#119656">${templateId}</span> <button class="info-icon-btn" title="Adding a new language to an existing approved template">i</button>`;
+    const sub = document.getElementById('page-subtitle');
+    if(sub) sub.textContent = 'Select a language and fill in the translated content below. The template structure is fixed.';
+    const submitLabel = document.getElementById('submit-btn-label');
+    if(submitLabel) submitLabel.textContent = 'Add Language';
+
+    // Load the template (locks element name, shows language chips)
+    loadExistingTemplate(templateId);
+
+    // Replace the element name input with a static title display + hidden input so JS still works
+    const nameInput = document.getElementById('element-name');
+    if(nameInput){
+      const display = document.createElement('div');
+      display.style.cssText = 'font-size:18px;font-weight:700;color:#111;letter-spacing:-0.01em;padding:2px 0 8px;line-height:1.3';
+      display.textContent = templateId;
+      const hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.id = 'element-name';
+      hidden.value = templateId;
+      nameInput.replaceWith(display);
+      display.after(hidden);
+    }
+
+    // Hide the whole field label row (label + "Use existing template" link)
+    const labelRow = document.querySelector('.field-label-row');
+    if(labelRow) labelRow.style.display = 'none';
+
+    // Hide all the name feedback divs and hint
+    ['element-name-checking','element-name-error','element-name-ok','existing-dd'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+    });
+    const nameField = document.querySelector('.field-hint');
+    if(nameField) nameField.style.display = 'none';
+
+    // Hide fields that are irrelevant (category is already locked by loadExistingTemplate)
+    // Show add-language panel immediately
+    const addLangPanel = document.getElementById('add-lang-panel');
+    if(addLangPanel) addLangPanel.style.display = 'block';
+
+    // Scroll form to top
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+});
+</script>
+</body>
+</html>

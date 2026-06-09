@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates — Glific</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex}
+
+/* ── SIDEBAR ── */
+.sidebar{width:180px;min-height:100vh;background:#fff;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:16px 14px 10px}
+.logo-badge{background:#073F24;color:#fff;font-size:13px;font-weight:700;padding:5px 10px;border-radius:6px;letter-spacing:-.3px}
+.wallet-card{margin:6px 10px 12px;background:#f0faf4;border:1px solid #c8e6d0;border-radius:8px;padding:10px 12px}
+.wallet-label{font-size:11px;color:#555;margin-bottom:3px;font-weight:500}
+.wallet-amount{font-size:16px;font-weight:700;color:#119656}
+.nav-section{padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#9ca3af}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 14px;font-size:13px;font-weight:500;color:#4b5563;text-decoration:none;cursor:pointer;border-radius:6px;margin:1px 8px;transition:all .13s}
+.nav-item:hover{background:#f3f4f6;color:#111}
+.nav-item.active{background:#e8f5ee;color:#073F24;font-weight:600}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.nav-item.active svg{opacity:1}
+
+/* ── MAIN ── */
+.main{flex:1;padding:32px 40px;overflow-y:auto;min-width:0}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px}
+.page-header-left h1{font-size:28px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.info-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid #d1d5db;background:none;cursor:pointer;font-size:11px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.page-subtitle{font-size:13px;color:#6b7280}
+.page-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-top:6px}
+
+/* ── HEADER BUTTONS ── */
+.hbtn-text{background:none;border:none;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#119656;cursor:pointer;padding:0 4px;white-space:nowrap}
+.hbtn-text:hover{text-decoration:underline}
+.hbtn-outline{height:38px;padding:0 16px;background:#fff;color:#111;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.hbtn-outline:hover{border-color:#119656;color:#073F24}
+.hbtn-green{height:38px;padding:0 18px;background:#119656;color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s;white-space:nowrap}
+.hbtn-green:hover{background:#0e7a47}
+
+/* ── FILTERS BAR ── */
+.filters-bar{display:flex;align-items:center;gap:10px;margin-bottom:0}
+.filter-dropdown{height:38px;padding:0 32px 0 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;color:#374151;background:#fff;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .15s;min-width:130px}
+.filter-dropdown:focus{border-color:#119656}
+.search-wrap{position:relative;margin-left:auto;width:320px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none}
+.search-inp{width:100%;height:38px;padding:0 14px 0 36px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;color:#111;background:#fff;outline:none;transition:border-color .15s}
+.search-inp:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.1)}
+.search-inp::placeholder{color:#9ca3af}
+
+/* ── TABLE WRAPPER ── */
+.table-wrap{background:#fff;border-radius:12px;border:1px solid #e5e5e0;overflow:hidden;margin-top:20px}
+table{width:100%;border-collapse:collapse}
+
+/* ── TABLE HEADER ── */
+thead tr{background:#f2f5f2}
+thead th{padding:12px 16px;font-size:12px;font-weight:600;color:#4b5563;text-align:left;border-bottom:1px solid #e0e4e0;white-space:nowrap}
+thead th:first-child{padding-left:20px;width:220px}
+thead th.col-body{width:auto}
+thead th.col-langs{width:210px}
+thead th.col-catcost{width:160px}
+thead th.col-created{width:120px}
+thead th.col-actions{width:200px;text-align:right;padding-right:20px}
+
+/* ── TABLE ROWS ── */
+tbody tr{border-bottom:1px solid #f0f0ee;transition:background .1s;cursor:pointer}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafaf8}
+tbody td{padding:14px 16px;vertical-align:middle}
+tbody td:first-child{padding-left:20px}
+tbody td.col-actions{padding-right:20px}
+
+/* ── TITLE CELL ── */
+.tpl-id{font-size:14px;font-weight:700;color:#111;margin-bottom:5px}
+.tpl-meta-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cat-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap}
+.cat-utility{background:#e8f5ee;color:#119656}
+.cat-marketing{background:#f3e8ff;color:#7c3aed}
+.cat-authentication{background:#fff0e8;color:#c2410c}
+.cat-service{background:#e8f4ff;color:#1d4ed8}
+/* ── CATEGORY MISMATCH ── */
+.cat-mismatch-wrap{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cat-mismatch-old{text-decoration:line-through;opacity:.55}
+.cat-mismatch-arrow{font-size:11px;color:#b45309;font-weight:700}
+.cat-mismatch-badge{display:inline-flex;align-items:center;gap:4px;background:#fffbeb;border:1px solid #fcd34d;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;color:#92400e;white-space:nowrap;cursor:default}
+.cat-mismatch-badge svg{flex-shrink:0}
+
+.copy-uuid{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#6b7280;cursor:pointer;background:none;border:none;font-family:'Heebo',sans-serif;padding:0;transition:color .15s}
+.copy-uuid:hover{color:#119656}
+.copy-uuid svg{flex-shrink:0}
+
+/* ── LANGUAGE CHIPS (own column) ── */
+.lang-chips-cell{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.lc{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:100px;font-size:11px;font-weight:700;border:1px solid;white-space:nowrap}
+.lc.approved{background:#f0faf5;border-color:#28a745;color:#073F24}
+.lc.pending{background:#fffbeb;border-color:#ffc107;color:#856404}
+.lc.rejected{background:#fff5f5;border-color:#dc2626;color:#b91c1c}
+.lc-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-g{background:#28a745}.dot-a{background:#ffc107}.dot-r{background:#dc2626}
+.lang-more-btn{font-size:11px;font-weight:600;color:#119656;background:#f0faf5;border:1px solid #c8e6d0;border-radius:100px;padding:2px 9px;cursor:pointer;white-space:nowrap;font-family:'Heebo',sans-serif;transition:all .12s;line-height:1.6}
+.lang-more-btn:hover{background:#e8f5ee}
+.lang-status-sum{font-size:11px;margin-top:5px;width:100%;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.lang-sum-rej{display:inline-flex;align-items:center;gap:3px;color:#b91c1c;font-weight:700}
+.lang-sum-pend{display:inline-flex;align-items:center;gap:3px;color:#92400e;font-weight:700}
+.lang-sum-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ── BODY CELL ── */
+.body-text{font-size:13px;color:#6b7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:320px;line-height:1.5}
+
+/* ── COMPACT VIEW ── */
+.compact tbody td{padding:7px 16px}
+.compact tbody td:first-child{padding-left:20px}
+.compact .body-text{-webkit-line-clamp:1;max-width:280px}
+.compact .tpl-meta-row{gap:5px}
+
+/* ── DENSITY TOGGLE ── */
+.density-btn{width:34px;height:34px;border:1.5px solid #d1d5db;border-radius:7px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:#6b7280;transition:all .15s;flex-shrink:0}
+.density-btn:hover{border-color:#119656;color:#073F24}
+.density-btn.active{border-color:#119656;background:#e8f5ee;color:#073F24}
+
+/* ── CATEGORY + COST COLUMN ── */
+.cat-badges-row{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.cat-cost-cell{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.cat-cost{font-size:12px;font-weight:700;color:#073F24;cursor:default}
+.cat-cost-break{font-size:11px;font-weight:400;color:#6b7280;margin-left:2px}
+.cat-cost-meta{color:#b45309}
+
+/* ── CREATED CELL ── */
+.created-cell{font-size:13px;color:#6b7280;white-space:nowrap}
+
+/* ── ACTIONS CELL ── */
+.actions-cell-inner{display:flex;align-items:center;justify-content:flex-end;gap:6px;position:relative}
+.dots-btn{width:32px;height:32px;border:none;background:none;cursor:pointer;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#9ca3af;transition:all .15s}
+.dots-btn:hover{background:#f3f4f6;color:#374151}
+.dots-menu{position:absolute;right:0;top:36px;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:180px;overflow:hidden;display:none}
+.dots-menu.open{display:block}
+.dots-menu-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#374151;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:'Heebo',sans-serif;transition:background .1s}
+.dots-menu-item:hover{background:#f9fafb;color:#111}
+.dots-menu-item.danger{color:#dc2626}
+.dots-menu-item.danger:hover{background:#fff5f5}
+.dots-menu-divider{border:none;border-top:1px solid #f0f0f0;margin:4px 0}
+
+/* ── FOOTER ── */
+.table-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid #f0f0ee;background:#fff}
+.rows-per-page{display:flex;align-items:center;gap:8px;font-size:13px;color:#6b7280}
+.rows-select{height:30px;padding:0 24px 0 10px;border:1.5px solid #d1d5db;border-radius:6px;font-family:'Heebo',sans-serif;font-size:13px;color:#374151;background:#fff;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%236b7280' d='M4 5L0 0h8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
+.page-range{font-size:13px;color:#6b7280}
+.page-arrows{display:flex;gap:4px}
+.page-arrow{width:30px;height:30px;border:1.5px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:#374151;transition:all .15s;font-size:14px}
+.page-arrow:hover:not(:disabled){border-color:#119656;color:#073F24}
+.page-arrow:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── COPY TOAST ── */
+.copy-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999}
+.copy-toast.show{opacity:1}
+
+/* ── EMPTY ── */
+.empty-row td{text-align:center;padding:60px 20px;color:#9ca3af;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-badge">Glific</span>
+  </div>
+  <div class="wallet-card">
+    <div class="wallet-label">Wallet Balance</div>
+    <div class="wallet-amount">₹ 2,340</div>
+  </div>
+  <div class="nav-section">Conversations</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Chat
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Contacts
+  </a>
+  <div class="nav-section">Automation</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Flows
+  </a>
+  <a class="nav-item active" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+    HSM Templates
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+    Triggers
+  </a>
+  <div class="nav-section">Reports</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Analytics
+  </a>
+  <div class="nav-section" style="margin-top:auto">Settings</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
+  </a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>
+        Templates
+        <button class="info-btn" title="About HSM Templates">i</button>
+      </h1>
+      <p class="page-subtitle">Please go through all the templates below</p>
+    </div>
+    <div class="page-header-right">
+      <button class="hbtn-text">View sample</button>
+      <button class="hbtn-outline" onclick="syncHSM(this)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+        Sync HSM
+      </button>
+      <a href="hsm-create-hifi.html" class="hbtn-outline" style="text-decoration:none;color:#111">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create
+      </a>
+      <button class="hbtn-green">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+        Bulk apply
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTERS BAR -->
+  <div class="filters-bar">
+    <select class="filter-dropdown" id="status-filter" onchange="filterTable()">
+      <option value="">All Status</option>
+      <option value="approved">Approved</option>
+      <option value="pending">Pending</option>
+      <option value="rejected">Rejected</option>
+    </select>
+    <select class="filter-dropdown" id="cat-filter" onchange="filterTable()">
+      <option value="">All Tags</option>
+      <option value="utility">Utility</option>
+      <option value="marketing">Marketing</option>
+    </select>
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input class="search-inp" id="search-inp" type="text" placeholder="Search" oninput="filterTable()">
+    </div>
+    <button class="density-btn" id="density-btn" onclick="toggleDensity()" title="Toggle compact view">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="tpl-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th class="col-body">Body</th>
+          <th class="col-langs">Languages</th>
+          <th class="col-catcost">Category</th>
+          <th class="col-created">Created</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tpl-tbody"></tbody>
+    </table>
+
+    <!-- FOOTER -->
+    <div class="table-footer">
+      <div class="rows-per-page">
+        Rows per page:
+        <select class="rows-select">
+          <option>50</option>
+          <option>25</option>
+          <option>100</option>
+        </select>
+      </div>
+      <span class="page-range" id="page-range">01–9 of 9</span>
+      <div class="page-arrows">
+        <button class="page-arrow" disabled>&#8592;</button>
+        <button class="page-arrow" disabled>&#8594;</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Copy toast -->
+<div class="copy-toast" id="copy-toast">Copied to clipboard</div>
+
+<script>
+const TEMPLATES = [
+  {
+    id: 'welcome_message',
+    category: 'utility',
+    categories: ['utility','marketing'],
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'pending'}],
+    body: 'Hi {{1}}, welcome to {{2}}! We\'re glad to have you on board.',
+    status: 'approved',
+    created: '2 weeks ago',
+    tags: ['welcome','onboarding'],
+    uuid: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
+  },
+  {
+    id: 'otp_verification',
+    category: 'utility',
+    categories: ['authentication'],
+    langs: [{code:'EN',status:'approved'}],
+    body: 'Your OTP is {{1}}. Valid for 10 minutes. Do not share this code with anyone.',
+    status: 'approved',
+    created: 'A week ago',
+    tags: ['transactional','otp'],
+    uuid: 'b2c3d4e5-f6a7-8901-bcde-f12345678901'
+  },
+  {
+    id: 'order_confirmation',
+    category: 'marketing',
+    categories: ['marketing'],
+    metaCategory: 'utility',
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
+    body: 'Thank you for your order #{{1}}! Your order has been confirmed and will be dispatched soon.',
+    status: 'approved',
+    created: '3 weeks ago',
+    tags: ['order'],
+    uuid: 'c3d4e5f6-a7b8-9012-cdef-123456789012'
+  },
+  {
+    id: 'shipping_update',
+    category: 'utility',
+    categories: ['utility'],
+    langs: [{code:'EN',status:'pending'}],
+    body: 'Great news! Your order #{{1}} has been shipped and will arrive by {{2}}.',
+    status: 'pending',
+    created: 'A week ago',
+    tags: ['logistics'],
+    uuid: 'd4e5f6a7-b8c9-0123-defa-234567890123'
+  },
+  {
+    id: 'programme_enrollment',
+    category: 'utility',
+    categories: ['utility','marketing'],
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'approved'},{code:'TA',status:'approved'}],
+    body: 'Hi {{1}}, you have been successfully enrolled in {{2}}. Your journey begins now!',
+    status: 'approved',
+    created: '0 months ago',
+    tags: ['enrollment','programme'],
+    uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
+  },
+  {
+    id: 'workshop_reminder',
+    category: 'utility',
+    categories: ['utility'],
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
+    body: 'Hi {{1}}, this is a reminder about your workshop scheduled for {{2}} at {{3}}.',
+    status: 'approved',
+    created: '3 weeks ago',
+    tags: ['reminder','events'],
+    uuid: 'f6a7b8c9-d0e1-2345-fabc-456789012345'
+  },
+  {
+    id: 'feedback_request',
+    category: 'marketing',
+    categories: ['marketing','utility'],
+    langs: [{code:'EN',status:'rejected'}],
+    body: 'Hi {{1}}, how was your recent experience with us? We would love to hear your feedback.',
+    status: 'rejected',
+    created: 'A week ago',
+    tags: ['feedback'],
+    uuid: 'a7b8c9d0-e1f2-3456-abcd-567890123456'
+  },
+  {
+    id: 'document_submission',
+    category: 'utility',
+    categories: ['utility'],
+    langs: [{code:'EN',status:'approved'}],
+    body: 'Dear {{1}}, please submit your documents by {{2}} to complete your verification process.',
+    status: 'approved',
+    created: '0 months ago',
+    tags: ['documents','kyc'],
+    uuid: 'b8c9d0e1-f2a3-4567-bcde-678901234567'
+  },
+  {
+    id: 'appointment_confirm',
+    category: 'marketing',
+    categories: ['marketing','utility'],
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
+    body: 'Your appointment with {{1}} is confirmed for {{2}}. Please arrive 10 minutes early.',
+    status: 'approved',
+    created: 'A week ago',
+    tags: ['appointment','service'],
+    uuid: 'c9d0e1f2-a3b4-5678-cdef-789012345678'
+  }  ,{
+    // GROUP: 5-7 languages (~100 templates)
+    id: 'health_screening_alert',
+    category: 'utility',
+    categories: ['utility'],
+    langs: [
+      {code:'EN',status:'approved'},{code:'HI',status:'approved'},
+      {code:'MR',status:'approved'},{code:'TE',status:'approved'},
+      {code:'TA',status:'approved'},{code:'BN',status:'pending'}
+    ],
+    body: 'Dear {{1}}, your health screening is scheduled for {{2}} at {{3}}. Please bring your ID and previous reports.',
+    status: 'approved',
+    created: '2 weeks ago',
+    tags: ['health'],
+    uuid: 'd1e2f3a4-b5c6-7890-defa-123456789abc'
+  },
+  {
+    // GROUP: 10+ languages (<50 templates)
+    id: 'national_programme_update',
+    category: 'utility',
+    categories: ['utility','marketing'],
+    langs: [
+      {code:'EN',status:'approved'},{code:'HI',status:'approved'},
+      {code:'MR',status:'approved'},{code:'TE',status:'approved'},
+      {code:'TA',status:'approved'},{code:'BN',status:'approved'},
+      {code:'GU',status:'approved'},{code:'PA',status:'approved'},
+      {code:'KN',status:'approved'},{code:'ML',status:'pending'},
+      {code:'UR',status:'pending'},{code:'OD',status:'rejected'}
+    ],
+    body: 'Hi {{1}}, important update on the {{2}} programme. Please check your portal for details and next steps.',
+    status: 'approved',
+    created: '3 weeks ago',
+    tags: ['programme'],
+    uuid: 'e2f3a4b5-c6d7-8901-efab-234567890bcd'
+  }
+];
+
+function catClass(c){return{utility:'cat-utility',marketing:'cat-marketing',authentication:'cat-authentication',service:'cat-service'}[c]||'cat-utility';}
+function catLabel(c){return{utility:'Utility',marketing:'Marketing',authentication:'Auth',service:'Service'}[c]||c;}
+
+function catBadgesHTML(t){
+  const cats=t.categories||[t.category];
+  if(t.metaCategory&&t.metaCategory!==t.category){
+    return `<span class="cat-mismatch-wrap">
+      <span class="cat-badge ${catClass(t.category)} cat-mismatch-old">${catLabel(t.category)}</span>
+      <span class="cat-mismatch-arrow">→</span>
+      <span class="cat-mismatch-badge" title="Meta reclassified from ${catLabel(t.category)} to ${catLabel(t.metaCategory)}">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        ${catLabel(t.metaCategory)} by Meta
+      </span></span>`;
+  }
+  if(cats.length>1){
+    return `<span class="cat-badges-row">${cats.map(c=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)}</span>`).join('')}</span>`;
+  }
+  return `<span class="cat-badge ${catClass(cats[0])}">${catLabel(cats[0])}</span>`;
+}
+
+function catCostHTML(t){return catBadgesHTML(t);}
+
+let _compact=false;
+function toggleDensity(){
+  _compact=!_compact;
+  document.getElementById('tpl-table').closest('.table-wrap').parentElement.querySelector('table').classList.toggle('compact',_compact);
+  document.getElementById('density-btn').classList.toggle('active',_compact);
+  document.getElementById('density-btn').title=_compact?'Switch to comfortable view':'Switch to compact view';
+}
+
+function langChip(l){
+  const dotC={approved:'dot-g',pending:'dot-a',rejected:'dot-r'}[l.status]||'dot-a';
+  return `<span class="lc ${l.status}"><span class="lc-dot ${dotC}"></span>${l.code}</span>`;
+}
+
+function langCell(langs, i){
+  const MAX_SHOW=4;
+  const visible=langs.slice(0,MAX_SHOW);
+  const hidden=langs.slice(MAX_SHOW);
+  const rejCount=langs.filter(l=>l.status==='rejected').length;
+  const pendCount=langs.filter(l=>l.status==='pending').length;
+
+  let html=`<div class="lang-chips-cell" id="lc-wrap-${i}">`;
+  html+=visible.map(langChip).join('');
+  if(hidden.length){
+    html+=`<span class="lc-hidden" id="lc-hidden-${i}" style="display:none">${hidden.map(langChip).join('')}</span>`;
+    html+=`<button class="lang-more-btn" id="lc-more-btn-${i}" onclick="expandLangs(${i},event)">+${hidden.length} more</button>`;
+  }
+  html+='</div>';
+  return html;
+}
+
+function expandLangs(i,e){
+  e.stopPropagation();
+  const hidden=document.getElementById('lc-hidden-'+i);
+  const btn=document.getElementById('lc-more-btn-'+i);
+  if(hidden) hidden.style.display='';
+  if(btn) btn.style.display='none';
+}
+
+function truncate(str,max=72){return str.length>max?str.slice(0,max)+'…':str;}
+
+function copyUUID(uuid, e){
+  e.stopPropagation();
+  navigator.clipboard.writeText(uuid).catch(()=>{});
+  const t=document.getElementById('copy-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function getFiltered(){
+  const q=(document.getElementById('search-inp').value||'').toLowerCase();
+  const sf=document.getElementById('status-filter').value;
+  const cf=document.getElementById('cat-filter').value;
+  return TEMPLATES.filter(t=>{
+    if(sf && t.status!==sf) return false;
+    if(cf){const cats=t.categories||[t.category];if(!cats.includes(cf))return false;}
+    if(q && !t.id.includes(q) && !t.body.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderTable(){
+  const data=getFiltered();
+  const tbody=document.getElementById('tpl-tbody');
+  document.getElementById('page-range').textContent=`01–${data.length} of ${data.length}`;
+
+  if(!data.length){
+    tbody.innerHTML=`<tr class="empty-row"><td colspan="6">No templates match your filters.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML=data.map((t,i)=>`
+    <tr onclick="window.location.href='hsm-create-hifi.html?template=${t.id}'">
+      <td>
+        <div class="tpl-id">${t.id}</div>
+        <div class="tpl-meta-row">
+          <button class="copy-uuid" onclick="copyUUID('${t.uuid}',event)" title="Copy UUID">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy UUID
+          </button>
+        </div>
+      </td>
+      <td><div class="body-text">${truncate(t.body)}</div></td>
+      <td>${langCell(t.langs,i)}</td>
+      <td>${catCostHTML(t)}</td>
+      <td class="created-cell">${t.created}</td>
+      <td class="col-actions">
+        <div class="actions-cell-inner" onclick="event.stopPropagation()">
+          <button class="dots-btn" title="View template" style="color:#9ca3af" onclick="event.stopPropagation();viewTemplate('${t.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="dots-btn" title="Duplicate" style="color:#9ca3af" onclick="event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="dots-btn" onclick="toggleMenu('menu-${i}',event)" title="More options">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
+          </button>
+          <div class="dots-menu" id="menu-${i}">
+            <button class="dots-menu-item" onclick="addLanguage('${t.id}')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><line x1="19" y1="5" x2="19" y2="5.01"/><line x1="17" y1="3" x2="21" y2="7"/></svg>
+              Add new language
+            </button>
+            <button class="dots-menu-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send broadcast
+            </button>
+            <hr class="dots-menu-divider">
+            <button class="dots-menu-item danger">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              Delete
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterTable(){ renderTable(); }
+
+function toggleMenu(id, e){
+  e.stopPropagation();
+  const menu=document.getElementById(id);
+  const wasOpen=menu.classList.contains('open');
+  closeAllMenus();
+  if(!wasOpen){ menu.classList.add('open'); }
+}
+function closeAllMenus(){
+  document.querySelectorAll('.dots-menu.open').forEach(m=>m.classList.remove('open'));
+}
+document.addEventListener('click', closeAllMenus);
+
+function addLanguage(id){
+  closeAllMenus();
+  window.location.href=`add-hsm-language.html?template=${id}`;
+}
+function viewTemplate(id){
+  window.location.href=`add-hsm-language.html?template=${id}&action=view`;
+}
+
+function syncHSM(btn){
+  const orig=btn.innerHTML;
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .8s linear infinite"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg> Syncing…`;
+  btn.disabled=true;
+  setTimeout(()=>{btn.innerHTML=orig;btn.disabled=false;},1800);
+}
+
+renderTable();
+</script>
+<style>@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}</style>
+</body>
+</html>
