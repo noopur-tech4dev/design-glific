@@ -62,7 +62,7 @@ thead th{padding:12px 16px;font-size:12px;font-weight:600;color:#4b5563;text-ali
 thead th:first-child{padding-left:20px;width:220px}
 thead th.col-body{width:auto}
 thead th.col-langs{width:210px}
-thead th.col-catcost{width:160px}
+thead th.col-catcost{width:180px}
 thead th.col-created{width:120px}
 thead th.col-actions{width:200px;text-align:right;padding-right:20px}
 
@@ -88,6 +88,8 @@ tbody td.col-actions{padding-right:20px}
 .cat-mismatch-arrow{font-size:11px;color:#b45309;font-weight:700}
 .cat-mismatch-badge{display:inline-flex;align-items:center;gap:4px;background:#fffbeb;border:1px solid #fcd34d;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;color:#92400e;white-space:nowrap;cursor:default}
 .cat-mismatch-badge svg{flex-shrink:0}
+.cat-meta-tag{display:inline-flex;align-items:center;gap:4px;background:#f0f4ff;border:1px solid #c7d4f8;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;color:#3451b2;white-space:nowrap;cursor:default;flex-shrink:0}
+.cat-meta-tag svg{flex-shrink:0}
 
 .copy-uuid{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#6b7280;cursor:pointer;background:none;border:none;font-family:'Heebo',sans-serif;padding:0;transition:color .15s}
 .copy-uuid:hover{color:#119656}
@@ -108,8 +110,19 @@ tbody td.col-actions{padding-right:20px}
 .lang-sum-pend{display:inline-flex;align-items:center;gap:3px;color:#92400e;font-weight:700}
 .lang-sum-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 
+/* ── LANGUAGE CATEGORY SUMMARY ── */
+.lang-cat-summary{display:flex;align-items:center;gap:4px;margin-top:6px;flex-wrap:wrap;width:100%}
+.lcat-count{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap}
+.lcat-utility{background:#e8f5ee;color:#119656}
+.lcat-marketing{background:#f3e8ff;color:#7c3aed}
+.lcat-authentication{background:#fff0e8;color:#c2410c}
+.lcat-sep{font-size:10px;color:#d1d5db}
+
 /* ── BODY CELL ── */
-.body-text{font-size:13px;color:#6b7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:320px;line-height:1.5}
+.body-text{font-size:13px;color:#6b7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;max-width:320px;line-height:1.5}
+.body-tooltip-wrap{position:relative;display:inline-block;max-width:100%}
+.body-tooltip{display:none;position:fixed;background:#1c1c1c;color:#f5f5f5;font-size:12px;font-family:'Heebo',sans-serif;line-height:1.6;padding:10px 14px;border-radius:9px;max-width:320px;white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 20px rgba(0,0,0,.22);z-index:9999;pointer-events:none}
+.body-tooltip-wrap:hover .body-tooltip{display:block}
 
 /* ── COMPACT VIEW ── */
 .compact tbody td{padding:7px 16px}
@@ -123,7 +136,7 @@ tbody td.col-actions{padding-right:20px}
 .density-btn.active{border-color:#119656;background:#e8f5ee;color:#073F24}
 
 /* ── CATEGORY + COST COLUMN ── */
-.cat-badges-row{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.cat-badges-row{display:flex;align-items:flex-start;flex-direction:column;gap:4px;flex-wrap:wrap}
 .cat-cost-cell{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .cat-cost{font-size:12px;font-weight:700;color:#073F24;cursor:default}
 .cat-cost-break{font-size:11px;font-weight:400;color:#6b7280;margin-left:2px}
@@ -245,7 +258,7 @@ tbody td.col-actions{padding-right:20px}
       <option value="rejected">Rejected</option>
     </select>
     <select class="filter-dropdown" id="cat-filter" onchange="filterTable()">
-      <option value="">All Tags</option>
+      <option value="">All Categories</option>
       <option value="utility">Utility</option>
       <option value="marketing">Marketing</option>
     </select>
@@ -305,6 +318,7 @@ const TEMPLATES = [
     id: 'welcome_message',
     category: 'utility',
     categories: ['utility','marketing'],
+    langCats: {EN:'utility',HI:'utility',MR:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'pending'}],
     body: 'Hi {{1}}, welcome to {{2}}! We\'re glad to have you on board.',
     status: 'approved',
@@ -315,7 +329,8 @@ const TEMPLATES = [
   {
     id: 'otp_verification',
     category: 'utility',
-    categories: ['authentication'],
+    categories: ['utility'],
+    langCats: {EN:'utility'},
     langs: [{code:'EN',status:'approved'}],
     body: 'Your OTP is {{1}}. Valid for 10 minutes. Do not share this code with anyone.',
     status: 'approved',
@@ -328,6 +343,7 @@ const TEMPLATES = [
     category: 'marketing',
     categories: ['marketing'],
     metaCategory: 'utility',
+    langCats: {EN:'marketing',HI:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Thank you for your order #{{1}}! Your order has been confirmed and will be dispatched soon.',
     status: 'approved',
@@ -336,9 +352,24 @@ const TEMPLATES = [
     uuid: 'c3d4e5f6-a7b8-9012-cdef-123456789012'
   },
   {
+    id: 'payment_reminder',
+    category: 'utility',
+    categories: ['utility'],
+    metaCategory: 'utility',
+    metaCategoryNote: 'Meta reviewed and confirmed this as Utility, resetting the billing cycle.',
+    langCats: {EN:'utility',HI:'utility'},
+    langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
+    body: 'Hi {{1}}, your payment of ₹{{2}} is due on {{3}}. Please complete it to avoid service interruption.',
+    status: 'approved',
+    created: '5 days ago',
+    tags: ['payment','transactional'],
+    uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
+  },
+  {
     id: 'shipping_update',
     category: 'utility',
     categories: ['utility'],
+    langCats: {EN:'utility'},
     langs: [{code:'EN',status:'pending'}],
     body: 'Great news! Your order #{{1}} has been shipped and will arrive by {{2}}.',
     status: 'pending',
@@ -350,6 +381,7 @@ const TEMPLATES = [
     id: 'programme_enrollment',
     category: 'utility',
     categories: ['utility','marketing'],
+    langCats: {EN:'utility',HI:'utility',MR:'marketing',TA:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'approved'},{code:'TA',status:'approved'}],
     body: 'Hi {{1}}, you have been successfully enrolled in {{2}}. Your journey begins now!',
     status: 'approved',
@@ -361,6 +393,7 @@ const TEMPLATES = [
     id: 'workshop_reminder',
     category: 'utility',
     categories: ['utility'],
+    langCats: {EN:'utility',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Hi {{1}}, this is a reminder about your workshop scheduled for {{2}} at {{3}}.',
     status: 'approved',
@@ -372,6 +405,7 @@ const TEMPLATES = [
     id: 'feedback_request',
     category: 'marketing',
     categories: ['marketing','utility'],
+    langCats: {EN:'marketing'},
     langs: [{code:'EN',status:'rejected'}],
     body: 'Hi {{1}}, how was your recent experience with us? We would love to hear your feedback.',
     status: 'rejected',
@@ -383,6 +417,7 @@ const TEMPLATES = [
     id: 'document_submission',
     category: 'utility',
     categories: ['utility'],
+    langCats: {EN:'utility'},
     langs: [{code:'EN',status:'approved'}],
     body: 'Dear {{1}}, please submit your documents by {{2}} to complete your verification process.',
     status: 'approved',
@@ -394,6 +429,7 @@ const TEMPLATES = [
     id: 'appointment_confirm',
     category: 'marketing',
     categories: ['marketing','utility'],
+    langCats: {EN:'marketing',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Your appointment with {{1}} is confirmed for {{2}}. Please arrive 10 minutes early.',
     status: 'approved',
@@ -405,6 +441,7 @@ const TEMPLATES = [
     id: 'health_screening_alert',
     category: 'utility',
     categories: ['utility'],
+    langCats: {EN:'utility',HI:'utility',MR:'utility',TE:'utility',TA:'utility',BN:'utility'},
     langs: [
       {code:'EN',status:'approved'},{code:'HI',status:'approved'},
       {code:'MR',status:'approved'},{code:'TE',status:'approved'},
@@ -421,6 +458,7 @@ const TEMPLATES = [
     id: 'national_programme_update',
     category: 'utility',
     categories: ['utility','marketing'],
+    langCats: {EN:'utility',HI:'utility',MR:'utility',TE:'utility',TA:'marketing',BN:'marketing',GU:'marketing',PA:'utility',KN:'utility',ML:'utility',UR:'marketing',OD:'marketing'},
     langs: [
       {code:'EN',status:'approved'},{code:'HI',status:'approved'},
       {code:'MR',status:'approved'},{code:'TE',status:'approved'},
@@ -437,27 +475,49 @@ const TEMPLATES = [
   }
 ];
 
-function catClass(c){return{utility:'cat-utility',marketing:'cat-marketing',authentication:'cat-authentication',service:'cat-service'}[c]||'cat-utility';}
-function catLabel(c){return{utility:'Utility',marketing:'Marketing',authentication:'Auth',service:'Service'}[c]||c;}
+function catClass(c){return{utility:'cat-utility',marketing:'cat-marketing',service:'cat-service'}[c]||'cat-utility';}
+function catLabel(c){return{utility:'Utility',marketing:'Marketing',service:'Service'}[c]||c;}
+
+function metaTagHTML(t){
+  if(!t.metaCategory) return '';
+  const sameCategory = t.metaCategory === t.category;
+  const tip = sameCategory
+    ? `Meta confirmed this as ${catLabel(t.metaCategory)}. Billing cycle may have reset.`
+    : `Meta reclassified from ${catLabel(t.category)} to ${catLabel(t.metaCategory)}`;
+  // Both same and different category show the same amber "X by Meta" badge
+  return `<span class="cat-mismatch-badge" title="${tip}">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    ${catLabel(t.metaCategory)} by Meta
+  </span>`;
+}
 
 function catBadgesHTML(t){
   const cats=t.categories||[t.category];
-  if(t.metaCategory&&t.metaCategory!==t.category){
-    return `<span class="cat-mismatch-wrap">
-      <span class="cat-badge ${catClass(t.category)} cat-mismatch-old">${catLabel(t.category)}</span>
-      <span class="cat-mismatch-arrow">→</span>
-      <span class="cat-mismatch-badge" title="Meta reclassified from ${catLabel(t.category)} to ${catLabel(t.metaCategory)}">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        ${catLabel(t.metaCategory)} by Meta
-      </span></span>`;
+  const badgesHTML = cats.length>1
+    ? cats.map(c=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)}</span>`).join('')
+    : `<span class="cat-badge ${catClass(cats[0])}">${catLabel(cats[0])}</span>`;
+  if(t.metaCategory && t.metaCategory !== t.category){
+    return `<div class="cat-badges-row">${badgesHTML}${metaTagHTML(t)}</div>`;
   }
-  if(cats.length>1){
-    return `<span class="cat-badges-row">${cats.map(c=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)}</span>`).join('')}</span>`;
-  }
-  return `<span class="cat-badge ${catClass(cats[0])}">${catLabel(cats[0])}</span>`;
+  return cats.length>1
+    ? `<span class="cat-badges-row">${badgesHTML}</span>`
+    : `<span class="cat-badge ${catClass(cats[0])}">${catLabel(cats[0])}</span>`;
 }
 
-function catCostHTML(t){return catBadgesHTML(t);}
+function catCostHTML(t){
+  if(t.langCats && t.langs && t.langs.length > 0){
+    const counts={};
+    t.langs.forEach(l=>{const c=t.langCats[l.code]||t.category||'utility';counts[c]=(counts[c]||0)+1;});
+    const parts=Object.entries(counts).map(([c,n])=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)} <span style="opacity:.7;font-weight:500">×${n}</span></span>`);
+    // Different-category Meta change: plain original category badge + Meta badge
+    if(t.metaCategory && t.metaCategory !== t.category){
+      return `<div class="cat-badges-row"><span class="cat-badge ${catClass(t.category)}">${catLabel(t.category)}</span>${metaTagHTML(t)}</div>`;
+    }
+    // Same-category or no Meta change: just show counts, no Meta tag
+    return `<div class="cat-badges-row">${parts.join('')}</div>`;
+  }
+  return catBadgesHTML(t);
+}
 
 let _compact=false;
 function toggleDensity(){
@@ -472,12 +532,10 @@ function langChip(l){
   return `<span class="lc ${l.status}"><span class="lc-dot ${dotC}"></span>${l.code}</span>`;
 }
 
-function langCell(langs, i){
+function langCell(langs, i, t){
   const MAX_SHOW=4;
   const visible=langs.slice(0,MAX_SHOW);
   const hidden=langs.slice(MAX_SHOW);
-  const rejCount=langs.filter(l=>l.status==='rejected').length;
-  const pendCount=langs.filter(l=>l.status==='pending').length;
 
   let html=`<div class="lang-chips-cell" id="lc-wrap-${i}">`;
   html+=visible.map(langChip).join('');
@@ -498,6 +556,18 @@ function expandLangs(i,e){
 }
 
 function truncate(str,max=72){return str.length>max?str.slice(0,max)+'…':str;}
+function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Tooltip mouse tracking
+document.addEventListener('mousemove',e=>{
+  const tip=e.target.closest('.body-tooltip-wrap')?.querySelector('.body-tooltip');
+  if(tip){
+    const x=e.clientX+14, y=e.clientY+14;
+    const tipW=320, tipH=80;
+    tip.style.left=(x+tipW>window.innerWidth?e.clientX-tipW-8:x)+'px';
+    tip.style.top=(y+tipH>window.innerHeight?e.clientY-tipH-8:y)+'px';
+  }
+});
 
 function copyUUID(uuid, e){
   e.stopPropagation();
@@ -540,8 +610,8 @@ function renderTable(){
           </button>
         </div>
       </td>
-      <td><div class="body-text">${truncate(t.body)}</div></td>
-      <td>${langCell(t.langs,i)}</td>
+      <td><div class="body-tooltip-wrap"><div class="body-text">${escHtml(t.body)}</div><div class="body-tooltip">${escHtml(t.body)}</div></div></td>
+      <td>${langCell(t.langs,i,t)}</td>
       <td>${catCostHTML(t)}</td>
       <td class="created-cell">${t.created}</td>
       <td class="col-actions">
@@ -563,11 +633,6 @@ function renderTable(){
             <button class="dots-menu-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               Send broadcast
-            </button>
-            <hr class="dots-menu-divider">
-            <button class="dots-menu-item danger">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-              Delete
             </button>
           </div>
         </div>

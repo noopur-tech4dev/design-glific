@@ -75,6 +75,35 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .textarea-wrap:focus-within{box-shadow:0 0 0 3px rgba(17,150,86,.12);border-radius:8px}
 .add-var-btn{font-size:12px;font-weight:600;color:#119656;background:none;border:1.5px solid #b9e4cc;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 10px;transition:background .15s,border-color .15s}
 .add-var-btn:hover{background:#f0faf4;border-color:#119656}
+.fmt-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:#6b7280;transition:background .12s,color .12s;flex-shrink:0;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:0}
+.fmt-btn:hover{background:#f0f0ed;color:#111}
+.fmt-btn.active{background:#e8f5ee;color:#119656}
+.fmt-btn-bold{font-weight:800}
+.fmt-btn-italic{font-style:italic;font-weight:600}
+.fmt-btn-strike{text-decoration:line-through}
+
+/* ── AI ASSIST MENU ── */
+.ai-assist-wrap{position:relative;display:inline-flex}
+.ai-assist-menu{position:absolute;bottom:calc(100% + 8px);left:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);z-index:300;min-width:230px;overflow:hidden;display:none}
+.ai-assist-menu.open{display:block}
+.ai-assist-option{display:flex;align-items:center;gap:9px;width:100%;padding:10px 14px;font-size:13px;font-weight:500;color:#374151;background:none;border:none;cursor:pointer;text-align:left;font-family:'Heebo',sans-serif;transition:background .1s;white-space:nowrap}
+.ai-assist-option:hover{background:#f4fbf7;color:#073F24}
+.ai-assist-option svg{flex-shrink:0;color:#6b7280}
+.ai-assist-option:hover svg{color:#119656}
+.ai-assist-back{display:none;align-items:center;gap:7px;width:100%;padding:9px 14px;font-size:12px;font-weight:600;color:#6b7280;background:none;border:none;border-bottom:1px solid #f0f0f0;cursor:pointer;text-align:left;font-family:'Heebo',sans-serif;transition:color .1s}
+.ai-assist-back:hover{color:#119656}
+.ai-assist-menu.custom-mode .ai-assist-back{display:flex}
+.ai-assist-menu.custom-mode .ai-main-options{display:none}
+.ai-assist-menu.custom-mode .ai-custom-area{display:block}
+.ai-assist-divider{border:none;border-top:1px solid #f0f0f0;margin:3px 0}
+.ai-custom-area{padding:10px 14px 12px;border-top:1px solid #f0f0f0;display:none}
+.ai-custom-area.visible{display:block}
+.ai-custom-inp{width:100%;border:1.5px solid #d1d5db;border-radius:7px;font-family:'Heebo',sans-serif;font-size:12px;color:#111;padding:8px 10px;resize:none;min-height:68px;outline:none;line-height:1.5;transition:border-color .15s;box-sizing:border-box}
+.ai-custom-inp:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
+.ai-custom-inp::placeholder{color:#9ca3af}
+.ai-custom-run{margin-top:8px;width:100%;background:#119656;color:#fff;border:none;border-radius:7px;padding:9px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.ai-custom-run:hover{background:#0e7a47}
+.ai-custom-run:disabled{background:#d1d5db;cursor:not-allowed}
 .toolbar-divider{width:1px;height:16px;background:#e5e7eb;margin:0 2px}
 .toolbar-hint{font-size:11px;color:#b0b7c3;margin-left:auto}
 
@@ -198,6 +227,9 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .submit-btn:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
 .cancel-btn{background:none;border:none;font-family:'Heebo',sans-serif;font-size:15px;color:#6b7280;cursor:pointer}
 .cancel-btn:hover{color:#111}
+.delete-lang-btn{height:48px;padding:0 32px;background:#fff;color:#dc2626;border:1.5px solid #fca5a5;border-radius:100px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:none;align-items:center;gap:8px;transition:all .15s}
+.delete-lang-btn:hover:not(:disabled){background:#fff5f5;border-color:#dc2626}
+.delete-lang-btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
 
 /* ── LIVE PREVIEW ── */
 .preview-panel{position:sticky;top:24px}
@@ -235,6 +267,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .field-readonly .textarea-header{background:#f9fafb;border-color:#e5e7eb!important}
 .field-readonly .textarea-toolbar{background:#f9fafb;border-color:#e5e7eb!important;pointer-events:none}
 .field-readonly .add-var-btn{display:none}
+.field-readonly .fmt-btn{display:none}
 .field-readonly .toolbar-hint{display:none}
 .cat-card.readonly{pointer-events:none;opacity:.85}
 .form-section.readonly .btn-type-seg{pointer-events:none;cursor:default}
@@ -244,6 +277,12 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .form-section.readonly .green-pill-btn{display:none}
 .form-section.readonly .remove-btn-abs{display:none}
 .tags-readonly input{pointer-events:none}
+
+/* ── PER-LANGUAGE CATEGORY BADGE ── */
+.lang-cat-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:1px 7px;border-radius:100px;white-space:nowrap;margin-left:5px;vertical-align:middle}
+.lcp-utility{background:#e8f5ee;color:#119656}
+.lcp-marketing{background:#f3e8ff;color:#7c3aed}
+.lcp-authentication{background:#fff0e8;color:#c2410c}
 
 /* ── LANGUAGE SECTION BOX ── */
 .lang-section-box{border:1.5px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-top:4px}
@@ -304,10 +343,8 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .rej-notice-del{font-size:12px;color:#b91c1c;cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block}
 
 /* ── METHOD PICKER (in-form, add mode) ── */
-.method-picker-section{display:none;background:#f0faf5;border:1.5px solid #c8e6d0;border-radius:10px;padding:16px;margin-bottom:16px}
+.method-picker-section{display:none;margin-bottom:22px}
 .method-picker-section.visible{display:block}
-.method-picker-title{font-size:13px;font-weight:700;color:#073F24;margin-bottom:2px}
-.method-picker-sub{font-size:12px;color:#6b7280}
 
 /* ── REFERENCE STRIP (English source while translating) ── */
 .ref-strip{display:none;background:#f0faf5;border:1.5px solid #c8e6d0;border-radius:10px;margin-bottom:16px;overflow:hidden}
@@ -472,13 +509,13 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
           <!-- Language picker — visible only when adding a new language -->
           <div class="method-picker-section" id="method-picker-section">
-            <div class="method-picker-title">Choose a language to add</div>
-            <div class="method-picker-sub" style="margin-bottom:12px">The form opens as soon as you pick a language.</div>
-            <select id="new-lang-select" class="inp" onchange="onNewLangSelect(this.value)">
-              <option value="">Choose a language...</option>
-            </select>
-            <div class="add-lang-actions" style="margin-top:12px">
-              <button class="btn-text-cancel" onclick="closeFormMode()">Cancel</button>
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label">Language<span class="req">*</span></label>
+              <select id="new-lang-select" class="inp" onchange="onNewLangSelect(this.value)"></select>
+              <button type="button" class="green-pill-btn" id="picker-autotranslate-btn" onclick="aiTranslate()" style="display:none;margin-top:10px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                Auto-translate
+              </button>
             </div>
           </div>
 
@@ -530,14 +567,49 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
               </div>
               <textarea id="body" class="body-textarea" placeholder="Enter your message template here..." oninput="updatePreview();checkValidity();updateBodyCounter();checkVarMismatch()"></textarea>
               <div class="textarea-toolbar">
+                <button type="button" class="fmt-btn fmt-btn-bold" onclick="applyFormat('bold')" title="Bold (*text*)">B</button>
+                <button type="button" class="fmt-btn fmt-btn-italic" onclick="applyFormat('italic')" title="Italic (_text_)">I</button>
+                <button type="button" class="fmt-btn fmt-btn-strike" onclick="applyFormat('strike')" title="Strikethrough (~text~)">S</button>
+                <div class="toolbar-divider"></div>
                 <button type="button" class="add-var-btn" onclick="addVariable()">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   Add Variable
                 </button>
-                <button type="button" class="add-var-btn" id="ai-translate-btn" onclick="aiTranslate()" style="display:none">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                  AI Translate
-                </button>
+                <div class="ai-assist-wrap" id="ai-assist-wrap">
+                  <button type="button" class="add-var-btn" id="ai-translate-btn" onclick="toggleAiAssistMenu(event)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>
+                    <span id="ai-translate-label">AI Assist</span>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:1px"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="ai-assist-menu" id="ai-assist-menu">
+                    <button class="ai-assist-back" onclick="exitCustomPrompt()">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                      Back
+                    </button>
+                    <div class="ai-main-options">
+                      <button class="ai-assist-option" onclick="runAiAssist('professional')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Make it sound professional
+                      </button>
+                      <button class="ai-assist-option" onclick="runAiAssist('utility')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                        Make it utility
+                      </button>
+                      <hr class="ai-assist-divider">
+                      <button class="ai-assist-option" onclick="toggleCustomPrompt()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        Custom prompt
+                      </button>
+                    </div>
+                    <div class="ai-custom-area" id="ai-custom-area">
+                      <textarea class="ai-custom-inp" id="ai-custom-inp" placeholder="e.g. Shorten this to 2 sentences…" rows="3" oninput="updateCustomRunBtn()"></textarea>
+                      <button class="ai-custom-run" id="ai-custom-run" onclick="runAiAssist('custom')" disabled>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 <div class="toolbar-divider"></div>
                 <span class="toolbar-hint">Use {{1}}, {{2}}… for dynamic values</span>
               </div>
@@ -684,6 +756,10 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
         <!-- Submit -->
         <div class="form-submit-row">
           <button class="submit-btn" id="submit-btn" onclick="handleSubmit()" disabled><span id="submit-btn-label">Submit for Approval</span></button>
+          <button class="delete-lang-btn" id="delete-lang-btn" onclick="deleteCurrentLang()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+            Delete this language
+          </button>
           <button class="cancel-btn" onclick="window.location.href='hsm-list.html'">Cancel</button>
         </div>
       </div>
@@ -738,6 +814,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 const TEMPLATES = {
   welcome_message:{
     category:'utility',
+    langCats:{en:'utility',hi:'utility',mr:'marketing',te:'marketing',bn:'utility'},
     languages:[
       {code:'en',name:'English',status:'approved'},
       {code:'hi',name:'Hindi',status:'approved'},
@@ -755,6 +832,7 @@ const TEMPLATES = {
   },
   otp_verification:{
     category:'utility',
+    langCats:{en:'authentication'},
     languages:[{code:'en',name:'English',status:'approved'}],
     variables:['otp'],btnType:'',buttons:[],tags:'transactional',
     langContent:{
@@ -763,6 +841,7 @@ const TEMPLATES = {
   },
   order_confirmation:{
     category:'marketing',
+    langCats:{en:'marketing',hi:'marketing'},
     languages:[{code:'en',name:'English',status:'approved'},{code:'hi',name:'Hindi',status:'approved'}],
     variables:['name','order_id','amount'],btnType:'cta',buttons:['Track Order'],tags:'transactional',
     langContent:{
@@ -773,6 +852,7 @@ const TEMPLATES = {
   },
   shipping_update:{
     category:'utility',
+    langCats:{en:'utility'},
     languages:[{code:'en',name:'English',status:'pending'}],
     variables:['name','tracking_id'],btnType:'',buttons:[],tags:'notification',
     langContent:{
@@ -781,6 +861,7 @@ const TEMPLATES = {
   },
   health_screening_alert:{
     category:'utility',
+    langCats:{en:'utility',hi:'utility',mr:'utility',te:'utility',ta:'utility',bn:'utility'},
     languages:[
       {code:'en',name:'English',status:'approved'},
       {code:'hi',name:'Hindi',status:'approved'},
@@ -800,6 +881,13 @@ const TEMPLATES = {
   }
 };
 const ALL_LANGS={en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati'};
+function catLabel(c){return{utility:'Utility',marketing:'Marketing',authentication:'Auth'}[c]||c;}
+function catPill(code,tpl){
+  if(!tpl||!tpl.langCats) return '';
+  const c=tpl.langCats[code];
+  if(!c) return '';
+  return `<span class="lang-cat-pill lcp-${c}">${catLabel(c)}</span>`;
+}
 
 // ── STATE ─────────────────────────────────────────────
 let selectedCategory='', selectedBtnType='', urlBtnCount=0, qrBtnCount=0, phoneAdded=false;
@@ -872,6 +960,36 @@ function showNameError(msg){
 }
 
 // ── BODY COUNTER ──────────────────────────────────────
+// ── FORMAT BUTTONS (Bold / Italic / Strikethrough) ───────
+const FORMAT_MARKERS={bold:'*',italic:'_',strike:'~'};
+function applyFormat(type){
+  const ta=document.getElementById('body');
+  const marker=FORMAT_MARKERS[type];
+  if(!marker)return;
+  const start=ta.selectionStart, end=ta.selectionEnd;
+  const val=ta.value;
+  const selected=val.slice(start,end);
+  if(start===end){
+    const insertion=marker+marker;
+    ta.value=val.slice(0,start)+insertion+val.slice(end);
+    ta.selectionStart=ta.selectionEnd=start+marker.length;
+  } else {
+    const before=val.slice(start-marker.length>=0?start-marker.length:0,start);
+    const after=val.slice(end,end+marker.length);
+    if(before===marker&&after===marker){
+      ta.value=val.slice(0,start-marker.length)+selected+val.slice(end+marker.length);
+      ta.selectionStart=start-marker.length;
+      ta.selectionEnd=end-marker.length;
+    } else {
+      ta.value=val.slice(0,start)+marker+selected+marker+val.slice(end);
+      ta.selectionStart=start+marker.length;
+      ta.selectionEnd=end+marker.length;
+    }
+  }
+  ta.focus();
+  updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
+}
+
 const BODY_MAX=1024;
 function updateBodyCounter(){
   const len=document.getElementById('body').value.length;
@@ -984,7 +1102,7 @@ function renderLangTable(tpl, activeCode){
         ? `<span class="lang-act-fix" onclick="event.stopPropagation();selectLangRow('${l.code}')">Fix</span><span class="lang-act-del" onclick="event.stopPropagation();deleteLang('${l.code}')">Delete</span>`
         : `<span class="lang-act-view" onclick="event.stopPropagation();selectLangRow('${l.code}')">View</span>`;
       return `<div class="lang-row-item${isRej?' rej-item':''}${isActive?' active':''}" onclick="selectLangRow('${l.code}')">
-        <div><span class="lang-row-name">${l.name}</span><span class="lang-row-code">${l.code.toUpperCase()}</span>${reason}</div>
+        <div><span class="lang-row-name">${l.name}</span><span class="lang-row-code">${l.code.toUpperCase()}</span>${catPill(l.code,tpl)}${reason}</div>
         <div class="lang-row-actions">${actions}</div>
       </div>`;
     }).join('');
@@ -1105,11 +1223,25 @@ function showLangView(code){
 
   // 10. Hide method picker, reference strips, AI button (view/fix modes don't use them)
   document.getElementById('method-picker-section').classList.remove('visible');
+  const _patBtn=document.getElementById('picker-autotranslate-btn');if(_patBtn)_patBtn.style.display='none';
   const refStrip=document.getElementById('ref-strip');
   if(refStrip)refStrip.style.display='none';
   document.querySelectorAll('.btn-ref-inline').forEach(el=>el.remove());
-  const aiBtn=document.getElementById('ai-translate-btn');
-  if(aiBtn)aiBtn.style.display='none';
+  const aiWrap=document.getElementById('ai-assist-wrap');
+  if(aiWrap)aiWrap.style.display='none';
+  closeAiAssistMenu();
+  const aiLbl=document.getElementById('ai-translate-label');
+  if(aiLbl) aiLbl.textContent='AI Translate';
+
+  // 11. Swap CTA: hide Submit, show Delete (disabled when pending)
+  const submitBtn=document.getElementById('submit-btn');
+  const deleteBtn=document.getElementById('delete-lang-btn');
+  if(submitBtn) submitBtn.style.display='none';
+  if(deleteBtn){
+    deleteBtn.style.display='inline-flex';
+    deleteBtn.disabled=(lang.status==='pending');
+    deleteBtn.title=lang.status==='pending'?'Cannot delete a language that is pending Meta approval':'';
+  }
 }
 
 function setFormLocked(lock){
@@ -1124,9 +1256,12 @@ function setFormLocked(lock){
     el.style.cursor=lock?'default':'';
     el.style.borderColor=lock?'#e5e7eb':'';
   });
-  // Textarea header (Add Variable button)
+  // Textarea header (Add Variable button + AI Assist)
   const addVarBtn=document.querySelector('.add-var-btn');
   if(addVarBtn) addVarBtn.style.display=lock?'none':'';
+  const aiWrapLock=document.getElementById('ai-assist-wrap');
+  if(aiWrapLock) aiWrapLock.style.display=lock?'none':'inline-flex';
+  if(lock) closeAiAssistMenu();
   // Category cards
   document.querySelectorAll('.cat-card').forEach(c=>{
     c.style.pointerEvents=lock?'none':'';
@@ -1186,15 +1321,19 @@ function clearViewMode(){
   resetFormCardMode();
   document.getElementById('rej-notice-strip').classList.remove('visible');
   document.getElementById('method-picker-section').classList.remove('visible');
-  // Hide reference strips and AI translate button
+  const _patBtn2=document.getElementById('picker-autotranslate-btn');if(_patBtn2)_patBtn2.style.display='none';
+  // Hide reference strips and AI assist button
   const refStrip=document.getElementById('ref-strip');
   if(refStrip)refStrip.style.display='none';
   document.querySelectorAll('.btn-ref-inline').forEach(el=>el.remove());
-  const aiBtn=document.getElementById('ai-translate-btn');
-  if(aiBtn)aiBtn.style.display='none';
+  closeAiAssistMenu();
   // Legacy readonly-notice (may still exist in DOM)
   const rn=document.getElementById('readonly-notice');
   if(rn)rn.style.display='none';
+  // Restore Submit / hide Delete
+  const _sb=document.getElementById('submit-btn');const _db=document.getElementById('delete-lang-btn');
+  if(_sb){_sb.style.display='';_sb.disabled=true;}
+  if(_db){_db.style.display='none';_db.disabled=false;}
   setFormLocked(false);
   document.getElementById('body').value='';
   document.getElementById('footer').value='';
@@ -1262,9 +1401,20 @@ function openAddLangRow(){
 function openAddLangPanel(){ openAddLangRow(); }
 
 function onNewLangSelect(code){
-  if(!code||!currentTemplate)return;
-  // Immediately commit the language and open the form — no method step needed
-  _commitAddLanguage(code,'');
+  if(!currentTemplate)return;
+  const atBtn=document.getElementById('picker-autotranslate-btn');
+  if(!code){
+    // User reset to "Choose a language..." — clear the form
+    currentTemplate.languages=currentTemplate.languages.filter(l=>l.status!=='new');
+    renderLangTable(currentTemplate,null);
+    document.getElementById('lang-form-card').style.display='none';
+    addLangMode=false; selectedLang='';
+    if(atBtn) atBtn.style.display='none';
+    return;
+  }
+  if(atBtn) atBtn.style.display='flex';
+  // Switch to new language — drop any previous 'new' draft and load fresh form
+  _commitAddLanguage(code);
 }
 
 function _commitAddLanguage(code){
@@ -1274,8 +1424,6 @@ function _commitAddLanguage(code){
   currentTemplate.languages=currentTemplate.languages.filter(l=>l.status!=='new');
   currentTemplate.languages.push({code,name:ALL_LANGS[code],status:'new'});
   renderLangTable(currentTemplate,code);
-  // Hide language picker — form takes over
-  document.getElementById('method-picker-section').classList.remove('visible');
   // Show Card 2 in add mode
   showLangFormCard('mode-add');
   document.getElementById('form-mode-lang-name').textContent=`${ALL_LANGS[code]} (${code.toUpperCase()})`;
@@ -1321,9 +1469,9 @@ function setupAddLangForm(code){
     if(tpl.btnType==='cta'){tpl.buttons.forEach(b=>{addURLBtn();const rows=document.querySelectorAll('#url-btns-list .url-btn-row input[placeholder="Visit Website"]');rows[rows.length-1].value=b;});}
   }
   if(tpl.tags){lockTag(tpl.tags);}else{unlockTag();}
-  // Show AI Translate button in toolbar
-  const aiBtn=document.getElementById('ai-translate-btn');
-  if(aiBtn) aiBtn.style.display='';
+  // Reset AI Assist label (always visible, just ensure label is correct)
+  const aiLbl=document.getElementById('ai-translate-label');
+  if(aiLbl) aiLbl.textContent='AI Assist';
   // Show button reference strip
   showBtnRefStrip();
   updatePreview();
@@ -1390,13 +1538,14 @@ function showBtnRefStrip(){
   }
 }
 
+// ── AUTO-TRANSLATE (picker button — loads translation into body) ─────
 function aiTranslate(){
   const code=selectedLang;
   if(!code||!currentTemplate)return;
-  const btn=document.getElementById('ai-translate-btn');
+  const btn=document.getElementById('picker-autotranslate-btn');
   const origHTML=btn.innerHTML;
   btn.disabled=true;
-  btn.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Translating…`;
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Translating…`;
   setTimeout(()=>{
     const content=currentTemplate.langContent&&currentTemplate.langContent[code];
     const enContent=currentTemplate.langContent&&currentTemplate.langContent['en'];
@@ -1407,6 +1556,107 @@ function aiTranslate(){
     btn.disabled=false;btn.innerHTML=origHTML;
     updatePreview();checkValidity();updateBodyCounter();updateFooterCounter();
   },1400);
+}
+
+// ── AI ASSIST MENU ────────────────────────────────────────
+function toggleAiAssistMenu(e){
+  e.stopPropagation();
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.toggle('open');
+}
+function closeAiAssistMenu(){
+  const menu=document.getElementById('ai-assist-menu');
+  if(menu){menu.classList.remove('open');menu.classList.remove('custom-mode');}
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#ai-assist-wrap')) closeAiAssistMenu();
+});
+
+function toggleCustomPrompt(){
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.add('custom-mode');
+  setTimeout(()=>document.getElementById('ai-custom-inp').focus(),50);
+}
+function exitCustomPrompt(){
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.remove('custom-mode');
+}
+function updateCustomRunBtn(){
+  const val=(document.getElementById('ai-custom-inp').value||'').trim();
+  document.getElementById('ai-custom-run').disabled=!val;
+}
+
+// Split body on {{N}} tokens; apply fn only to plain-text segments; reassemble
+function rewriteBody(body, fn){
+  // split with capture group keeps the {{N}} tokens in the array
+  const parts = body.split(/(\{\{\d+\}\})/);
+  return parts.map(p => /^\{\{\d+\}\}$/.test(p) ? p : fn(p)).join('');
+}
+
+const AI_TRANSFORMS = {
+  professional: {
+    label: 'Refining tone…',
+    fn: text => text
+      .replace(/\bhi\b/gi, 'Dear')
+      .replace(/\bhey\b/gi, 'Dear')
+      .replace(/\bthanks\b/gi, 'Thank you')
+      .replace(/\bsoon\b/gi, 'at the earliest convenience')
+      .replace(/\bplease\b/gi, 'kindly')
+      .replace(/!\s/g, '. ')
+      .replace(/!$/gm, '.')
+      .replace(/[🎉🛍️📦✨💫🌟😊]/gu, '')
+      .trim()
+  },
+  utility: {
+    label: 'Adjusting tone…',
+    fn: text => text
+      .replace(/\bDear\b/gi, 'Hello')
+      .replace(/\bWe are (?:pleased|happy|glad) to inform you\b/gi, 'This is to inform you')
+      .replace(/\bfeel free to\b/gi, 'please')
+      .replace(/\bdo not hesitate to\b/gi, 'please')
+      .replace(/[🎉🛍️📦✨💫🌟😊]/gu, '')
+      .trim()
+  }
+};
+
+function runAiAssist(type){
+  const bodyEl=document.getElementById('body');
+  const currentBody=bodyEl.value;
+  if(!currentBody.trim()&&type!=='custom'){closeAiAssistMenu();return;}
+
+  const btn=document.getElementById('ai-translate-btn');
+  const lbl=document.getElementById('ai-translate-label');
+  const origLbl=lbl?lbl.textContent:'AI Assist';
+
+  const labelMap={professional:'Refining tone…',utility:'Adjusting tone…',custom:'Applying prompt…'};
+  if(btn) btn.disabled=true;
+  if(lbl) lbl.textContent=labelMap[type]||'Processing…';
+  closeAiAssistMenu();
+
+  setTimeout(()=>{
+    let newBody=currentBody;
+
+    if(type==='professional'||type==='utility'){
+      const t=AI_TRANSFORMS[type];
+      newBody=rewriteBody(currentBody, t.fn);
+
+    } else if(type==='custom'){
+      const prompt=(document.getElementById('ai-custom-inp').value||'').trim();
+      if(prompt){
+        // Prototype: prepend the custom instruction as a note, preserve vars
+        newBody=rewriteBody(currentBody, text=>text.trim());
+        // Simulate applying the prompt by noting it below the content
+        newBody=newBody+'\n\n[AI applied: "'+prompt+'"]';
+      }
+      document.getElementById('ai-custom-inp').value='';
+      updateCustomRunBtn();
+    }
+
+    bodyEl.value=newBody;
+    if(btn) btn.disabled=false;
+    if(lbl) lbl.textContent=origLbl;
+    updatePreview();checkValidity();updateBodyCounter();
+  },1200);
 }
 
 function closeAddLangPanel(){

@@ -87,6 +87,27 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .toolbar-divider{width:1px;height:16px;background:#e5e7eb;margin:0 2px}
 .toolbar-hint{font-size:11px;color:#b0b7c3;margin-left:auto}
 
+/* ── AI ASSIST DROPDOWN ── */
+.ai-assist-wrap{position:relative;display:inline-flex}
+.ai-assist-menu{position:absolute;bottom:calc(100% + 8px);left:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;min-width:220px;overflow:hidden;display:none}
+.ai-assist-menu.open{display:block}
+.ai-assist-option{display:flex;align-items:center;gap:9px;width:100%;padding:10px 14px;font-size:13px;font-weight:500;color:#374151;background:none;border:none;cursor:pointer;font-family:'Heebo',sans-serif;text-align:left;transition:background .1s}
+.ai-assist-option:hover{background:#f0faf4;color:#073F24}
+.ai-assist-back{display:none;align-items:center;gap:7px;width:100%;padding:9px 14px;font-size:12px;font-weight:600;color:#6b7280;background:none;border:none;border-bottom:1px solid #f0f0f0;cursor:pointer;text-align:left;font-family:'Heebo',sans-serif;transition:color .1s}
+.ai-assist-back:hover{color:#119656}
+.ai-assist-menu.custom-mode .ai-assist-back{display:flex}
+.ai-assist-menu.custom-mode .ai-main-options{display:none}
+.ai-assist-menu.custom-mode .ai-custom-area{display:block}
+.ai-assist-divider{border:none;border-top:1px solid #f0f0f0;margin:4px 0}
+.ai-custom-area{padding:10px 14px 12px;display:none}
+.ai-custom-area.visible{display:block}
+.ai-custom-inp{width:100%;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;padding:8px 10px;resize:none;outline:none;color:#111;transition:border-color .15s}
+.ai-custom-inp:focus{border-color:#119656}
+.ai-custom-run{margin-top:8px;width:100%;background:#119656;color:#fff;border:none;border-radius:7px;padding:7px 0;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s}
+.ai-custom-run:hover:not(:disabled){background:#0e7a47}
+.ai-custom-run:disabled{opacity:.45;cursor:not-allowed}
+.field-readonly .ai-assist-wrap{display:none}
+
 /* ── LANGUAGE CHIPS ── */
 .lang-chips-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
 .lang-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s;white-space:nowrap}
@@ -493,6 +514,38 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   Add Variable
                 </button>
+                <div class="ai-assist-wrap" id="ai-assist-wrap">
+                  <button type="button" class="add-var-btn" id="ai-assist-btn" onclick="toggleAiAssistMenu(event)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 014-10z"/></svg>
+                    AI Assist
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:1px"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="ai-assist-menu" id="ai-assist-menu">
+                    <button class="ai-assist-back" onclick="exitCustomPrompt()">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                      Back
+                    </button>
+                    <div class="ai-main-options">
+                      <button class="ai-assist-option" onclick="runAiAssist('professional')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Make it sound professional
+                      </button>
+                      <button class="ai-assist-option" onclick="runAiAssist('utility')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                        Make it utility
+                      </button>
+                      <hr class="ai-assist-divider">
+                      <button class="ai-assist-option" onclick="toggleCustomPrompt()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        Custom prompt
+                      </button>
+                    </div>
+                    <div class="ai-custom-area" id="ai-custom-area">
+                      <textarea class="ai-custom-inp" id="ai-custom-inp" placeholder="e.g. Shorten this to 2 sentences…" rows="3" oninput="updateCustomRunBtn()"></textarea>
+                      <button class="ai-custom-run" id="ai-custom-run" onclick="runAiAssist('custom')" disabled>Apply</button>
+                    </div>
+                  </div>
+                </div>
                 <!-- Counter pushed to the right -->
                 <span id="body-counter" class="toolbar-counter">0 / 1024</span>
               </div>
@@ -1602,6 +1655,63 @@ function applyFormat(type){
   ta.focus();
   updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
 }
+
+// ── AI ASSIST ─────────────────────────────────────────
+function rewriteBody(body,fn){
+  const parts=body.split(/(\{\{\d+\}\})/);
+  return parts.map(p=>/^\{\{\d+\}\}$/.test(p)?p:fn(p)).join('');
+}
+const AI_TRANSFORMS={
+  professional:{label:'Refining tone…',fn:text=>text.replace(/\bhi\b/gi,'Dear').replace(/\bthanks\b/gi,'Thank you').replace(/!\s/g,'. ').replace(/[🎉🛍️📦✨💫🌟😊]/gu,'').trim()},
+  utility:{label:'Adjusting tone…',fn:text=>text.replace(/\bDear\b/gi,'Hello').replace(/\bfeel free to\b/gi,'please').replace(/[🎉🛍️📦✨💫🌟😊]/gu,'').trim()}
+};
+function toggleAiAssistMenu(e){
+  e.stopPropagation();
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.toggle('open');
+}
+function closeAiAssistMenu(){
+  const menu=document.getElementById('ai-assist-menu');
+  if(menu){menu.classList.remove('open');menu.classList.remove('custom-mode');}
+}
+function toggleCustomPrompt(){
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.add('custom-mode');
+  setTimeout(()=>document.getElementById('ai-custom-inp').focus(),50);
+}
+function exitCustomPrompt(){
+  const menu=document.getElementById('ai-assist-menu');
+  menu.classList.remove('custom-mode');
+}
+function updateCustomRunBtn(){
+  const inp=document.getElementById('ai-custom-inp');
+  const btn=document.getElementById('ai-custom-run');
+  btn.disabled=!inp.value.trim();
+}
+function runAiAssist(type){
+  const ta=document.getElementById('body');
+  const body=ta.value;
+  if(!body.trim()){closeAiAssistMenu();return;}
+  const btn=document.getElementById('ai-assist-btn');
+  closeAiAssistMenu();
+  const origHTML=btn.innerHTML;
+  btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .7s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Working…';
+  btn.disabled=true;
+  setTimeout(()=>{
+    let newBody=body;
+    if(type==='custom'){
+      const prompt=document.getElementById('ai-custom-inp').value.trim();
+      newBody=rewriteBody(body,t=>t.length>60?t.slice(0,60)+'…':t);
+    } else if(AI_TRANSFORMS[type]){
+      newBody=rewriteBody(body,AI_TRANSFORMS[type].fn);
+    }
+    ta.value=newBody;
+    btn.innerHTML=origHTML;
+    btn.disabled=false;
+    updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
+  },900);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#ai-assist-wrap'))closeAiAssistMenu();});
 
 function updatePreview(){
   const body=document.getElementById('body').value;
