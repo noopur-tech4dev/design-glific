@@ -62,9 +62,12 @@ thead tr{background:#f2f5f2}
 thead th{padding:12px 16px;font-size:12px;font-weight:600;color:#4b5563;text-align:left;border-bottom:1px solid #e0e4e0;white-space:nowrap}
 thead th:first-child{padding-left:52px;width:220px}
 thead th.col-langs{width:210px}
-thead th.col-catcost{width:180px}
+thead th.col-catcost{width:160px}
+thead th.col-tags{width:150px}
 thead th.col-created{width:130px}
 thead th.col-actions{width:120px;text-align:right;padding-right:20px}
+.tag-pill{display:inline-flex;align-items:center;background:#f0faf4;border:1px solid #c8e6d0;border-radius:100px;padding:2px 8px;font-size:11px;font-weight:500;color:#0e6640;white-space:nowrap}
+.tags-cell{display:flex;flex-wrap:wrap;gap:4px}
 
 /* ── TABLE ROWS ── */
 tbody tr{border-bottom:1px solid #f0f0ee;transition:background .1s;cursor:pointer}
@@ -181,8 +184,11 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
 
 /* ── ACTIONS CELL ── */
 .actions-cell-inner{display:flex;align-items:center;justify-content:flex-end;gap:6px;position:relative}
-.dots-btn{width:32px;height:32px;border:none;background:none;cursor:pointer;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#9ca3af;transition:all .15s}
+.dots-btn{width:32px;height:32px;border:none;background:none;cursor:pointer;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#9ca3af;transition:all .15s;position:relative}
 .dots-btn:hover{background:#f3f4f6;color:#374151}
+.dots-btn[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);white-space:nowrap;background:#1f2937;color:#fff;font-size:11px;font-weight:500;font-family:'Heebo',sans-serif;padding:4px 9px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:500;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.dots-btn[data-tip]::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1f2937;pointer-events:none;opacity:0;transition:opacity .15s;z-index:500}
+.dots-btn[data-tip]:hover::after,.dots-btn[data-tip]:hover::before{opacity:1}
 .dots-menu{position:absolute;right:0;top:36px;background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:180px;overflow:hidden;display:none}
 .dots-menu.open{display:block}
 .dots-menu-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:13px;font-weight:500;color:#374151;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:'Heebo',sans-serif;transition:background .1s}
@@ -245,7 +251,7 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
 .tl-group-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;background:#f9f8f5;transition:background .1s;user-select:none}
 .tl-group-hdr:hover{background:#f0faf4}
 .tl-group-label{font-size:13px;font-weight:700;color:#111}
-.tl-group-count{font-size:11px;color:#6b7280;font-weight:500}
+.tl-group-count{font-size:12px;color:#9ca3af;font-weight:500}
 .tl-group-chevron{color:#9ca3af;transition:transform .2s;flex-shrink:0}
 .tl-group-chevron.open{transform:rotate(180deg)}
 .tl-group-body{background:#fff}
@@ -258,8 +264,8 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
 .tl-group.no-match{opacity:.42;pointer-events:none}
 .tl-group-empty-hint{font-size:12px;color:#9ca3af;font-style:italic;padding:10px 16px 12px 20px;border-top:1px solid #f4f3ef}
 /* right preview */
-.tl-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-end;justify-content:flex-end;margin-bottom:12px}
-.tl-preview-empty{display:flex;flex:1;align-self:center;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
+.tl-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:flex-end;margin-bottom:12px}
+.tl-preview-empty{display:flex;width:100%;min-height:292px;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
 .tl-right-info{font-size:12px;color:#6b7280;line-height:1.6}
 /* footer */
 .tl-footer{padding:14px 36px;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0}
@@ -268,6 +274,11 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
 .tl-btn-create{height:44px;padding:0 28px;background:#119656;color:#fff;border:none;border-radius:100px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
 .tl-btn-create:hover{background:#0e7a47}
 .tl-btn-create.disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;pointer-events:none}
+/* ── TEMPLATE LIBRARY BUTTON TOOLTIP ── */
+.tl-header-btn-wrap{position:relative;display:inline-flex}
+.tl-header-btn-tooltip{position:absolute;top:calc(100% + 8px);right:0;width:240px;background:#1f2937;color:#fff;font-size:12px;font-weight:400;line-height:1.5;padding:9px 13px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.tl-header-btn-tooltip::before{content:'';position:absolute;bottom:100%;right:22px;border:6px solid transparent;border-bottom-color:#1f2937}
+.tl-header-btn-wrap:hover .tl-header-btn-tooltip{opacity:1}
 </style>
 </head>
 <body>
@@ -342,10 +353,13 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
         <div style="position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:11px;color:#9ca3af;white-space:nowrap;cursor:pointer">View sample</div>
       </div>
       <!-- Template library — opens modal -->
-      <button class="hbtn-outline" onclick="openTplLibrary()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Template library
-      </button>
+      <div class="tl-header-btn-wrap">
+        <button class="hbtn-outline" onclick="openTplLibrary()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Template library
+        </button>
+        <div class="tl-header-btn-tooltip">Pre-built templates from Meta's WhatsApp library — approved and ready to use</div>
+      </div>
       <!-- Create — primary green, rightmost -->
       <a href="hsm-create-hifi.html" class="hbtn-green" style="text-decoration:none">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -360,6 +374,21 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
       <option value="">All Categories</option>
       <option value="utility">Utility</option>
       <option value="marketing">Marketing</option>
+    </select>
+    <select class="filter-dropdown" id="tag-filter" onchange="filterTable()">
+      <option value="">All Tags</option>
+      <option value="welcome">welcome</option>
+      <option value="transactional">transactional</option>
+      <option value="order">order</option>
+      <option value="payment">payment</option>
+      <option value="logistics">logistics</option>
+      <option value="enrollment">enrollment</option>
+      <option value="programme">programme</option>
+      <option value="reminder">reminder</option>
+      <option value="feedback">feedback</option>
+      <option value="health">health</option>
+      <option value="documents">documents</option>
+      <option value="appointment">appointment</option>
     </select>
     <div class="search-wrap">
       <span class="search-icon">
@@ -378,7 +407,8 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
       <colgroup>
         <col style="width:220px">
         <col style="width:210px">
-        <col style="width:180px">
+        <col style="width:160px">
+        <col style="width:150px">
         <col style="width:130px">
         <col><!-- Actions: takes remaining space -->
       </colgroup>
@@ -387,6 +417,7 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
           <th>Title</th>
           <th class="col-langs">Languages</th>
           <th class="col-catcost">Category</th>
+          <th class="col-tags">Tags</th>
           <th class="col-created">Last updated</th>
           <th class="col-actions"></th>
         </tr>
@@ -436,7 +467,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'2 weeks ago'},HI:{lastUpdated:'2 weeks ago'},MR:{lastUpdated:'3 days ago'}},
     status: 'approved',
     created: '2 weeks ago',
-    tags: ['welcome','onboarding'],
+    tag: 'welcome',
     uuid: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
   },
   {
@@ -451,7 +482,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'approved',
     created: 'A week ago',
-    tags: ['transactional','otp'],
+    tag: 'transactional',
     uuid: 'b2c3d4e5-f6a7-8901-bcde-f12345678901'
   },
   {
@@ -472,7 +503,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
     created: '3 weeks ago',
-    tags: ['order'],
+    tag: 'order',
     uuid: 'c3d4e5f6-a7b8-9012-cdef-123456789012'
   },
   {
@@ -493,7 +524,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'5 days ago'},HI:{lastUpdated:'5 days ago'}},
     status: 'approved',
     created: '5 days ago',
-    tags: ['payment','transactional'],
+    tag: 'payment',
     uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
   },
   {
@@ -509,7 +540,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'pending',
     created: 'A week ago',
-    tags: ['logistics'],
+    tag: 'logistics',
     uuid: 'd4e5f6a7-b8c9-0123-defa-234567890123'
   },
   {
@@ -530,7 +561,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'1 month ago'},HI:{lastUpdated:'1 month ago'},MR:{lastUpdated:'3 weeks ago'},TA:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
     created: '1 month ago',
-    tags: ['enrollment','programme'],
+    tag: 'enrollment',
     uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
   },
   {
@@ -550,7 +581,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
     created: '3 weeks ago',
-    tags: ['reminder','events'],
+    tag: 'reminder',
     uuid: 'f6a7b8c9-d0e1-2345-fabc-456789012345'
   },
   {
@@ -565,7 +596,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'rejected',
     created: 'A week ago',
-    tags: ['feedback'],
+    tag: 'feedback',
     uuid: 'a7b8c9d0-e1f2-3456-abcd-567890123456'
   },
   {
@@ -581,7 +612,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'1 month ago'}},
     status: 'approved',
     created: '1 month ago',
-    tags: ['documents','kyc'],
+    tag: 'documents',
     uuid: 'b8c9d0e1-f2a3-4567-bcde-678901234567'
   },
   {
@@ -600,7 +631,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'A week ago'},HI:{lastUpdated:'5 days ago'}},
     status: 'approved',
     created: 'A week ago',
-    tags: ['appointment','service'],
+    tag: 'appointment',
     uuid: 'c9d0e1f2-a3b4-5678-cdef-789012345678'
   },
   {
@@ -628,7 +659,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'2 weeks ago'},HI:{lastUpdated:'2 weeks ago'},MR:{lastUpdated:'2 weeks ago'},TE:{lastUpdated:'10 days ago'},TA:{lastUpdated:'10 days ago'},BN:{lastUpdated:'3 days ago'}},
     status: 'approved',
     created: '2 weeks ago',
-    tags: ['health'],
+    tag: 'health',
     uuid: 'd1e2f3a4-b5c6-7890-defa-123456789abc'
   },
   {
@@ -664,7 +695,7 @@ const TEMPLATES = [
     langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'},MR:{lastUpdated:'3 weeks ago'},TE:{lastUpdated:'3 weeks ago'},TA:{lastUpdated:'2 weeks ago'},BN:{lastUpdated:'2 weeks ago'},GU:{lastUpdated:'2 weeks ago'},PA:{lastUpdated:'2 weeks ago'},KN:{lastUpdated:'2 weeks ago'},ML:{lastUpdated:'4 days ago'},UR:{lastUpdated:'4 days ago'},OD:{lastUpdated:'1 week ago'}},
     status: 'approved',
     created: '3 weeks ago',
-    tags: ['programme'],
+    tag: 'programme',
     uuid: 'e2f3a4b5-c6d7-8901-efab-234567890bcd'
   }
 ];
@@ -702,7 +733,7 @@ function catCostHTML(t){
   if(t.langCats && t.langs && t.langs.length > 0){
     const counts={};
     t.langs.forEach(l=>{const c=t.langCats[l.code]||t.category||'utility';counts[c]=(counts[c]||0)+1;});
-    const parts=Object.entries(counts).map(([c,n])=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)} <span style="opacity:.7;font-weight:500">×${n}</span></span>`);
+    const parts=Object.entries(counts).map(([c,n])=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)}${n>1?` <span style="opacity:.7;font-weight:500">×${n}</span>`:''}</span>`);
     // Different-category Meta change: plain original category badge + Meta badge
     if(t.metaCategory && t.metaCategory !== t.category){
       return `<div class="cat-badges-row"><span class="cat-badge ${catClass(t.category)}">${catLabel(t.category)}</span>${metaTagHTML(t)}</div>`;
@@ -764,8 +795,10 @@ function copyUUID(uuid, e){
 function getFiltered(){
   const q=(document.getElementById('search-inp').value||'').toLowerCase();
   const cf=document.getElementById('cat-filter').value;
+  const tf=document.getElementById('tag-filter').value;
   return TEMPLATES.filter(t=>{
     if(cf){const cats=t.categories||[t.category];if(!cats.includes(cf))return false;}
+    if(tf){if(t.tag!==tf)return false;}
     if(q && !t.id.includes(q) && !t.body.toLowerCase().includes(q)) return false;
     return true;
   });
@@ -786,6 +819,7 @@ function renderExpandRow(t){
       </div>
       <div><span class="lc ${l.status}"><span class="lc-dot ${dotClass}"></span>${l.code}</span></div>
       <div><span class="cat-badge ${catClass(cat)}" style="font-size:11px">${catLabel(cat)}</span></div>
+      <div>${t.tag?`<span class="tag-pill">${t.tag}</span>`:''}</div>
       <div><span class="expand-sub-upd">${escHtml(lastUpd)}</span></div>
       <div></div>
     </div>`;
@@ -838,7 +872,6 @@ _waTip.innerHTML=`<div class="wa-tip-inner">
     <div class="wa-tip-media" id="wat-media" style="display:none"></div>
     <div class="wa-tip-body" id="wat-body"></div>
     <div class="wa-tip-footer" id="wat-footer" style="display:none"></div>
-    <div class="wa-tip-time">12:30 ✓✓</div>
   </div>
   <div class="wa-tip-btns" id="wat-btns"></div>
 </div>`;
@@ -862,7 +895,7 @@ document.addEventListener('mousemove',e=>{
     const tid=subRow.dataset.waTid, lang=subRow.dataset.waLang;
     const t=TEMPLATES.find(x=>x.id===tid);
     if(t){
-      document.getElementById('wat-lang').textContent=lang+' · '+catLabel((t.langCats&&t.langCats[lang])||t.category||'utility');
+      document.getElementById('wat-lang').textContent=tid+' · '+lang;
       const langBody=(t.langBodies&&t.langBodies[lang])||t.body;
       document.getElementById('wat-body').innerHTML=bodyWithVars(langBody);
       const ftEl=document.getElementById('wat-footer');
@@ -894,7 +927,7 @@ document.addEventListener('mousemove',e=>{
     if(!isExpanded){
       const t=TEMPLATES.find(x=>x.id===mainRow.dataset.tid);
       if(t){
-        document.getElementById('wat-lang').textContent='EN · '+catLabel((t.langCats&&t.langCats['EN'])||t.category||'utility');
+        document.getElementById('wat-lang').textContent=t.id+' · EN';
         const enBody=(t.langBodies&&t.langBodies['EN'])||t.body;
         document.getElementById('wat-body').innerHTML=bodyWithVars(enBody);
         const ftEl=document.getElementById('wat-footer');
@@ -932,7 +965,7 @@ function renderTable(){
   document.getElementById('page-range').textContent=`01–${data.length} of ${data.length}`;
 
   if(!data.length){
-    tbody.innerHTML=`<tr class="empty-row"><td colspan="5">No templates match your filters.</td></tr>`;
+    tbody.innerHTML=`<tr class="empty-row"><td colspan="6">No templates match your filters.</td></tr>`;
     return;
   }
 
@@ -956,10 +989,11 @@ function renderTable(){
       </td>
       <td>${langCell(t.langs,i,t)}</td>
       <td>${catCostHTML(t)}</td>
+      <td class="col-tags"><div class="tags-cell">${t.tag?`<span class="tag-pill">${t.tag}</span>`:''}</div></td>
       <td class="created-cell">${t.created}</td>
       <td class="col-actions">
         <div class="actions-cell-inner" onclick="event.stopPropagation()">
-          <button class="dots-btn" title="Add new language" onclick="event.stopPropagation();addLanguage('${t.id}')">
+          <button class="dots-btn" data-tip="Add new language" onclick="event.stopPropagation();addLanguage('${t.id}')">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <!-- Capital A — source language -->
               <path d="M1 13.5 L4 5 L7 13.5"/>
@@ -972,10 +1006,10 @@ function renderTable(){
               <line x1="9.75" y1="2.75" x2="13.25" y2="2.75"/>
             </svg>
           </button>
-          <button class="dots-btn" title="View template" onclick="event.stopPropagation();viewTemplate('${t.id}')">
+          <button class="dots-btn" data-tip="View template" onclick="event.stopPropagation();viewTemplate('${t.id}')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-          <button class="dots-btn" onclick="toggleMenu('menu-${i}',event)" title="More options">
+          <button class="dots-btn" onclick="toggleMenu('menu-${i}',event)" data-tip="More options">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
           </button>
           <div class="dots-menu" id="menu-${i}">
@@ -992,7 +1026,7 @@ function renderTable(){
       </td>
     </tr>
     <tr class="expand-data-row" id="expand-row-${i}" style="display:none">
-      <td colspan="5"></td>
+      <td colspan="6"></td>
     </tr>
   `).join('');
 }
@@ -1027,6 +1061,194 @@ function syncHSM(btn){
 }
 
 renderTable();
+</script>
+
+<!-- TEMPLATE LIBRARY MODAL -->
+<div class="tl-overlay" id="tl-overlay" onclick="if(event.target===this)closeTplLibrary()">
+  <div class="tl-modal">
+
+    <div class="tl-header">
+      <div class="tl-header-row">
+        <div>
+          <div class="tl-title">Template Library</div>
+          <div class="tl-subtitle">Browse all pre-approved WhatsApp message templates</div>
+        </div>
+        <button class="tl-close" onclick="closeTplLibrary()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="tl-body">
+      <div class="tl-left">
+        <span class="tl-section-label">Select a Template</span>
+        <div class="tl-search-row">
+          <div class="tl-search-wrap">
+            <span class="tl-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input class="tl-search-inp" id="tl-search" type="text" placeholder="Search by template name…" oninput="tlFilter()" autocomplete="off">
+          </div>
+          <select class="tl-lang-select" id="tl-lang" onchange="tlFilter()">
+            <option value="">All languages</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="mr">Marathi</option>
+            <option value="te">Telugu</option>
+            <option value="ta">Tamil</option>
+            <option value="bn">Bengali</option>
+            <option value="gu">Gujarati</option>
+          </select>
+        </div>
+        <div class="tl-cat-pills">
+          <button class="tl-cat-pill active" id="tl-cat-utility" onclick="tlSetCat('utility',this)">Utility</button>
+          <button class="tl-cat-pill" id="tl-cat-authentication" onclick="tlSetCat('authentication',this)">Authentication</button>
+        </div>
+        <div class="tl-list" id="tl-list"></div>
+        <div class="tl-list-count" id="tl-count"></div>
+      </div>
+
+      <div class="tl-right">
+        <div class="tl-preview" id="tl-preview">
+          <div class="tl-preview-empty" id="tl-preview-empty">Select a template<br>to see a preview</div>
+          <div id="tl-bubble" style="display:none;width:100%"></div>
+        </div>
+        <div class="tl-right-info">Using this template pre-fills the message body, footer, and button fields. All fields stay fully editable.</div>
+      </div>
+    </div>
+
+    <div class="tl-footer">
+      <button class="tl-btn-cancel" onclick="closeTplLibrary()">Close</button>
+      <a class="tl-btn-create disabled" id="tl-create-btn" href="hsm-create-hifi.html" onclick="if(tlSelected){sessionStorage.setItem('tpl_prefill',tlSelected);}else{event.preventDefault();}">
+        Create from template
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── TEMPLATE LIBRARY MODAL DATA ──────────────────────────────
+const TL_FEATURE_LABELS={
+  utility:{account_updates:'Account updates',order_management:'Order management',event_reminder:'Event reminders',payments:'Payments',customer_feedback:'Customer feedback',group_invite:'Group invites',public_disruption:'Public disruption'},
+  authentication:{otp:'OTP / Verification',security:'Security alerts'}
+};
+const TL_LANG_NAMES={en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati'};
+const TL_TEMPLATES=[
+  {id:'account_creation_confirmation_3',title:'Finalize account set-up',category:'utility',feature:'account_updates',langs:['en','hi','mr','te','ta','bn'],body:'Hi {{text}},\n\nYour new account has been created successfully.\n\nPlease verify {{text}} to complete your profile.',footer:'',button:{label:'Verify account'}},
+  {id:'address_update',title:'Address update',category:'utility',feature:'account_updates',langs:['en','hi','te','ta'],body:'Hi {{text}}, your delivery address has been successfully updated to {{text}}. Contact {{text}} for any inquiries.',footer:'',button:null},
+  {id:'appointment_cancelled_v1',title:'Your appointment was canceled',category:'utility',feature:'event_reminder',langs:['en','hi','mr'],body:'Hello {{text}},\n\nYour upcoming appointment with {{business name}} on {{date}} at {{text}} has been canceled.',footer:'',button:null},
+  {id:'appointment_cancelled',title:'Appointment cancelled',category:'utility',feature:'event_reminder',langs:['en','hi','te','ta','bn','gu'],body:'Hi {{text}},\nYour appointment on {{text}} has been cancelled. We hope to see you another time.',footer:'',button:null},
+  {id:'order_shipped_notification',title:'Order shipped',category:'utility',feature:'order_management',langs:['en','hi','mr','te','ta','bn','gu'],body:'Hi {{text}}, your order #{{text}} has been shipped!\n\nTrack your package with ID {{text}}.\nExpected delivery: {{text}}.',footer:'',button:{label:'Track order'}},
+  {id:'payment_confirmation',title:'Payment confirmation',category:'utility',feature:'payments',langs:['en','hi','te','ta'],body:"Hi {{text}}, we've received your payment of {{text}} on {{text}}.\n\nTransaction ID: {{text}}.",footer:'',button:null},
+  {id:'event_registration_confirmed',title:'Event registration confirmed',category:'utility',feature:'event_reminder',langs:['en','hi','mr','te'],body:"Hello {{text}}!\n\nYour registration for {{text}} on {{text}} at {{text}} is confirmed.",footer:'Reply CANCEL to unregister',button:{label:'Add to calendar'}},
+  {id:'document_verification_required',title:'Document verification required',category:'utility',feature:'account_updates',langs:['en','hi'],body:"Dear {{text}},\n\nTo complete your profile, please submit the following documents by {{text}}:\n\n• Government-issued ID\n• Proof of address",footer:'',button:{label:'Submit documents'}},
+  {id:'programme_welcome',title:'Programme welcome',category:'utility',feature:'account_updates',langs:['en','hi','mr','te','ta','bn','gu'],body:"Hi {{text}}, welcome to the {{text}} programme!\n\nYour registration is confirmed.",footer:'',button:{label:'Learn more'}},
+  {id:'feedback_survey_request',title:'Share your feedback',category:'utility',feature:'customer_feedback',langs:['en','hi','te'],body:"Hi {{text}},\n\nHelp us improve — take our 2-minute survey.",footer:'',button:{label:'Start survey'}},
+  {id:'group_community_invite',title:'Community group invite',category:'utility',feature:'group_invite',langs:['en','hi','mr','te','ta','bn'],body:"Hi {{text}},\n\nYou've been invited to join the {{text}} WhatsApp group.",footer:'',button:{label:'Join group'}},
+  {id:'service_disruption_alert',title:'Service disruption notice',category:'utility',feature:'public_disruption',langs:['en','hi'],body:"Dear {{text}},\n\nWe're experiencing temporary disruption to {{text}} services.\n\nExpected restoration: {{text}}.",footer:'Apologies for any inconvenience.',button:null},
+  {id:'payment_reminder',title:'Payment reminder',category:'utility',feature:'payments',langs:['en','hi','mr','te','ta'],body:"Hi {{text}}, your payment of {{text}} is due on {{text}}.\n\nPlease complete the payment to avoid any interruption.",footer:'',button:{label:'Pay now'}},
+  {id:'order_cancellation',title:'Order cancelled',category:'utility',feature:'order_management',langs:['en','hi','te','ta'],body:"Hi {{text}}, your order #{{text}} has been cancelled.\n\nRefund of {{text}} will be processed within 5–7 business days.",footer:'',button:null},
+  {id:'otp_login_verification',title:'Login verification code',category:'authentication',feature:'otp',langs:['en','hi','mr','te','ta','bn','gu'],body:'{{text}} is your verification code.\n\nDo not share this code with anyone. This code expires in 10 minutes.',footer:'',button:{label:'Verify now'}},
+  {id:'account_security_alert',title:'Security alert',category:'authentication',feature:'security',langs:['en','hi'],body:"Hi {{text}}, we noticed a sign-in attempt to your account from {{text}}.\n\nIf this wasn't you, please secure your account immediately.",footer:'',button:{label:'Secure account'}},
+  {id:'password_reset',title:'Password reset',category:'authentication',feature:'otp',langs:['en','hi','te'],body:"Hi {{text}},\n\nYour password reset code is {{text}}. Valid for 15 minutes.",footer:'',button:null},
+];
+
+let tlSelected=null;
+const tlGroupOpen={};
+
+function openTplLibrary(){
+  tlSelected=null;
+  Object.keys(tlGroupOpen).forEach(k=>delete tlGroupOpen[k]);
+  document.getElementById('tl-overlay').classList.add('open');
+  document.getElementById('tl-search').value='';
+  document.getElementById('tl-lang').value='';
+  document.getElementById('tl-bubble').style.display='none';
+  document.getElementById('tl-preview-empty').style.display='flex';
+  document.getElementById('tl-create-btn').classList.add('disabled');
+  document.querySelectorAll('.tl-cat-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tl-cat-utility').classList.add('active');
+  tlFilter();
+}
+function closeTplLibrary(){
+  document.getElementById('tl-overlay').classList.remove('open');
+}
+function tlSetCat(cat,btn){
+  document.querySelectorAll('.tl-cat-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  Object.keys(tlGroupOpen).forEach(k=>delete tlGroupOpen[k]);
+  tlFilter();
+}
+function tlToggleGroup(feature){
+  tlGroupOpen[feature]=!tlGroupOpen[feature];
+  const body=document.getElementById('tlgbody-'+feature);
+  const chev=document.getElementById('tlgchev-'+feature);
+  if(body) body.style.display=tlGroupOpen[feature]?'block':'none';
+  if(chev) chev.classList.toggle('open',tlGroupOpen[feature]);
+}
+function tlFilter(){
+  const q=(document.getElementById('tl-search').value||'').toLowerCase();
+  const lang=document.getElementById('tl-lang').value;
+  const activeCat=document.querySelector('.tl-cat-pill.active');
+  const cat=activeCat?activeCat.id.replace('tl-cat-',''):'utility';
+  let filtered=TL_TEMPLATES.filter(t=>t.category===cat);
+  if(lang) filtered=filtered.filter(t=>t.langs&&t.langs.includes(lang));
+  if(q) filtered=filtered.filter(t=>t.title.toLowerCase().includes(q));
+  const total=TL_TEMPLATES.filter(t=>t.category===cat).length;
+  document.getElementById('tl-count').textContent=`Showing ${filtered.length} of ${total} templates`;
+  tlRender(filtered,cat,lang);
+}
+function tlRender(templates,cat,lang){
+  const list=document.getElementById('tl-list');
+  const labels=TL_FEATURE_LABELS[cat]||{};
+  const allFeatures=Object.keys(labels);
+  const groups={};
+  templates.forEach(t=>{const f=t.feature||'other';if(!groups[f])groups[f]=[];groups[f].push(t);});
+  const featureKeys=lang?allFeatures:Object.keys(groups);
+  if(!featureKeys.length){
+    list.innerHTML=`<div style="padding:48px 0;text-align:center;font-size:13px;color:#9ca3af">No templates match your search</div>`;
+    return;
+  }
+  featureKeys.forEach((f,i)=>{
+    if(tlGroupOpen[f]===undefined){
+      const hasItems=(groups[f]||[]).length>0;
+      tlGroupOpen[f]=hasItems&&featureKeys.slice(0,i).every(k=>(groups[k]||[]).length===0);
+    }
+  });
+  const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const chevSvg=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const langName=lang?(TL_LANG_NAMES[lang]||lang):'';
+  list.innerHTML=featureKeys.map(f=>{
+    const items=groups[f]||[];
+    const label=labels[f]||f;
+    const isEmpty=items.length===0;
+    const isOpen=!isEmpty&&tlGroupOpen[f];
+    const countLabel=isEmpty?`0 in ${langName}`:items.length;
+    const itemsHtml=isEmpty
+      ?`<div class="tl-group-empty-hint">No ${label.toLowerCase()} templates in ${langName}</div>`
+      :items.map(t=>`<div class="tl-group-item${tlSelected===t.id?' selected':''}" onclick="tlSelect('${t.id}')"><span class="tl-group-item-name">${t.title}</span><div class="tl-item-check">${tlSelected===t.id?checkSvg:''}</div></div>`).join('');
+    return `<div class="tl-group${isEmpty?' no-match':''}">
+      <div class="tl-group-hdr"${isEmpty?'':` onclick="tlToggleGroup('${f}')"`}>
+        <span class="tl-group-label">${label} <span class="tl-group-count">(${countLabel})</span></span>
+        ${isEmpty?'':`<span class="tl-group-chevron${isOpen?' open':''}" id="tlgchev-${f}">${chevSvg}</span>`}
+      </div>
+      <div class="tl-group-body" id="tlgbody-${f}" style="display:${isOpen||isEmpty?'block':'none'}">${itemsHtml}</div>
+    </div>`;
+  }).join('');
+}
+function tlSelect(id){
+  tlSelected=id;
+  tlFilter();
+  const t=TL_TEMPLATES.find(m=>m.id===id);
+  if(!t) return;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const bodyHtml=esc(t.body).replace(/\{\{[^}]+\}\}/g,m=>`<span style="color:#aed98a;font-weight:600">${m}</span>`).replace(/\n/g,'<br>');
+  const footHtml=t.footer?`<div style="font-size:11px;color:#6b7280;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.1);font-style:italic">${esc(t.footer)}</div>`:'';
+  const btnHtml=t.button?`<div style="margin-top:8px;padding:7px 12px;border-top:1px solid rgba(0,0,0,.1);font-size:12px;font-weight:600;color:#128C7E;display:flex;align-items:center;gap:6px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(t.button.label)}</div>`:'';
+  document.getElementById('tl-bubble').innerHTML=`<div style="background:#e4f7b0;border-radius:10px 2px 10px 10px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.15);width:100%"><div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px">${esc(t.title)}</div><div style="font-size:12px;color:#111;line-height:1.55">${bodyHtml}</div>${footHtml}${btnHtml}</div>`;
+  document.getElementById('tl-bubble').style.display='block';
+  document.getElementById('tl-preview-empty').style.display='none';
+  document.getElementById('tl-create-btn').classList.remove('disabled');
+}
 </script>
 <style>@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}</style>
 </body>

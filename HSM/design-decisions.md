@@ -349,6 +349,95 @@ A living record of decisions made during the HSM Templates redesign. Updated as 
 
 ---
 
+## D-41 · Rejected template — two distinct paths from the language list
+**Date:** 11 June 2026  
+**Decision:** Clicking a rejected language row and clicking "Edit & Re-apply" are two different interactions with two different outcomes. Row click → locked read-only view (Card 2 in `mode-view`, Delete button only, no Submit). "Edit & Re-apply" inline CTA → editable pre-filled form (Card 2 in `mode-add`, all fields editable, rejection reason strip visible, Submit reads "Reapply for Approval").  
+**Rationale:** A PM clicking the row wants to understand what was rejected before deciding whether to fix it. Opening the form immediately on row click risks accidental edits or premature re-submission. Separating the intent (inspect vs. act) into two distinct affordances eliminates ambiguity about what a click will do.  
+**Implementation:** `showLangView(code)` — always locked, no Submit. `openForReapply(code)` — mirrors `setupAddLangForm()` with pre-filled body/footer from saved `langContent`, then calls `hideButtonStructureControls()` after `setFormLocked(false)` to prevent button deletion.
+
+---
+
+## D-42 · Button structure is read-only in all existing-template contexts
+**Date:** 11 June 2026  
+**Decision:** When viewing or editing a language on an existing template (view mode, fix/reapply mode, or add-new-language mode), the delete (×) icons on QR buttons and CTA buttons, and all "Add button" triggers, are hidden. Button labels are editable; button structure (count, type) is not.  
+**Rationale:** Button structure (number and type of buttons) is submitted to Meta as part of the original template definition. Changing it on a language version would create a structural mismatch — Meta expects language versions to share the same button slots. Deleting a button on one language while it exists on another is not a valid submission state. Hiding the delete controls prevents this class of error entirely.  
+**Implementation:** `hideButtonStructureControls()` hides `.remove-btn-abs`, `.var-remove`, add-button trigger IDs, `.clear-btn-link`, and the phone-button add pill. Called from `setupAddLangForm()` (add mode) and `openForReapply()` (after `setFormLocked(false)` re-shows controls). `setFormLocked(true)` already hides these via CSS selector.
+
+---
+
+## D-43 · Auto-translate button styled to match AI Assist
+**Date:** 11 June 2026  
+**Decision:** The auto-translate trigger button (`.auto-translate-pill`) uses the same visual language as the AI Assist button: white background, green border (`#b9e4cc`), green text (`#119656`), 6px border-radius, Heebo font, same padding. It is not a pill-shaped chip or a plain text link.  
+**Rationale:** Both buttons initiate AI-assisted content generation. Visual consistency between them signals to the PM that they are in the same category of action — automation assist, not form control. The original auto-translate styling (plain text, no border) looked like a disabled state and was frequently overlooked.
+
+---
+
+## D-44 · Inline rejected-language CTA labelled "Edit & Re-apply"
+**Date:** 11 June 2026  
+**Decision:** The inline action link on rejected language rows in the language table reads "Edit & Re-apply" (not "Reapply", "Fix", or "Edit"). The Submit button in the reapply form reads "Reapply for Approval."  
+**Rationale:** "Reapply" alone implied submitting without editing — unclear whether you'd be re-sending the original rejected content. "Edit" alone implied free editing without a submission step. "Edit & Re-apply" makes both intentions explicit in sequence. "Reapply for Approval" on the submit button reinforces that the action sends to Meta, not just saves locally.
+
+---
+
+## D-45 · WA hover tooltip header shows templateId · LANG
+**Date:** 11 June 2026  
+**Decision:** The header line inside the WhatsApp-format hover tooltip reads `{templateId} · {LANG}` (e.g., `welcome_message · HI`). Previously it read `EN · UTILITY` (hardcoded language and category).  
+**Rationale:** The tooltip is triggered per-language from the expanded sub-rows. Showing "EN" regardless of which language row the PM is hovering on was simply wrong data. The category label was moved out of the header — it's already visible in the Category column. The templateId grounds the PM in which template they're previewing when multiple rows are visible.  
+**Implementation:** Both tooltip trigger paths (chip hover and main row hover) now set `document.getElementById('wat-lang').textContent = tid + ' · ' + lang`.
+
+---
+
+## D-46 · Template ID field — show error state for invalid characters, do not strip silently
+**Date:** 11 June 2026  
+**Decision:** When a PM types a character not allowed in a Template ID (anything other than `a–z`, `0–9`, `_`), the field shows a red error state immediately: red border + red glow, an error message below ("Only lowercase letters, numbers, and underscores allowed — e.g., order_confirmation"), and the hint text is hidden. The invalid character is NOT removed from the field. On blur, availability check is skipped if invalid characters are present.  
+**Rationale:** Silently stripping characters as the PM types (the old behaviour) felt like keys were broken or the field was laggy. PMs reported thinking their keyboard wasn't working. An explicit error message respects user agency — they can see what they typed and understand the rule — rather than having the system secretly modify their input.  
+**Root cause fixed:** The previous implementation crashed on a `null` reference (`document.getElementById('existing-dd')` returned `null` — the element doesn't exist) before any validation logic ran, silently swallowing all errors.
+
+---
+
+## D-47 · Tag dropdown — overflow visible, 5-item scroll, Create CTA always shown
+**Date:** 11 June 2026  
+**Decision:** Three fixes to the tag dropdown in `hsm-create-hifi.html`: (1) `.form-card` changed from `overflow:hidden` to `overflow:visible` so the absolutely-positioned dropdown is not clipped by the card boundary. (2) The scrollable options list (`.tag-dropdown-options`) has `max-height:180px` (≈5 items at 36px each) with `overflow-y:auto`. (3) The "Create" row is always visible — it shows "Create a new tag…" when the input is empty or has an exact match, and "Create '{query}'" when there is a partial non-matching query.  
+**Rationale:** The clipping was caused by `overflow:hidden` on the parent card — a common CSS trap with absolute dropdowns. Splitting max-height onto the options child (not the whole dropdown list) keeps the Create CTA pinned below the scroll area at all times. Always showing the Create CTA removes the confusion where it only appeared mid-query and vanished when the user cleared the field.
+
+---
+
+## D-48 · Tags column added to HSM list table with filter
+**Date:** 11 June 2026  
+**Decision:** A "Tags" column is added to the HSM template list table (between Category and Last updated). Each cell shows the template's tag as a single green pill. A tag filter dropdown is added to the filters bar (next to All Categories). Filtering by tag uses exact match against the template's single `tag` field.  
+**Rationale:** Tags are the primary organisational mechanism for NGOs that manage large template libraries. Without a column and filter, tags are write-only — PMs can assign them but have no way to use them for browsing or finding related templates. The column makes the tag visible at a glance; the filter makes it actionable.
+
+---
+
+## D-49 · One tag per template — string, not array
+**Date:** 11 June 2026  
+**Decision:** Each template has at most one organisational tag, stored as a string (`tag: 'welcome'`), not an array. The tag filter uses exact string equality (`t.tag === tf`). The tag pill in the list and expanded rows renders a single chip or nothing.  
+**Rationale:** Multiple tags per template were explored in an earlier pass (arrays like `tags: ['welcome','onboarding']`). Rejected because: (a) multi-tag filtering logic is significantly more complex (AND vs OR, UI for compound filters); (b) NGO PMs have consistently said tags are used for top-level categorisation, not cross-cutting metadata — one category per template is the mental model they use; (c) multiple tags make it harder to build a clean tag taxonomy over time.  
+**Migration:** All templates in the prototype data converted from `tags: [...]` arrays to `tag: '...'` strings, keeping the first/most specific value.
+
+---
+
+## D-50 · Expanded sub-rows include Tags column and per-language Last updated
+**Date:** 11 June 2026  
+**Decision:** Each expanded language sub-row now renders a Tags cell (same tag pill as the parent row — tags apply to the whole template, not individual languages) and a Last updated cell showing the per-language timestamp from `langMeta[code].lastUpdated`. Previously the Tags column was missing from expanded rows (causing column misalignment) and Last updated showed a single value for all languages.  
+**Rationale:** Column alignment between the collapsed row and its expanded sub-rows is required for the grid to feel like a coherent drill-in rather than a separate widget (see D-40). The per-language timestamp is the most actionable data in the expanded view — it tells the PM which language was submitted most recently, so they can prioritise follow-up.
+
+---
+
+## D-51 · Category count badge — suppress ×1, show ×N only when count > 1
+**Date:** 11 June 2026  
+**Decision:** Category badges on the HSM list show a count suffix only when more than one language version shares that category (e.g., "Utility ×3"). When exactly one language is in a category, the badge shows the plain label ("Utility", no count). This supersedes D-34.  
+**Rationale:** D-34 showed ×1 on every badge. In practice, most templates in a single-language NGO's library have exactly one Utility language — every row showed "Utility ×1", which added visual noise without adding information. The count is meaningful only when the reader needs to know how many; one is already the expected default. Suppressing ×1 makes the count signal meaningful when it does appear.
+
+---
+
+## D-52 · WhatsApp message preview — timestamps and read-ticks removed everywhere
+**Date:** 11 June 2026  
+**Decision:** The "9:41 AM ✓✓" and "12:30 ✓✓" timestamp/read-tick lines are removed from all WhatsApp-format preview bubbles across the three prototype files: the inline preview panel in `hsm-create-hifi.html`, the JS-rendered template picker bubbles in both `hsm-create-hifi.html` and `hsm-list.html`, the WA hover tooltip in `hsm-list.html`, and the preview panel in `add-hsm-language.html`.  
+**Rationale:** The previews are design-time representations of a template's content, not screenshots of a sent message. Timestamps implied the template had been sent, which is incorrect. Read ticks are specific to individual message delivery status — they have no meaning in a template preview context. Their presence was a carry-over from styling the bubble to look "realistic" but they mislead PMs about what they're looking at.
+
+---
+
 ## Resolved decisions
 
 - ✅ **Should the form live on a separate page or in a right drawer/modal?** → Separate full page (see D-13).  

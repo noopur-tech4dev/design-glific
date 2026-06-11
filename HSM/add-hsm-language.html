@@ -65,6 +65,13 @@ body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100
 select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%236b7280' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
 .textarea-wrap{position:relative}
 .textarea-header{display:flex;align-items:center;border:1.5px solid #d1d5db;border-bottom:none;border-radius:8px 8px 0 0;padding:8px 12px;transition:border-color .15s}
+.autotranslate-wrap{position:relative;display:inline-flex}
+.auto-translate-pill{display:none;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#119656;background:#fff;border:1.5px solid #b9e4cc;border-radius:6px;padding:5px 11px;cursor:pointer;font-family:'Heebo',sans-serif;transition:background .15s,border-color .15s;white-space:nowrap}
+.auto-translate-pill:hover{background:#f0faf4;border-color:#119656}
+.auto-translate-pill svg{flex-shrink:0}
+.autotranslate-tooltip{position:absolute;top:calc(100% + 7px);right:0;width:220px;background:#1f2937;color:#f9fafb;font-size:11.5px;line-height:1.45;border-radius:7px;padding:8px 11px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:200;font-family:'Heebo',sans-serif}
+.autotranslate-tooltip::before{content:'';position:absolute;bottom:100%;right:16px;border:5px solid transparent;border-bottom-color:#1f2937}
+.autotranslate-wrap:hover .autotranslate-tooltip{opacity:1}
 .textarea-wrap:focus-within .textarea-header{border-color:#119656}
 .textarea-header-label{font-size:13px;font-weight:600;color:#111}
 .body-textarea{width:100%;min-height:130px;padding:12px;border:1.5px solid #d1d5db;border-top:none;border-bottom:none;border-radius:0;font-family:'Heebo',sans-serif;font-size:14px;color:#111;background:#fff;resize:vertical;outline:none;line-height:1.55;transition:border-color .15s,box-shadow .15s;box-sizing:border-box}
@@ -112,14 +119,14 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .lang-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s;white-space:nowrap}
 .lang-chip.approved{background:#f0faf5;border-color:#28a745;color:#073F24}
 .lang-chip.pending{background:#fffbeb;border-color:#ffc107;color:#856404}
-.lang-chip.rejected{background:#fff5f5;border-color:#dc2626;color:#b91c1c}
+.lang-chip.rejected{background:#fef9ec;border-color:#d97706;color:#92400e}
 .lang-chip.add-new{background:#fff;border:1.5px dashed #d1d5db;color:#6b7280}
 .lang-chip.add-new:hover{border-color:#119656;color:#119656;background:#f0faf5}
 .lang-chip.chip-active{outline:2px solid #073F24;outline-offset:2px}
 .lang-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .dot-green{background:#28a745}
 .dot-amber{background:#ffc107}
-.dot-red{background:#dc2626}
+.dot-red{background:#d97706}
 
 /* ── ADD LANGUAGE PANEL ── */
 .add-lang-panel{background:#f8fafb;border:1.5px solid #c8e6d0;border-radius:12px;padding:20px;margin-top:12px}
@@ -290,24 +297,24 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .lang-tab{padding:8px 14px;font-size:12px;font-weight:600;color:#9ca3af;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;display:flex;align-items:center;gap:6px;transition:color .15s;white-space:nowrap}
 .lang-tab:hover{color:#374151}
 .lang-tab.active{color:#073F24;border-bottom-color:#073F24}
-.lang-tab.tab-rejected.active{color:#dc2626;border-bottom-color:#dc2626}
+.lang-tab.tab-rejected.active{color:#92400e;border-bottom-color:#d97706}
 .lang-tab-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:100px;background:#f0f0f0;color:#6b7280}
 .lang-tab.active .lang-tab-badge{background:#e8f5ee;color:#073F24}
-.lang-tab.tab-rejected.active .lang-tab-badge{background:#fff5f5;color:#dc2626}
+.lang-tab.tab-rejected.active .lang-tab-badge{background:#fef3c7;color:#92400e}
 .lang-tab-panel{display:none;padding:4px 12px 8px}
 .lang-tab-panel.active{display:block}
 .lang-row-item{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 4px;border-bottom:1px solid #f5f5f5;cursor:pointer;border-radius:4px}
 .lang-row-item:last-child{border-bottom:none}
 .lang-row-item:hover{background:#f9fafb}
 .lang-row-item.active{background:#f0faf5}
-.lang-row-item.rej-item:hover{background:#fff5f5}
-.lang-row-item.rej-item.active{background:#fee2e2}
+.lang-row-item.rej-item:hover{background:#f9fafb}
+.lang-row-item.rej-item.active{background:#f0faf5}
 .lang-row-name{font-size:13px;font-weight:600;color:#374151}
 .lang-row-code{font-size:11px;color:#9ca3af;margin-left:4px;font-weight:400}
 .lang-row-reason{font-size:11px;color:#b91c1c;margin-top:3px;line-height:1.4}
 .lang-row-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-top:1px}
 .lang-act-view{font-size:12px;color:#073F24;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
-.lang-act-fix{font-size:12px;color:#dc2626;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.lang-act-fix{font-size:12px;color:#119656;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .lang-act-del{font-size:12px;color:#9ca3af;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .lang-add-btn{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#119656;cursor:pointer;padding:10px 16px;border-top:1.5px solid #e5e7eb;background:#fff;transition:background .13s}
 .lang-add-btn:hover{background:#f0faf5}
@@ -315,13 +322,13 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
 /* ── FORM CARD MODE STATES ── */
 .form-card.mode-view{border-top:3px solid #d1d5db}
-.form-card.mode-fix{border-top:3px solid #fca5a5}
+.form-card.mode-fix{border-top:3px solid #d1d5db}
 .form-card.mode-add{border-top:3px solid #c8e6d0}
 
 /* ── FORM CONTEXT BANNER (top of form card) ── */
 .form-context-banner{display:none;align-items:center;justify-content:space-between;padding:12px 32px;border-bottom:1px solid #f0f0f0;background:#fafafa}
 .form-context-banner.visible{display:flex}
-.form-context-banner.mode-fix{background:#fff5f5;border-bottom-color:#fecaca}
+.form-context-banner.mode-fix{background:#fafafa;border-bottom-color:#f0f0f0}
 .form-context-banner.mode-add{background:#f0faf5;border-bottom-color:#c8e6d0}
 
 /* ── FORM MODE HEADER (above category in form) ── */
@@ -330,17 +337,22 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .form-mode-lang-name{font-size:14px;font-weight:700;color:#111}
 .form-mode-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;margin-left:8px}
 .badge-view-only{background:#f3f4f6;color:#6b7280}
-.badge-fix{background:#fff5f5;color:#b91c1c}
+.badge-fix{background:#f3f4f6;color:#374151}
 .badge-add{background:#e8f5ee;color:#073F24}
 .form-mode-close{background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;display:flex;align-items:center;border-radius:4px}
 .form-mode-close:hover{color:#374151;background:#f0f0f0}
+.banner-edit-btn{display:none;align-items:center;gap:6px;height:32px;padding:0 14px;background:#fff;color:#119656;border:1.5px solid #119656;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;transition:background .15s}
+.banner-edit-btn:hover{background:#f0faf4}
+.badge-rejected{background:#f3f4f6;color:#6b7280}
+.badge-editing{background:#f0faf4;color:#119656}
 
 /* ── REJECTION NOTICE (in form, above category) ── */
-.rej-notice-strip{display:none;background:#fff5f5;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.rej-notice-strip{display:none;background:#fafafa;border:1.5px solid #e5e7eb;border-left:4px solid #dc2626;border-radius:10px;padding:14px 16px;margin-bottom:16px}
 .rej-notice-strip.visible{display:block}
-.rej-notice-head{font-size:13px;font-weight:700;color:#b91c1c;margin-bottom:5px;display:flex;align-items:center;gap:6px}
-.rej-notice-body{font-size:12px;color:#7f1d1d;line-height:1.6}
-.rej-notice-del{font-size:12px;color:#b91c1c;cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block}
+.rej-notice-head{font-size:13px;font-weight:700;color:#374151;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.rej-notice-head svg{color:#dc2626;flex-shrink:0}
+.rej-notice-body{font-size:12px;color:#6b7280;line-height:1.6}
+.rej-notice-del{font-size:12px;color:#dc2626;cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block;font-weight:600}
 
 /* ── METHOD PICKER (in-form, add mode) ── */
 .method-picker-section{display:none;margin-bottom:22px}
@@ -488,7 +500,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
         <div class="form-context-banner" id="form-context-banner">
           <div style="display:flex;align-items:center;gap:10px">
             <span id="form-mode-lang-name" style="font-size:14px;font-weight:700;color:#111">–</span>
-            <span class="form-mode-badge badge-view-only" id="form-mode-badge">View only</span>
           </div>
           <button class="form-mode-close" onclick="closeFormMode()" title="Close">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -512,10 +523,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
             <div class="field" style="margin-bottom:0">
               <label class="field-label">Language<span class="req">*</span></label>
               <select id="new-lang-select" class="inp" onchange="onNewLangSelect(this.value)"></select>
-              <button type="button" class="green-pill-btn" id="picker-autotranslate-btn" onclick="aiTranslate()" style="display:none;margin-top:10px">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                Auto-translate
-              </button>
             </div>
           </div>
 
@@ -542,7 +549,16 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
         <!-- ── SECTION 2: Message Content ── -->
         <div class="form-section">
-          <h2 class="section-heading">Message Content</h2>
+          <div class="section-heading-row" style="justify-content:space-between">
+            <h2>Message Content</h2>
+            <div class="autotranslate-wrap">
+              <button type="button" class="auto-translate-pill" id="picker-autotranslate-btn" onclick="aiTranslate()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                Auto-translate
+              </button>
+              <div class="autotranslate-tooltip">Google Translate will auto-translate in the selected language based on English reference</div>
+            </div>
+          </div>
 
           <!-- Reference strip — shown when adding a new language -->
           <div class="ref-strip" id="ref-strip">
@@ -778,7 +794,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
             <div class="wa-msg-body" id="wa-body" style="display:none"></div>
             <div class="wa-msg-footer" id="wa-footer-text" style="display:none"></div>
             <div class="wa-btn-list" id="wa-btn-list" style="display:none"></div>
-            <div class="wa-msg-time">9:41 AM ✓✓</div>
           </div>
         </div>
       </div>
@@ -1097,9 +1112,9 @@ function renderLangTable(tpl, activeCode){
     const rows=langs.map(l=>{
       const isActive=l.code===activeCode;
       const isRej=t.key==='rejected';
-      const reason=isRej&&l.rejectionReason ? `<div class="lang-row-reason">${l.rejectionReason.length>90?l.rejectionReason.substring(0,90)+'…':l.rejectionReason}</div>` : '';
+      const reason='';
       const actions=isRej
-        ? `<span class="lang-act-fix" onclick="event.stopPropagation();selectLangRow('${l.code}')">Fix</span><span class="lang-act-del" onclick="event.stopPropagation();deleteLang('${l.code}')">Delete</span>`
+        ? `<span class="lang-act-fix" onclick="event.stopPropagation();openForReapply('${l.code}')">Edit &amp; Re-apply</span><span class="lang-act-del" onclick="event.stopPropagation();deleteLang('${l.code}')">Delete</span>`
         : `<span class="lang-act-view" onclick="event.stopPropagation();selectLangRow('${l.code}')">View</span>`;
       return `<div class="lang-row-item${isRej?' rej-item':''}${isActive?' active':''}" onclick="selectLangRow('${l.code}')">
         <div><span class="lang-row-name">${l.name}</span><span class="lang-row-code">${l.code.toUpperCase()}</span>${catPill(l.code,tpl)}${reason}</div>
@@ -1195,21 +1210,12 @@ function showLangView(code){
 
   const isRejected = lang.status === 'rejected';
 
-  // 7. Lock fields for view/pending; unlock for rejected (fix mode)
-  setFormLocked(!isRejected);
+  // 7. Always locked on initial open — "Reapply" from the list unlocks separately
+  setFormLocked(true);
 
-  // 8. Show Card 2 in the right mode
-  const modeKey=isRejected?'mode-fix':'mode-view';
-  showLangFormCard(modeKey);
+  // 8. Show Card 2 — rejected uses same neutral view style (locked)
+  showLangFormCard('mode-view');
   document.getElementById('form-mode-lang-name').textContent=`${lang.name} (${lang.code.toUpperCase()})`;
-  const badge=document.getElementById('form-mode-badge');
-  if(isRejected){
-    badge.textContent='Fix and resubmit';
-    badge.className='form-mode-badge badge-fix';
-  } else {
-    badge.textContent='View only';
-    badge.className='form-mode-badge badge-view-only';
-  }
 
   // 9. Rejection notice
   const rejStrip=document.getElementById('rej-notice-strip');
@@ -1221,7 +1227,7 @@ function showLangView(code){
     rejStrip.classList.remove('visible');
   }
 
-  // 10. Hide method picker, reference strips, AI button (view/fix modes don't use them)
+  // 10. Hide method picker, reference strips, AI button (always hidden in view)
   document.getElementById('method-picker-section').classList.remove('visible');
   const _patBtn=document.getElementById('picker-autotranslate-btn');if(_patBtn)_patBtn.style.display='none';
   const refStrip=document.getElementById('ref-strip');
@@ -1230,10 +1236,8 @@ function showLangView(code){
   const aiWrap=document.getElementById('ai-assist-wrap');
   if(aiWrap)aiWrap.style.display='none';
   closeAiAssistMenu();
-  const aiLbl=document.getElementById('ai-translate-label');
-  if(aiLbl) aiLbl.textContent='AI Translate';
 
-  // 11. Swap CTA: hide Submit, show Delete (disabled when pending)
+  // 11. CTAs: all states show Delete only; Submit shown only when entering edit mode via openForReapply
   const submitBtn=document.getElementById('submit-btn');
   const deleteBtn=document.getElementById('delete-lang-btn');
   if(submitBtn) submitBtn.style.display='none';
@@ -1242,6 +1246,77 @@ function showLangView(code){
     deleteBtn.disabled=(lang.status==='pending');
     deleteBtn.title=lang.status==='pending'?'Cannot delete a language that is pending Meta approval':'';
   }
+}
+
+// Called only from the "Reapply" inline CTA in the language list
+function openForReapply(code){
+  if(!currentTemplate) return;
+  const lang=currentTemplate.languages.find(l=>l.code===code);
+  if(!lang) return;
+
+  clearViewMode();
+  selectedLang=code;
+  addLangMode=false;
+  _activeTab='rejected';
+  renderLangTable(currentTemplate,code);
+
+  // Card style same as "adding new language" — green top border
+  showLangFormCard('mode-add');
+  document.getElementById('form-mode-lang-name').textContent=`${lang.name} (${code.toUpperCase()})`;
+  const badge=document.getElementById('form-mode-badge');
+  if(badge){badge.textContent='Editing';badge.className='form-mode-badge badge-add';}
+
+  // Show rejection notice so user knows what to fix
+  const rejStrip=document.getElementById('rej-notice-strip');
+  if(lang.rejectionReason){
+    document.getElementById('rej-notice-head-text').textContent=`${lang.name} rejected by Meta`;
+    document.getElementById('rej-notice-body').textContent=lang.rejectionReason;
+    rejStrip.classList.add('visible');
+  } else {
+    rejStrip.classList.remove('visible');
+  }
+
+  // Language picker hidden — language already determined
+  document.getElementById('method-picker-section').classList.remove('visible');
+
+  // Set up variables, buttons, tags — same structure as add-new-language
+  setupAddLangForm(code);
+
+  // Override body/footer with the rejected language's saved content
+  const saved=currentTemplate.langContent&&currentTemplate.langContent[code];
+  const bodyEl=document.getElementById('body');
+  const footerEl=document.getElementById('footer');
+  if(bodyEl) bodyEl.value=(saved&&saved.body)||'';
+  if(footerEl) footerEl.value=(saved&&saved.footer)||'';
+
+  // Unlock the form — then re-hide button structure controls (setFormLocked(false) shows them)
+  setFormLocked(false);
+  hideButtonStructureControls();
+
+  // Show AI Assist + Auto-translate (same as add-new-language)
+  const aiWrap=document.getElementById('ai-assist-wrap');
+  if(aiWrap) aiWrap.style.display='inline-flex';
+  const atBtn=document.getElementById('picker-autotranslate-btn');
+  if(atBtn) atBtn.style.display='flex';
+
+  // Show English source reference strip
+  showReferenceStrip();
+
+  // CTAs: Submit ("Reapply for Approval") + Delete
+  const submitBtn=document.getElementById('submit-btn');
+  const submitLbl=document.getElementById('submit-btn-label');
+  const deleteBtn=document.getElementById('delete-lang-btn');
+  if(submitBtn){submitBtn.style.display='';submitBtn.disabled=false;}
+  if(submitLbl) submitLbl.textContent='Reapply for Approval';
+  if(deleteBtn){deleteBtn.style.display='inline-flex';deleteBtn.disabled=false;deleteBtn.title='';}
+
+  if(typeof updateBodyCounter==='function') updateBodyCounter();
+  if(typeof updatePreview==='function') updatePreview();
+  checkValidity();
+
+  // Scroll to form
+  const formCard=document.getElementById('lang-form-card');
+  if(formCard) setTimeout(()=>formCard.scrollIntoView({behavior:'smooth',block:'start'}),60);
 }
 
 function setFormLocked(lock){
@@ -1272,7 +1347,7 @@ function setFormLocked(lock){
   document.querySelectorAll('#btn-content-qr .qr-btn-row input, #btn-content-cta .url-btn-row input, #btn-content-cta select').forEach(el=>{
     el.readOnly=lock; el.style.background=lock?'#f9fafb':''; el.style.pointerEvents=lock?'none':'';
   });
-  document.querySelectorAll('.remove-btn-abs,.clear-btn-link,.green-pill-btn').forEach(el=>el.style.display=lock?'none':'');
+  document.querySelectorAll('.remove-btn-abs,.var-remove,.clear-btn-link,.green-pill-btn').forEach(el=>el.style.display=lock?'none':'');
   // Tags input
   const tagsInp=document.getElementById('tags-inp');
   if(tagsInp){tagsInp.readOnly=lock;tagsInp.style.background=lock?'#f9fafb':'';}
@@ -1288,6 +1363,27 @@ function closeFormMode(){
   resetFormCardMode();
   clearViewMode();
   showCatNote('none');
+  // Reset edit button visibility
+  const eb=document.getElementById('banner-edit-btn');if(eb)eb.style.display='none';
+}
+
+function enterRejectedEditMode(){
+  // Unlock form for editing
+  setFormLocked(false);
+  // Show AI Assist
+  const aiWrap=document.getElementById('ai-assist-wrap');
+  if(aiWrap) aiWrap.style.display='inline-flex';
+  // Update badge (element may not exist if banner was simplified)
+  const badge=document.getElementById('form-mode-badge');
+  if(badge){badge.textContent='Editing';badge.className='form-mode-badge badge-editing';}
+  // Hide the edit button itself
+  const eb=document.getElementById('banner-edit-btn');if(eb)eb.style.display='none';
+  // Show Reapply + keep Delete
+  const submitBtn=document.getElementById('submit-btn');
+  const submitLbl=document.getElementById('submit-btn-label');
+  if(submitBtn){submitBtn.style.display='';submitBtn.disabled=false;}
+  if(submitLbl) submitLbl.textContent='Reapply for Approval';
+  checkValidity();
 }
 
 function deleteLang(code){
@@ -1322,6 +1418,7 @@ function clearViewMode(){
   document.getElementById('rej-notice-strip').classList.remove('visible');
   document.getElementById('method-picker-section').classList.remove('visible');
   const _patBtn2=document.getElementById('picker-autotranslate-btn');if(_patBtn2)_patBtn2.style.display='none';
+  const _eb=document.getElementById('banner-edit-btn');if(_eb)_eb.style.display='none';
   // Hide reference strips and AI assist button
   const refStrip=document.getElementById('ref-strip');
   if(refStrip)refStrip.style.display='none';
@@ -1332,7 +1429,7 @@ function clearViewMode(){
   if(rn)rn.style.display='none';
   // Restore Submit / hide Delete
   const _sb=document.getElementById('submit-btn');const _db=document.getElementById('delete-lang-btn');
-  if(_sb){_sb.style.display='';_sb.disabled=true;}
+  if(_sb){_sb.style.display='';_sb.disabled=true;const _sl=document.getElementById('submit-btn-label');if(_sl)_sl.textContent='Submit for Approval';}
   if(_db){_db.style.display='none';_db.disabled=false;}
   setFormLocked(false);
   document.getElementById('body').value='';
@@ -1375,8 +1472,7 @@ function openAddLangRow(){
   showLangFormCard('mode-add');
   document.getElementById('form-mode-lang-name').textContent='New language';
   const badge=document.getElementById('form-mode-badge');
-  badge.textContent='Adding';
-  badge.className='form-mode-badge badge-add';
+  if(badge){badge.textContent='Adding';badge.className='form-mode-badge badge-add';}
 
   // Hide rejection notice
   document.getElementById('rej-notice-strip').classList.remove('visible');
@@ -1428,8 +1524,7 @@ function _commitAddLanguage(code){
   showLangFormCard('mode-add');
   document.getElementById('form-mode-lang-name').textContent=`${ALL_LANGS[code]} (${code.toUpperCase()})`;
   const badge=document.getElementById('form-mode-badge');
-  badge.textContent='New language';
-  badge.className='form-mode-badge badge-add';
+  if(badge){badge.textContent='New language';badge.className='form-mode-badge badge-add';}
   document.getElementById('rej-notice-strip').classList.remove('visible');
   // Set up form structure (variables/buttons/tags) — body starts empty
   setupAddLangForm(code);
@@ -1475,6 +1570,20 @@ function setupAddLangForm(code){
   // Show button reference strip
   showBtnRefStrip();
   updatePreview();
+  // Buttons are structural (shared across all languages) — never allow add/remove per language
+  hideButtonStructureControls();
+}
+
+// Hide add/remove controls on button rows — buttons are fixed per template
+function hideButtonStructureControls(){
+  document.querySelectorAll('.remove-btn-abs,.var-remove').forEach(el=>el.style.display='none');
+  ['add-url-btn-trigger','add-qr-btn-trigger','add-cta-btn-trigger'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  // Also hide "Add Phone Button" trigger and clear-btn-link
+  document.querySelectorAll('.clear-btn-link').forEach(el=>el.style.display='none');
+  const phoneArea=document.getElementById('phone-btn-area');
+  if(phoneArea){const gb=phoneArea.querySelector('.green-pill-btn');if(gb)gb.style.display='none';}
 }
 
 function showReferenceStrip(){
@@ -1622,7 +1731,14 @@ const AI_TRANSFORMS = {
 function runAiAssist(type){
   const bodyEl=document.getElementById('body');
   const currentBody=bodyEl.value;
-  if(!currentBody.trim()&&type!=='custom'){closeAiAssistMenu();return;}
+  if(!currentBody.trim()&&type!=='custom'){
+    closeAiAssistMenu();
+    // Give visible feedback instead of silent no-op
+    const bodyEl2=document.getElementById('body');
+    bodyEl2.placeholder='Type your message first, then use AI Assist to refine it.';
+    bodyEl2.focus();
+    return;
+  }
 
   const btn=document.getElementById('ai-translate-btn');
   const lbl=document.getElementById('ai-translate-label');
@@ -1634,25 +1750,28 @@ function runAiAssist(type){
   closeAiAssistMenu();
 
   setTimeout(()=>{
-    let newBody=currentBody;
+    let suggestion='';
 
     if(type==='professional'||type==='utility'){
       const t=AI_TRANSFORMS[type];
-      newBody=rewriteBody(currentBody, t.fn);
+      suggestion=rewriteBody(currentBody, t.fn);
 
     } else if(type==='custom'){
       const prompt=(document.getElementById('ai-custom-inp').value||'').trim();
       if(prompt){
-        // Prototype: prepend the custom instruction as a note, preserve vars
-        newBody=rewriteBody(currentBody, text=>text.trim());
-        // Simulate applying the prompt by noting it below the content
-        newBody=newBody+'\n\n[AI applied: "'+prompt+'"]';
+        suggestion=rewriteBody(currentBody, text=>text.trim());
       }
       document.getElementById('ai-custom-inp').value='';
       updateCustomRunBtn();
     }
 
-    bodyEl.value=newBody;
+    // Append suggestion below original — always give visible feedback
+    if(suggestion){
+      const note = suggestion!==currentBody
+        ? suggestion
+        : '✓ Text already meets this tone — no changes needed.';
+      bodyEl.value=currentBody+'\n\n── AI Suggestion ──\n'+note;
+    }
     if(btn) btn.disabled=false;
     if(lbl) lbl.textContent=origLbl;
     updatePreview();checkValidity();updateBodyCounter();
@@ -1833,7 +1952,7 @@ function handleSubmit(){
     // Simulate server check: if name is taken and this is a brand new template, show error
     if(!isExistingTemplate && TAKEN_IDS.includes(id)){
       btn.disabled=false;
-      btn.innerHTML=`<span id="submit-btn-label">Submit for Approval</span>`;
+      btn.innerHTML=`<span id="submit-btn-label">${currentTemplate&&selectedLang&&currentTemplate.languages.find(l=>l.code===selectedLang&&l.status==='rejected')?'Reapply for Approval':'Submit for Approval'}</span>`;
       checkValidity();
       errText.textContent='A template with this ID already exists. Please choose a different Template ID.';
       errBanner.classList.add('show');

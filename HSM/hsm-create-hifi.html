@@ -36,7 +36,7 @@ body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100
 .form-column{min-width:0}
 
 /* ── FORM CARD ── */
-.form-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;margin-bottom:16px}
+.form-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:visible;margin-bottom:16px}
 .form-section{padding:28px 32px;border-bottom:1px solid #f0f0f0}
 .form-section:last-child{border-bottom:none}
 .section-heading{font-size:20px;font-weight:700;color:#111;margin-bottom:22px}
@@ -51,17 +51,20 @@ body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100
 .req{color:#dc2626;margin-left:1px}
 .field-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .field-label-row .field-label{margin-bottom:0}
-.use-existing-link{font-size:13px;font-weight:600;color:#119656;cursor:pointer;text-decoration:none}
-.use-existing-link:hover{text-decoration:underline}
+.use-existing-btn{height:34px;padding:0 14px;background:#fff;color:#119656;border:1.5px solid #119656;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.use-existing-btn:hover{background:#f0faf4}
+.use-existing-tooltip{position:absolute;top:calc(100% + 8px);right:0;width:240px;background:#1f2937;color:#fff;font-size:12px;font-weight:400;line-height:1.5;padding:9px 13px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.use-existing-tooltip::before{content:'';position:absolute;bottom:100%;right:22px;border:6px solid transparent;border-bottom-color:#1f2937}
+.use-existing-btn-wrap:hover .use-existing-tooltip{opacity:1}
 .field-hint{font-size:12px;color:#6b7280;margin-top:5px;line-height:1.5}
-.field-error{font-size:12px;color:#dc2626;margin-top:4px;display:none;font-weight:500}
+.field-error{font-size:12px;color:#dc2626;margin-top:4px;font-weight:500;display:none}
 .info-q{width:16px;height:16px;border-radius:50%;border:1.5px solid #d1d5db;background:none;cursor:pointer;font-size:10px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* ── INPUTS ── */
 .inp{width:100%;height:44px;padding:0 12px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s;appearance:none}
 .inp:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.12)}
 .inp::placeholder{color:#9ca3af}
-.inp.err{border-color:#dc2626!important}
+.inp.err{border-color:#dc2626!important;box-shadow:0 0 0 3px rgba(220,38,38,.12)!important}
 select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%236b7280' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
 .textarea-wrap{position:relative}
 .textarea-header{display:flex;align-items:center;border:1.5px solid #d1d5db;border-bottom:none;border-radius:8px 8px 0 0;padding:8px 12px;transition:border-color .15s}
@@ -217,7 +220,8 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
 /* ── TAGS ── */
 .tag-dropdown-wrap{position:relative}
-.tag-dropdown-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #d1d5db;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:50;overflow:hidden;max-height:220px;overflow-y:auto}
+.tag-dropdown-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #d1d5db;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:200;overflow:hidden}
+.tag-dropdown-options{max-height:180px;overflow-y:auto}
 .tag-dropdown-option{padding:9px 14px;font-size:13px;color:#374151;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s}
 .tag-dropdown-option:hover,.tag-dropdown-option.focused{background:#f4fbf7;color:#073F24}
 .tag-dropdown-option .tag-dot{width:8px;height:8px;border-radius:50%;background:#c8e6d0;flex-shrink:0}
@@ -228,6 +232,13 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .tag-chip-remove{background:none;border:none;cursor:pointer;color:#6b7280;font-size:14px;line-height:1;padding:0;margin-left:2px}
 .suggested-tags{font-size:12px;color:#6b7280;margin-top:6px}
 .suggested-tags strong{color:#374151}
+
+/* ── PREFILL BANNER ── */
+.prefill-banner{display:flex;align-items:center;gap:10px;background:#f0faf4;border:1px solid #b9e4cc;border-radius:8px;padding:10px 14px;margin-bottom:20px;font-size:13px;color:#073F24}
+.prefill-banner svg{flex-shrink:0;color:#119656}
+.prefill-banner-text{flex:1;line-height:1.4}
+.prefill-banner-dismiss{background:none;border:none;cursor:pointer;color:#6b7280;font-size:16px;line-height:1;padding:0 2px;transition:color .15s;flex-shrink:0}
+.prefill-banner-dismiss:hover{color:#111}
 
 /* ── SUBMIT ROW ── */
 .form-submit-row{padding:24px 32px;display:flex;align-items:center;gap:16px;border-top:1px solid #f0f0f0}
@@ -253,7 +264,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .wa-btn-item{text-align:center;font-size:12px;font-weight:600;color:#0d6e53;padding:7px;background:rgba(255,255,255,.6);border-radius:6px;border:1px solid rgba(13,110,83,.25)}
 
 /* ── VALIDATION STATES ── */
-.field-error{font-size:12px;color:#dc2626;margin-top:5px;font-weight:500;display:flex;align-items:center;gap:5px}
+.field-error{font-size:12px;color:#dc2626;margin-top:5px;font-weight:500;display:none;align-items:center;gap:5px}
 .field-error svg{flex-shrink:0}
 .field-warning{font-size:12px;color:#d97706;margin-top:5px;font-weight:500;display:flex;align-items:center;gap:5px;background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:7px 10px}
 .field-checking{font-size:12px;color:#6b7280;margin-top:5px;display:flex;align-items:center;gap:5px}
@@ -336,7 +347,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .tpl-group-hdr:hover{background:#f0faf4}
 .tpl-group-label{font-size:13px;font-weight:700;color:#111}
 .tpl-group-meta{display:flex;align-items:center;gap:8px}
-.tpl-group-count{font-size:11px;color:#6b7280;font-weight:500;background:transparent;border:none;padding:0;letter-spacing:.01em}
+.tpl-group-count{font-size:12px;color:#9ca3af;font-weight:500}
 .tpl-group.no-match{opacity:.45;pointer-events:none}
 .tpl-group-empty-hint{font-size:12px;color:#9ca3af;font-style:italic;padding:10px 16px 12px 20px;border-top:1px solid #f4f3ef}
 .tpl-group-chevron{color:#9ca3af;transition:transform .2s;flex-shrink:0}
@@ -350,8 +361,8 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .tpl-group-item.selected .tpl-item-check{background:#119656;border-color:#119656}
 .tpl-list-count{font-size:12px;color:#9ca3af;margin-top:6px;flex-shrink:0}
 /* right panel — fixed height preview */
-.tpl-right-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-end;justify-content:flex-end;margin-bottom:12px}
-.tpl-preview-empty{display:flex;flex:1;align-self:center;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
+.tpl-right-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:flex-end;margin-bottom:12px}
+.tpl-preview-empty{display:flex;width:100%;min-height:292px;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
 .tpl-right-info{font-size:12px;color:#6b7280;line-height:1.6}
 /* footer */
 .tpl-picker-footer{padding:14px 36px;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0;background:#fff}
@@ -406,7 +417,23 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
         <!-- ── SECTION 1: Template Details ── -->
         <div class="form-section">
-          <h2 class="section-heading">Template Details</h2>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+            <h2 style="font-size:20px;font-weight:700;color:#111">Template Details</h2>
+            <div style="position:relative;display:inline-flex" class="use-existing-btn-wrap">
+              <button class="use-existing-btn" onclick="toggleExistingDD()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Template library
+              </button>
+              <div class="use-existing-tooltip">Pre-built templates from Meta's WhatsApp library — approved and ready to use</div>
+            </div>
+          </div>
+
+          <!-- Pre-fill banner (shown when form is filled from Template Library) -->
+          <div class="prefill-banner" id="prefill-banner" style="display:none">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <span class="prefill-banner-text" id="prefill-banner-text"></span>
+            <button class="prefill-banner-dismiss" onclick="document.getElementById('prefill-banner').style.display='none'" title="Dismiss">×</button>
+          </div>
 
           <!-- ① Language — simple dropdown (new template) — FIRST STEP -->
           <div class="field" id="lang-new-field">
@@ -465,10 +492,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 
           <!-- ② Element Name — comes AFTER language -->
           <div class="field">
-            <div class="field-label-row">
-              <label class="field-label" for="element-name">Element Name<span class="req">*</span></label>
-              <a class="use-existing-link" onclick="toggleExistingDD()">Use existing template</a>
-            </div>
+            <label class="field-label" for="element-name">Element Name<span class="req">*</span></label>
             <input type="text" id="element-name" class="inp" placeholder="e.g., order_confirmation" autocomplete="off" oninput="onElementInput(this)" onblur="onElementBlur(this)">
             <div id="element-name-checking" class="field-checking" style="display:none">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -482,7 +506,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               Template ID is available
             </div>
-            <div class="field-hint">Only lowercase letters, numbers, and underscores allowed.</div>
+            <div class="field-hint" id="element-name-hint">Only lowercase letters, numbers, and underscores allowed — e.g., order_confirmation</div>
           </div>
 
           <!-- ③ Category -->
@@ -710,7 +734,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
             <div class="wa-msg-body" id="wa-body" style="display:none"></div>
             <div class="wa-msg-footer" id="wa-footer-text" style="display:none"></div>
             <div class="wa-btn-list" id="wa-btn-list" style="display:none"></div>
-            <div class="wa-msg-time">9:41 AM ✓✓</div>
           </div>
         </div>
       </div>
@@ -907,19 +930,44 @@ let nameCheckTimer=null;
 const TAKEN_IDS=Object.keys(TEMPLATES); // simulate already-taken IDs
 
 function onElementInput(el){
-  el.value=el.value.toLowerCase().replace(/[^a-z0-9_]/g,'');
-  document.getElementById('existing-dd').style.display='none';
-  hideNameFeedback();
+  el.value = el.value.toLowerCase();
   clearTimeout(nameCheckTimer);
-  elementNameValid=true;
-  if(!el.value){resetExistingMode();checkValidity();return;}
-  // debounce server check by 600ms
-  nameCheckTimer=setTimeout(()=>checkNameAvailability(el.value),600);
+  const _dd=document.getElementById('existing-dd'); if(_dd) _dd.style.display='none';
+
+  const errDiv  = document.getElementById('element-name-error');
+  const errText = document.getElementById('element-name-error-text');
+  const hint    = document.getElementById('element-name-hint');
+
+  // Always reset first
+  errDiv.style.display = 'none';
+  document.getElementById('element-name-checking').style.display = 'none';
+  document.getElementById('element-name-ok').style.display = 'none';
+  el.classList.remove('err');
+  if(hint) hint.style.display = '';
+
+  if(!el.value){ elementNameValid=false; resetExistingMode(); checkValidity(); return; }
+
+  if(/[^a-z0-9_]/.test(el.value)){
+    // Invalid characters — show error inline, block submit
+    elementNameValid = false;
+    errText.textContent = 'Only lowercase letters, numbers, and underscores allowed — e.g., order_confirmation';
+    errDiv.style.display  = 'flex';
+    el.classList.add('err');
+    if(hint) hint.style.display = 'none';
+    checkValidity();
+    return;
+  }
+
+  // Valid format — debounce uniqueness check
+  elementNameValid = true;
+  nameCheckTimer = setTimeout(()=>checkNameAvailability(el.value), 600);
   checkValidity();
 }
 
 function onElementBlur(el){
   if(!el.value||isExistingTemplate)return;
+  // Don't run availability check if value has invalid characters
+  if(/[^a-z0-9_]/.test(el.value)) return;
   hideNameFeedback();
   checkNameAvailability(el.value);
 }
@@ -937,8 +985,6 @@ function checkNameAvailability(name){
     } else {
       elementNameValid=true;
       document.getElementById('element-name').classList.remove('err');
-      const okEl=document.getElementById('element-name-ok');
-      okEl.style.display='flex';
     }
     checkValidity();
   },800);
@@ -949,11 +995,16 @@ function hideNameFeedback(){
   document.getElementById('element-name-error').style.display='none';
   document.getElementById('element-name-ok').style.display='none';
   document.getElementById('element-name').classList.remove('err');
+  const hint=document.getElementById('element-name-hint');
+  if(hint) hint.style.display='';
 }
 
 function showNameError(msg){
   document.getElementById('element-name-error-text').textContent=msg;
   document.getElementById('element-name-error').style.display='flex';
+  // Hide the static hint — error message replaces it
+  const hint=document.getElementById('element-name-hint');
+  if(hint) hint.style.display='none';
 }
 
 // ── BODY COUNTER ──────────────────────────────────────
@@ -1177,11 +1228,8 @@ function renderMetaTplGrid(templates, cat, lang){
     const countLabel=isEmpty?'0 in '+langName:items.length;
     return `<div class="tpl-group${isEmpty?' no-match':''}">
       <div class="tpl-group-hdr"${isEmpty?'':` onclick="toggleTplGroup('${f}')"`}>
-        <span class="tpl-group-label">${label}</span>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="tpl-group-count">${countLabel}</span>
-          ${isEmpty?'':`<span class="tpl-group-chevron${isOpen?' open':''}" id="tpl-gchev-${f}">${chevSvg}</span>`}
-        </div>
+        <span class="tpl-group-label">${label} <span class="tpl-group-count">(${countLabel})</span></span>
+        ${isEmpty?'':`<span class="tpl-group-chevron${isOpen?' open':''}" id="tpl-gchev-${f}">${chevSvg}</span>`}
       </div>
       <div class="tpl-group-body" id="tpl-gbody-${f}" style="display:${isOpen||isEmpty?'block':'none'}">${itemsHtml}</div>
     </div>`;
@@ -1206,7 +1254,6 @@ function selectMetaCard(id){
         <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px">${esc(meta.title)}</div>
         <div style="font-size:12px;color:#111;line-height:1.55">${bodyHtml}</div>
         ${footHtml}
-        <div style="font-size:10px;color:#92a88a;text-align:right;margin-top:6px">9:41 AM ✓✓</div>
         ${btnHtml}
       </div>`;
     document.getElementById('tpl-right-bubble').style.display='block';
@@ -1226,20 +1273,66 @@ function applyTplSelection(){
   }
 }
 function prefillFromMeta(meta){
-  // Pre-fill the body with the meta template content
+  try { _prefillFromMetaInner(meta); } catch(e){ console.error('prefillFromMeta failed:',e); }
+}
+function _prefillFromMetaInner(meta){
+  // 1. Reset any existing-template mode so form is fully editable
   resetExistingMode();
-  selectCategory(meta.category,true);
+
+  // 2. Language — pick first available language and set the dropdown
+  const firstLang=(meta.langs&&meta.langs[0])||'en';
+  const langEl=document.getElementById('language');
+  if(langEl){langEl.value=firstLang;}
+  selectedLang=firstLang;
+
+  // 3. Element name — use the template ID as a sensible default (editable)
+  const nameEl=document.getElementById('element-name');
+  if(nameEl){
+    nameEl.value=meta.id;
+    nameEl.readOnly=false;
+    nameEl.style.background='';
+    nameEl.style.color='';
+    nameEl.style.cursor='';
+    nameEl.style.borderColor='';
+  }
+
+  // 4. Category (locked — Meta templates have fixed categories)
+  selectCategory(meta.category, true);
+
+  // 5. Body
   const bodyEl=document.getElementById('body');
   if(bodyEl) bodyEl.value=meta.body;
-  if(meta.footer){const fe=document.getElementById('footer');if(fe)fe.value=meta.footer;}
+
+  // 6. Footer
+  const footEl=document.getElementById('footer');
+  if(footEl) footEl.value=meta.footer||'';
+
+  // 7. Button — CTA type with label pre-filled
+  clearBtnType();
   if(meta.button){
     selectBtnType('cta',document.getElementById('btn-cta'));
-    addURLBtn();
-    const inp=document.querySelector('#url-btns-list .url-btn-row input[placeholder="Visit Website"]');
-    if(inp) inp.value=meta.button.label;
+    addCTABtn();
+    const ctaInput=document.querySelector('#cta-btns-list .cta-btn-row input[type="text"]');
+    if(ctaInput) ctaInput.value=meta.button.label;
   }
-  updatePreview&&updatePreview();
-  updateBodyCounter&&updateBodyCounter();
+
+  // 8. Show pre-fill banner
+  const cat=meta.category.charAt(0).toUpperCase()+meta.category.slice(1);
+  const banner=document.getElementById('prefill-banner');
+  const bannerText=document.getElementById('prefill-banner-text');
+  if(banner&&bannerText){
+    bannerText.innerHTML=`Form pre-filled from Template Library &mdash; <strong>${meta.title}</strong> &middot; ${cat}. All fields are editable.`;
+    banner.style.display='flex';
+  }
+
+  // 9. Refresh live preview + validity (enables Submit if all required fields filled)
+  if(typeof updatePreview==='function') updatePreview();
+  if(typeof updateBodyCounter==='function') updateBodyCounter();
+  checkValidity();
+
+  // 10. Scroll to top of form card so user sees the filled form
+  const formCard=document.querySelector('.form-card');
+  if(formCard) formCard.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function selectExisting(name){
   document.getElementById('element-name').value=name;
@@ -1591,10 +1684,14 @@ function clearBtnType(){
   selectedBtnType='';urlBtnCount=0;phoneAdded=false;qrBtnCount=0;ctaBtnCount=0;ctaPhoneAdded=false;
   const ctaList=document.getElementById('cta-btns-list');if(ctaList)ctaList.innerHTML='';
   const addBtn=document.getElementById('add-cta-btn-trigger');if(addBtn)addBtn.style.display='inline-flex';
-  ['cta','qr','form'].forEach(t=>{document.getElementById('btn-'+t).classList.remove('selected');document.getElementById('btn-content-'+t).style.display='none';});
-  document.getElementById('url-btns-list').innerHTML='';
-  document.getElementById('qr-btns-list').innerHTML='';
-  document.getElementById('phone-btn-area').innerHTML=`<button type="button" class="green-pill-btn" onclick="addPhoneBtn()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Phone Button</button>`;
+  ['cta','qr','form'].forEach(t=>{
+    const btnEl=document.getElementById('btn-'+t);if(btnEl)btnEl.classList.remove('selected');
+    const cEl=document.getElementById('btn-content-'+t);if(cEl)cEl.style.display='none';
+  });
+  const urlList=document.getElementById('url-btns-list');if(urlList)urlList.innerHTML='';
+  const qrList=document.getElementById('qr-btns-list');if(qrList)qrList.innerHTML='';
+  const phoneArea=document.getElementById('phone-btn-area');
+  if(phoneArea)phoneArea.innerHTML=`<button type="button" class="green-pill-btn" onclick="addPhoneBtn()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Phone Button</button>`;
   updatePreview();
 }
 // ── CTA BUTTONS (unified URL + Phone) ────────────────
@@ -1749,9 +1846,15 @@ function renderTagOptions(query){
   const createLabel=document.getElementById('tag-create-label');
   const filtered=q?TAG_OPTIONS.filter(t=>t.includes(q)):TAG_OPTIONS;
   opts.innerHTML=filtered.map(t=>`<div class="tag-dropdown-option" onclick="selectTag('${t}')"><span class="tag-dot"></span>${t}</div>`).join('');
+  // Always show the Create CTA — label shows typed value or generic prompt
   const exactMatch=TAG_OPTIONS.includes(q);
-  if(q&&!exactMatch){createRow.style.display='flex';createLabel.textContent=q;}
-  else{createRow.style.display='none';}
+  if(q&&!exactMatch){
+    createRow.style.display='flex';
+    createLabel.textContent=q;
+  } else {
+    createRow.style.display='flex';
+    createLabel.textContent='Create a new tag…';
+  }
 }
 function confirmNewTag(){
   const val=document.getElementById('tag-select').value.trim();
@@ -1830,21 +1933,32 @@ function updateCustomRunBtn(){
 function runAiAssist(type){
   const ta=document.getElementById('body');
   const body=ta.value;
-  if(!body.trim()){closeAiAssistMenu();return;}
+  if(!body.trim()){
+    closeAiAssistMenu();
+    ta.placeholder='Type your message first, then use AI Assist to refine it.';
+    ta.focus();
+    return;
+  }
   const btn=document.getElementById('ai-assist-btn');
   closeAiAssistMenu();
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .7s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Working…';
   btn.disabled=true;
   setTimeout(()=>{
-    let newBody=body;
+    let suggestion='';
     if(type==='custom'){
       const prompt=document.getElementById('ai-custom-inp').value.trim();
-      newBody=rewriteBody(body,t=>t.length>60?t.slice(0,60)+'…':t);
+      suggestion=rewriteBody(body,t=>t.length>60?t.slice(0,60)+'…':t);
     } else if(AI_TRANSFORMS[type]){
-      newBody=rewriteBody(body,AI_TRANSFORMS[type].fn);
+      suggestion=rewriteBody(body,AI_TRANSFORMS[type].fn);
     }
-    ta.value=newBody;
+    // Append suggestion below original — always give visible feedback
+    if(suggestion){
+      const note = suggestion!==body
+        ? suggestion
+        : '✓ Text already meets this tone — no changes needed.';
+      ta.value=body+'\n\n── AI Suggestion ──\n'+note;
+    }
     btn.innerHTML=origHTML;
     btn.disabled=false;
     updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
@@ -1948,9 +2062,9 @@ document.addEventListener('DOMContentLoaded', function(){
       display.after(hidden);
     }
 
-    // Hide the whole field label row (label + "Use existing template" link)
-    const labelRow = document.querySelector('.field-label-row');
-    if(labelRow) labelRow.style.display = 'none';
+    // Hide the "Template library" button when existing template is active
+    const useBtn = document.querySelector('.use-existing-btn-wrap');
+    if(useBtn) useBtn.style.display = 'none';
 
     // Hide all the name feedback divs and hint
     ['element-name-checking','element-name-error','element-name-ok','existing-dd'].forEach(id=>{
@@ -1967,6 +2081,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // Scroll form to top
     window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ── CROSS-PAGE PREFILL from Template Library (hsm-list.html) ──
+  const prefillId = sessionStorage.getItem('tpl_prefill');
+  if(prefillId && !addLangMode){
+    sessionStorage.removeItem('tpl_prefill'); // consume immediately — no re-apply on refresh
+    const meta = META_TEMPLATES.find(t=>t.id===prefillId);
+    if(meta){
+      prefillFromMeta(meta);
+    }
   }
 });
 </script>
