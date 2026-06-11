@@ -25,14 +25,14 @@ body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100
 .nav-item.active svg{opacity:1}
 
 /* ── MAIN ── */
-.main{flex:1;padding:36px 40px;overflow-y:auto}
+.main{flex:1;padding:36px 40px;min-width:0}
 .page-header{max-width:1020px;margin-bottom:28px}
 .page-header h1{font-size:26px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .info-icon-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid #d1d5db;background:none;cursor:pointer;font-size:12px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
 .page-subtitle{font-size:14px;color:#6b7280;line-height:1.5}
 
 /* ── CONTENT GRID ── */
-.content-grid{display:grid;grid-template-columns:1fr 310px;gap:24px;max-width:1020px;align-items:start}
+.content-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;max-width:1080px;align-items:start}
 .form-column{min-width:0}
 
 /* ── FORM CARD ── */
@@ -238,12 +238,12 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .cancel-btn:hover{color:#111}
 
 /* ── LIVE PREVIEW ── */
-.preview-panel{position:sticky;top:24px}
-.preview-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.preview-panel{position:sticky;top:24px;max-height:calc(100vh - 48px);display:flex;flex-direction:column}
+.preview-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;max-height:inherit}
 .preview-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #f0f0f0}
 .preview-title{font-size:15px;font-weight:700;color:#111}
 .preview-emoji-btn{background:none;border:1px solid #e5e7eb;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
-.preview-bg{background:linear-gradient(170deg,#1a7a65 0%,#0a5742 100%);min-height:380px;padding:16px;display:flex;flex-direction:column;align-items:flex-end}
+.preview-bg{background:linear-gradient(170deg,#1a7a65 0%,#0a5742 100%);flex:1;min-height:580px;padding:20px 16px;display:flex;flex-direction:column;align-items:flex-end;overflow-y:auto}
 .wa-bubble{background:#e4f7b0;border-radius:10px 2px 10px 10px;padding:10px 12px;max-width:90%;box-shadow:0 1px 2px rgba(0,0,0,.15)}
 .wa-placeholder{color:#a8d4a0;font-size:13px;font-style:italic}
 .wa-msg-body{font-size:13px;color:#111;line-height:1.55;white-space:pre-wrap;word-break:break-word}
@@ -297,57 +297,67 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .badge-pending{background:#fef9c3;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px}
 .modal-btns{display:flex;justify-content:center;gap:12px}
 
-/* ── TEMPLATE PICKER MODAL (Meta library style) ── */
-.tpl-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:998;display:none;align-items:center;justify-content:center}
+/* ── TEMPLATE PICKER MODAL ── */
+.tpl-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998;display:none;align-items:center;justify-content:center}
 .tpl-picker-overlay.open{display:flex}
-.tpl-picker-modal{background:#fff;border-radius:14px;width:min(96vw,1060px);height:min(88vh,720px);display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.22);overflow:hidden}
-/* top bar */
-.tpl-topbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #e5e7eb;flex-shrink:0;background:#fff}
-.tpl-search-wrap{flex:1;position:relative}
-.tpl-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none;display:flex}
-.tpl-topbar-search{width:100%;height:40px;padding:0 14px 0 38px;border:1.5px solid #d1d5db;border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;outline:none;transition:border-color .15s}
-.tpl-topbar-search:focus{border-color:#119656;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
-.tpl-topbar-search::placeholder{color:#9ca3af}
-.tpl-lang-select{height:40px;min-width:190px;padding:0 32px 0 12px;border:1.5px solid #d1d5db;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#374151;outline:none;cursor:pointer;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 12px center;flex-shrink:0;transition:border-color .15s}
-.tpl-lang-select:focus{border-color:#119656}
-.tpl-picker-close{background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.tpl-picker-close:hover{background:#f3f4f6;color:#374151}
+.tpl-picker-modal{background:#fff;border-radius:20px;width:min(96vw,880px);height:min(82vh,600px);display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.22);overflow:hidden}
+/* header */
+.tpl-modal-header{padding:28px 36px 16px;flex-shrink:0}
+.tpl-modal-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.tpl-modal-title{font-size:26px;font-weight:800;color:#111;margin-bottom:6px;letter-spacing:-.3px}
+.tpl-modal-subtitle{font-size:14px;color:#6b7280;line-height:1.5}
+.tpl-picker-close{background:none;border:none;cursor:pointer;color:#9ca3af;display:flex;align-items:center;justify-content:center;transition:color .15s;padding:0;flex-shrink:0;margin-top:6px}
+.tpl-picker-close:hover{color:#374151}
 /* body */
-.tpl-picker-body{display:flex;flex:1;min-height:0}
-/* sidebar */
-.tpl-sidebar{width:210px;flex-shrink:0;border-right:1px solid #e5e7eb;overflow-y:auto;background:#fff}
-.tpl-filter-group{padding:16px 16px 12px;border-bottom:1px solid #f0f0f0}
-.tpl-filter-group-title{font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;letter-spacing:.2px}
-.tpl-filter-radio-label{display:flex;align-items:center;gap:9px;font-size:13px;color:#374151;cursor:pointer;padding:4px 0;user-select:none}
-.tpl-filter-radio-label input[type=radio]{accent-color:#119656;width:15px;height:15px;cursor:pointer}
-.tpl-collapsible-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;font-size:13px;font-weight:500;color:#374151;border-bottom:1px solid #f5f5f5;transition:background .1s}
-.tpl-collapsible-hdr:hover{background:#fafafa}
-.tpl-collapsible-hdr svg{color:#9ca3af;flex-shrink:0;transition:transform .2s}
-.tpl-collapsible-hdr.open svg{transform:rotate(180deg)}
-/* card area */
-.tpl-card-area{flex:1;display:flex;flex-direction:column;min-width:0;background:#f5f6f8}
-.tpl-card-topbar{padding:12px 18px 6px;font-size:12px;color:#6b7280;flex-shrink:0}
-.tpl-card-grid{flex:1;overflow-y:auto;padding:8px 16px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-content:start}
-/* template cards */
-.tpl-meta-card{cursor:pointer;text-align:left;padding:0;background:transparent;border:none;border-radius:12px;outline:none;transition:transform .1s}
-.tpl-meta-card:hover{transform:translateY(-1px)}
-.tpl-meta-card-inner{background:#e2ddd5;border-radius:12px;padding:10px 10px 0;border:2.5px solid transparent;transition:border-color .12s}
-.tpl-meta-card.selected .tpl-meta-card-inner,.tpl-meta-card:focus .tpl-meta-card-inner{border-color:#119656}
-.tpl-meta-card:hover:not(.selected) .tpl-meta-card-inner{border-color:#c8e6d0}
-/* WA bubble inside card */
-.tpl-meta-bubble{background:#fff;border-radius:8px 2px 8px 8px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.tpl-meta-bubble-title{font-size:13px;font-weight:700;color:#111;margin-bottom:5px}
-.tpl-meta-bubble-body{font-size:12px;color:#111;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-.tpl-var{color:#128C7E;font-weight:500}
-.tpl-meta-bubble-footer{font-size:11px;color:#6b7280;margin-top:5px;padding-top:5px;border-top:1px solid rgba(0,0,0,.08);font-style:italic}
-.tpl-meta-bubble-time{font-size:10px;color:#9caa90;text-align:right;margin-top:6px}
-.tpl-meta-bubble-btn{margin-top:8px;padding:7px 12px;border-top:1px solid rgba(0,0,0,.08);font-size:12px;font-weight:600;color:#128C7E;display:flex;align-items:center;gap:6px}
-.tpl-meta-id-row{padding:7px 10px;font-size:11px;color:#9ca3af;font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tpl-picker-body{display:flex;flex:1;min-height:0;padding:0 36px 20px;gap:28px}
+.tpl-picker-left{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
+.tpl-picker-right{width:260px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+/* section label row */
+.tpl-section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tpl-section-label{font-size:15px;font-weight:700;color:#111}
+/* search row: input + language select */
+.tpl-search-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tpl-search-wrap{position:relative;flex:1}
+.tpl-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none;display:flex}
+.tpl-topbar-search{width:100%;height:42px;padding:0 14px 0 38px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;outline:none;transition:border-color .15s;background:#f9fafb}
+.tpl-topbar-search:focus{border-color:#119656;background:#fff;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
+.tpl-topbar-search::placeholder{color:#9ca3af}
+.tpl-lang-select{height:42px;padding:0 32px 0 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#374151;background:#f9fafb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;outline:none;cursor:pointer;transition:border-color .15s;white-space:nowrap;flex-shrink:0}
+.tpl-lang-select:focus{border-color:#119656;background-color:#fff}
+/* category pills */
+.tpl-cat-pills{display:flex;gap:8px;margin-bottom:8px}
+.tpl-cat-pill{height:32px;padding:0 16px;border:1.5px solid #e5e7eb;border-radius:100px;background:#fff;color:#6b7280;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.tpl-cat-pill.active{border-color:#119656;background:#f0faf4;color:#073F24}
+.tpl-cat-pill:hover:not(.active){border-color:#b9e4cc;color:#374151}
+/* grouped template list */
+.tpl-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.tpl-group{border:1.5px solid #e9e8e4;border-radius:10px;overflow:hidden;flex-shrink:0}
+.tpl-group-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;background:#f9f8f5;transition:background .1s;user-select:none}
+.tpl-group-hdr:hover{background:#f0faf4}
+.tpl-group-label{font-size:13px;font-weight:700;color:#111}
+.tpl-group-meta{display:flex;align-items:center;gap:8px}
+.tpl-group-count{font-size:11px;color:#6b7280;font-weight:500;background:transparent;border:none;padding:0;letter-spacing:.01em}
+.tpl-group.no-match{opacity:.45;pointer-events:none}
+.tpl-group-empty-hint{font-size:12px;color:#9ca3af;font-style:italic;padding:10px 16px 12px 20px;border-top:1px solid #f4f3ef}
+.tpl-group-chevron{color:#9ca3af;transition:transform .2s;flex-shrink:0}
+.tpl-group-chevron.open{transform:rotate(180deg)}
+.tpl-group-body{background:#fff}
+.tpl-group-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 10px 20px;cursor:pointer;border-top:1px solid #f4f3ef;transition:background .1s}
+.tpl-group-item:hover{background:#f9f8f5}
+.tpl-group-item.selected{background:#f0faf4}
+.tpl-group-item-name{font-size:13px;font-weight:500;color:#111;flex:1;min-width:0;padding-right:12px}
+.tpl-item-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;background:#fff}
+.tpl-group-item.selected .tpl-item-check{background:#119656;border-color:#119656}
+.tpl-list-count{font-size:12px;color:#9ca3af;margin-top:6px;flex-shrink:0}
+/* right panel — fixed height preview */
+.tpl-right-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-end;justify-content:flex-end;margin-bottom:12px}
+.tpl-preview-empty{display:flex;flex:1;align-self:center;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
+.tpl-right-info{font-size:12px;color:#6b7280;line-height:1.6}
 /* footer */
-.tpl-picker-footer{padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0;background:#fff}
-.tpl-picker-cancel{background:none;border:none;font-family:'Heebo',sans-serif;font-size:14px;color:#6b7280;cursor:pointer;padding:0}
-.tpl-picker-cancel:hover{color:#111}
-.tpl-picker-apply{height:40px;padding:0 24px;background:#119656;color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}
+.tpl-picker-footer{padding:14px 36px;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0;background:#fff}
+.tpl-picker-cancel{height:44px;padding:0 24px;background:#fff;border:1.5px solid #d1d5db;border-radius:100px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;transition:all .15s}
+.tpl-picker-cancel:hover{border-color:#9ca3af;color:#111}
+.tpl-picker-apply{height:44px;padding:0 28px;background:#119656;color:#fff;border:none;border-radius:100px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:8px}
 .tpl-picker-apply:hover{background:#0e7a47}
 .tpl-picker-apply:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
 </style>
@@ -398,31 +408,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
         <div class="form-section">
           <h2 class="section-heading">Template Details</h2>
 
-
-          <!-- Element Name -->
-          <div class="field">
-            <div class="field-label-row">
-              <label class="field-label" for="element-name">Element Name<span class="req">*</span></label>
-              <a class="use-existing-link" onclick="toggleExistingDD()">Use existing template</a>
-            </div>
-            <input type="text" id="element-name" class="inp" placeholder="e.g., order_confirmation" autocomplete="off" oninput="onElementInput(this)" onblur="onElementBlur(this)">
-            <div id="element-name-checking" class="field-checking" style="display:none">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              Checking availability…
-            </div>
-            <div id="element-name-error" class="field-error" style="display:none">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span id="element-name-error-text"></span>
-            </div>
-            <div id="element-name-ok" style="display:none;font-size:12px;color:#119656;margin-top:5px;font-weight:500;display:none;align-items:center;gap:5px">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              Template ID is available
-            </div>
-            <!-- existing-dd replaced by template picker modal -->
-            <div class="field-hint">Only lowercase letters, numbers, and underscores allowed.</div>
-          </div>
-
-          <!-- Language — simple dropdown (new template) -->
+          <!-- ① Language — simple dropdown (new template) — FIRST STEP -->
           <div class="field" id="lang-new-field">
             <label class="field-label" for="language">Language<span class="req">*</span></label>
             <select id="language" class="inp" onchange="onLangSelect(this.value)">
@@ -435,9 +421,10 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
               <option value="bn">Bengali</option>
               <option value="gu">Gujarati</option>
             </select>
+            <div class="field-hint">Choose the primary language for this template. You can add more languages after creating it.</div>
           </div>
 
-          <!-- Language — chips (existing template) -->
+          <!-- Language — chips (existing template) — FIRST for existing too -->
           <div class="field" id="lang-existing-field" style="display:none">
             <label class="field-label">Language versions</label>
             <div class="lang-chips-wrap" id="lang-chips-wrap">
@@ -476,7 +463,29 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
             </div>
           </div>
 
-          <!-- Category -->
+          <!-- ② Element Name — comes AFTER language -->
+          <div class="field">
+            <div class="field-label-row">
+              <label class="field-label" for="element-name">Element Name<span class="req">*</span></label>
+              <a class="use-existing-link" onclick="toggleExistingDD()">Use existing template</a>
+            </div>
+            <input type="text" id="element-name" class="inp" placeholder="e.g., order_confirmation" autocomplete="off" oninput="onElementInput(this)" onblur="onElementBlur(this)">
+            <div id="element-name-checking" class="field-checking" style="display:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Checking availability…
+            </div>
+            <div id="element-name-error" class="field-error" style="display:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="element-name-error-text"></span>
+            </div>
+            <div id="element-name-ok" style="display:none;font-size:12px;color:#119656;margin-top:5px;font-weight:500;display:none;align-items:center;gap:5px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Template ID is available
+            </div>
+            <div class="field-hint">Only lowercase letters, numbers, and underscores allowed.</div>
+          </div>
+
+          <!-- ③ Category -->
           <div class="field" id="field-category">
             <label class="field-label">Category<span class="req">*</span></label>
             <div class="category-grid" id="category-grid">
@@ -708,59 +717,77 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
     </div>
   </div>
 
-<!-- TEMPLATE PICKER MODAL (Meta library style) -->
+<!-- TEMPLATE PICKER MODAL -->
 <div class="tpl-picker-overlay" id="tpl-picker-overlay" onclick="if(event.target===this)closeTplPicker()">
   <div class="tpl-picker-modal">
-    <!-- Top bar: search + language + close -->
-    <div class="tpl-topbar">
-      <div class="tpl-search-wrap">
-        <span class="tpl-search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-        <input class="tpl-topbar-search" id="tpl-search" type="text" placeholder="Search Utility templates" oninput="filterMetaTplGrid()" autocomplete="off">
-      </div>
-      <select class="tpl-lang-select" id="tpl-lang-filter" onchange="filterMetaTplGrid()">
-        <option value="en">🌐 English (US) templates</option>
-        <option value="hi">Hindi templates</option>
-        <option value="mr">Marathi templates</option>
-        <option value="ta">Tamil templates</option>
-        <option value="te">Telugu templates</option>
-        <option value="bn">Bengali templates</option>
-      </select>
-      <button class="tpl-picker-close" onclick="closeTplPicker()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <!-- Body: sidebar + grid -->
-    <div class="tpl-picker-body">
-      <!-- Sidebar filters -->
-      <div class="tpl-sidebar">
-        <div class="tpl-filter-group">
-          <div class="tpl-filter-group-title">Category</div>
-          <label class="tpl-filter-radio-label"><input type="radio" name="tpl-cat" value="utility" checked onchange="filterMetaTplGrid()"> Utility (154)</label>
-          <label class="tpl-filter-radio-label"><input type="radio" name="tpl-cat" value="authentication" onchange="filterMetaTplGrid()"> Authentication (20)</label>
+
+    <!-- Header -->
+    <div class="tpl-modal-header">
+      <div class="tpl-modal-header-row">
+        <div>
+          <div class="tpl-modal-title">Template Library</div>
+          <div class="tpl-modal-subtitle">Browse and apply a pre-built WhatsApp message template to your form</div>
         </div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Industry <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Feature <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Account or product protection <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Account updates <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Call permissions <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Customer Feedback <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Event reminder <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Group invite link <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Legal / regulatory compliance <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Order management <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Payments <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="tpl-collapsible-hdr" onclick="this.classList.toggle('open')">Public disruption <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <!-- Card grid -->
-      <div class="tpl-card-area">
-        <div class="tpl-card-topbar" id="tpl-card-count">Showing 12 of 154 results</div>
-        <div class="tpl-card-grid" id="tpl-card-grid"></div>
+        <button class="tpl-picker-close" onclick="closeTplPicker()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
     </div>
+
+    <!-- Body -->
+    <div class="tpl-picker-body">
+
+      <!-- Left: browse + list -->
+      <div class="tpl-picker-left">
+        <div class="tpl-section-row">
+          <span class="tpl-section-label">Select a Template</span>
+        </div>
+        <!-- Search + language filter on same row -->
+        <div class="tpl-search-row">
+          <div class="tpl-search-wrap">
+            <span class="tpl-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input class="tpl-topbar-search" id="tpl-search" type="text" placeholder="Search by name or template ID…" oninput="filterMetaTplGrid()" autocomplete="off">
+          </div>
+          <select class="tpl-lang-select" id="tpl-lang-filter" onchange="filterMetaTplGrid()">
+            <option value="">All languages</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="mr">Marathi</option>
+            <option value="te">Telugu</option>
+            <option value="ta">Tamil</option>
+            <option value="bn">Bengali</option>
+            <option value="gu">Gujarati</option>
+          </select>
+        </div>
+        <!-- Main category pills -->
+        <div class="tpl-cat-pills">
+          <button class="tpl-cat-pill active" id="tpl-cat-utility" onclick="setCatFilter('utility',this)">Utility</button>
+          <button class="tpl-cat-pill" id="tpl-cat-authentication" onclick="setCatFilter('authentication',this)">Authentication</button>
+        </div>
+        <div class="tpl-list" id="tpl-card-grid"></div>
+        <div class="tpl-list-count" id="tpl-card-count"></div>
+      </div>
+
+      <!-- Right: WA preview + info -->
+      <div class="tpl-picker-right">
+        <div class="tpl-right-preview" id="tpl-right-preview">
+          <div class="tpl-preview-empty" id="tpl-preview-empty">Select a template<br>to see a preview</div>
+          <div id="tpl-right-bubble" style="display:none;width:100%"></div>
+        </div>
+        <div class="tpl-right-info">Using this template pre-fills the message body, footer, and button fields. All fields stay fully editable.</div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
     <div class="tpl-picker-footer">
       <button class="tpl-picker-cancel" onclick="closeTplPicker()">Cancel</button>
-      <button class="tpl-picker-apply" id="tpl-picker-apply" disabled onclick="applyTplSelection()">Use this template</button>
+      <button class="tpl-picker-apply" id="tpl-picker-apply" disabled onclick="applyTplSelection()">
+        Use this template
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
+
   </div>
 </div>
 </main>
@@ -969,47 +996,73 @@ function updateFooterCounter(){
 // ── META TEMPLATE LIBRARY ─────────────────────────────────
 const META_TEMPLATES=[
   {id:'account_creation_confirmation_3',title:'Finalize account set-up',category:'utility',feature:'account_updates',
+    langs:['en','hi','mr','te','ta','bn'],
     body:'Hi {{text}},\n\nYour new account has been created successfully.\n\nPlease verify {{text}} to complete your profile.',
     footer:'',button:{label:'Verify account'},vars:['name','verification_link']},
   {id:'address_update',title:'Address update',category:'utility',feature:'account_updates',
+    langs:['en','hi','te','ta'],
     body:'Hi {{text}}, your delivery address has been successfully updated to {{text}}. Contact {{text}} for any inquiries.',
     footer:'',button:null,vars:['name','address','support_number']},
   {id:'appointment_cancelled_v1',title:'Your appointment was canceled',category:'utility',feature:'event_reminder',
+    langs:['en','hi','mr'],
     body:'Hello {{text}},\n\nYour upcoming appointment with {{business name}} on {{date}} at {{text}} has been canceled.\n\nLet us know if you have any questions or need to reschedule.',
     footer:'',button:null,vars:['name','time']},
   {id:'appointment_cancelled',title:'Appointment cancelled',category:'utility',feature:'event_reminder',
+    langs:['en','hi','te','ta','bn','gu'],
     body:'Hi {{text}},\nYour appointment on {{text}} has been cancelled. We hope to see you another time.',
     footer:'',button:null,vars:['name','date']},
   {id:'order_shipped_notification',title:'Order shipped',category:'utility',feature:'order_management',
+    langs:['en','hi','mr','te','ta','bn','gu'],
     body:'Hi {{text}}, your order #{{text}} has been shipped!\n\nTrack your package with ID {{text}}.\nExpected delivery: {{text}}.',
     footer:'',button:{label:'Track order'},vars:['name','order_id','tracking_id','delivery_date']},
   {id:'payment_confirmation',title:'Payment confirmation',category:'utility',feature:'payments',
+    langs:['en','hi','te','ta'],
     body:"Hi {{text}}, we've received your payment of {{text}} on {{text}}.\n\nTransaction ID: {{text}}. Keep this for your records.",
     footer:'',button:null,vars:['name','amount','date','transaction_id']},
   {id:'event_registration_confirmed',title:'Event registration confirmed',category:'utility',feature:'event_reminder',
+    langs:['en','hi','mr','te'],
     body:"Hello {{text}}!\n\nYour registration for {{text}} on {{text}} at {{text}} is confirmed.\n\nWe look forward to seeing you there.",
     footer:'Reply CANCEL to unregister',button:{label:'Add to calendar'},vars:['name','event_name','date','venue']},
   {id:'document_verification_required',title:'Document verification required',category:'utility',feature:'account_updates',
+    langs:['en','hi'],
     body:"Dear {{text}},\n\nTo complete your profile, please submit the following documents by {{text}}:\n\n• Government-issued ID\n• Proof of address",
     footer:'',button:{label:'Submit documents'},vars:['name','deadline']},
   {id:'programme_welcome',title:'Programme welcome',category:'utility',feature:'account_updates',
+    langs:['en','hi','mr','te','ta','bn','gu'],
     body:"Hi {{text}}, welcome to the {{text}} programme!\n\nYour registration is confirmed. We'll share more details soon.",
     footer:'',button:{label:'Learn more'},vars:['name','programme_name']},
   {id:'feedback_survey_request',title:'Share your feedback',category:'utility',feature:'customer_feedback',
+    langs:['en','hi','te'],
     body:"Hi {{text}},\n\nWe hope your recent experience with {{text}} was positive! Help us improve — take our 2-minute survey.",
     footer:'',button:{label:'Start survey'},vars:['name','programme_name']},
   {id:'group_community_invite',title:'Community group invite',category:'utility',feature:'group_invite',
+    langs:['en','hi','mr','te','ta','bn'],
     body:"Hi {{text}},\n\nYou've been invited to join the {{text}} WhatsApp group.\n\nClick the link to join the community.",
     footer:'',button:{label:'Join group'},vars:['name','group_name']},
   {id:'service_disruption_alert',title:'Service disruption notice',category:'utility',feature:'public_disruption',
+    langs:['en','hi'],
     body:"Dear {{text}},\n\nWe're experiencing temporary disruption to {{text}} services. Our team is working to resolve this.\n\nExpected restoration: {{text}}.",
     footer:'Apologies for any inconvenience.',button:null,vars:['name','service_name','restore_time']},
-  {id:'otp_login_verification',title:'Login verification code',category:'authentication',feature:'auth',
+  {id:'payment_reminder',title:'Payment reminder',category:'utility',feature:'payments',
+    langs:['en','hi','mr','te','ta'],
+    body:"Hi {{text}}, this is a reminder that your payment of {{text}} is due on {{text}}.\n\nPlease complete the payment to avoid any interruption.",
+    footer:'',button:{label:'Pay now'},vars:['name','amount','due_date']},
+  {id:'order_cancellation',title:'Order cancelled',category:'utility',feature:'order_management',
+    langs:['en','hi','te','ta'],
+    body:"Hi {{text}}, your order #{{text}} has been cancelled as requested.\n\nRefund of {{text}} will be processed within 5–7 business days.",
+    footer:'',button:null,vars:['name','order_id','amount']},
+  {id:'otp_login_verification',title:'Login verification code',category:'authentication',feature:'otp',
+    langs:['en','hi','mr','te','ta','bn','gu'],
     body:'{{text}} is your verification code.\n\nDo not share this code with anyone. This code expires in 10 minutes.',
     footer:'',button:{label:'Verify now'},vars:['otp']},
-  {id:'account_security_alert',title:'Security alert',category:'authentication',feature:'auth',
+  {id:'account_security_alert',title:'Security alert',category:'authentication',feature:'security',
+    langs:['en','hi'],
     body:"Hi {{text}}, we noticed a sign-in attempt to your account from {{text}}.\n\nIf this wasn't you, please secure your account immediately.",
     footer:'',button:{label:'Secure account'},vars:['name','device_location']},
+  {id:'password_reset',title:'Password reset',category:'authentication',feature:'otp',
+    langs:['en','hi','te'],
+    body:"Hi {{text}},\n\nYour password reset code is {{text}}.\n\nThis code is valid for 15 minutes. If you didn't request this, please ignore.",
+    footer:'',button:null,vars:['name','otp']},
 ];
 
 // ── TEMPLATE PICKER MODAL ────────────────────────────────
@@ -1019,60 +1072,146 @@ function toggleExistingDD(){openTplPicker();}
 
 function openTplPicker(){
   tplPickerSelected=null;
+  // Reset group open state so first group always opens fresh
+  Object.keys(tplGroupOpen).forEach(k=>delete tplGroupOpen[k]);
   document.getElementById('tpl-picker-overlay').classList.add('open');
   document.getElementById('tpl-search').value='';
+  document.getElementById('tpl-lang-filter').value='';
   document.getElementById('tpl-picker-apply').disabled=true;
-  // default to utility
-  document.querySelector('input[name="tpl-cat"][value="utility"]').checked=true;
+  document.getElementById('tpl-right-bubble').style.display='none';
+  document.getElementById('tpl-preview-empty').style.display='flex';
+  document.querySelectorAll('.tpl-cat-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tpl-cat-utility').classList.add('active');
   filterMetaTplGrid();
 }
 function closeTplPicker(){
   document.getElementById('tpl-picker-overlay').classList.remove('open');
 }
+// Feature labels per category
+const FEATURE_LABELS={
+  utility:{
+    account_updates:'Account updates',order_management:'Order management',
+    event_reminder:'Event reminder',payments:'Payments',
+    customer_feedback:'Customer feedback',group_invite:'Group invite',
+    public_disruption:'Public disruption'
+  },
+  authentication:{otp:'OTP / Verification',security:'Security alerts'}
+};
+const LANG_NAMES={en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati'};
+
+// track which groups are open (by feature key)
+const tplGroupOpen={};
+
 function filterMetaTplGrid(){
   const q=(document.getElementById('tpl-search').value||'').toLowerCase();
-  const cat=document.querySelector('input[name="tpl-cat"]:checked').value;
+  const lang=document.getElementById('tpl-lang-filter').value;
+  const activeCat=document.querySelector('.tpl-cat-pill.active');
+  const cat=activeCat?activeCat.id.replace('tpl-cat-',''):'utility';
   let filtered=META_TEMPLATES.filter(t=>t.category===cat);
+  if(lang) filtered=filtered.filter(t=>t.langs&&t.langs.includes(lang));
   if(q) filtered=filtered.filter(t=>t.title.toLowerCase().includes(q)||t.id.includes(q));
   const total=META_TEMPLATES.filter(t=>t.category===cat).length;
-  document.getElementById('tpl-card-count').textContent=`Showing ${filtered.length} of ${total} results`;
-  renderMetaTplGrid(filtered);
+  document.getElementById('tpl-card-count').textContent=`Showing ${filtered.length} of ${total} templates`;
+  renderMetaTplGrid(filtered, cat, lang);
 }
-function renderMetaTplGrid(templates){
-  const grid=document.getElementById('tpl-card-grid');
-  if(!templates.length){
-    grid.innerHTML=`<div style="grid-column:span 2;padding:60px 20px;text-align:center;font-size:13px;color:#9ca3af">No templates match your search</div>`;
+function setCatFilter(cat, btn){
+  document.querySelectorAll('.tpl-cat-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  filterMetaTplGrid();
+}
+function toggleTplGroup(feature){
+  tplGroupOpen[feature]=!tplGroupOpen[feature];
+  const body=document.getElementById('tpl-gbody-'+feature);
+  const chevron=document.getElementById('tpl-gchev-'+feature);
+  if(body) body.style.display=tplGroupOpen[feature]?'block':'none';
+  if(chevron) chevron.classList.toggle('open', tplGroupOpen[feature]);
+}
+function renderMetaTplGrid(templates, cat, lang){
+  const list=document.getElementById('tpl-card-grid');
+  // All features for this category (for showing empty groups when lang filter active)
+  const labels=(FEATURE_LABELS[cat]||{});
+  const allFeatures=Object.keys(labels);
+
+  // Group filtered templates by feature
+  const groups={};
+  templates.forEach(t=>{
+    const f=t.feature||'other';
+    if(!groups[f]) groups[f]=[];
+    groups[f].push(t);
+  });
+
+  // When a language filter is active, also include empty groups so user sees what's unavailable
+  const featureKeys = lang
+    ? allFeatures  // show all features in defined order; empty ones will appear dimmed
+    : Object.keys(groups);
+
+  if(!featureKeys.length){
+    list.innerHTML=`<div style="padding:48px 0;text-align:center;font-size:13px;color:#9ca3af">No templates match your search</div>`;
     return;
   }
-  grid.innerHTML=templates.map(t=>{
-    const bodyHtml=t.body
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/\{\{[^}]+\}\}/g,m=>`<span class="tpl-var">${m}</span>`)
-      .replace(/\n/g,'<br>');
-    const btnHtml=t.button?`<div class="tpl-meta-bubble-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${t.button.label}</div>`:'';
-    const footHtml=t.footer?`<div class="tpl-meta-bubble-footer">${t.footer}</div>`:'';
-    const isSelected=tplPickerSelected===t.id;
-    return `<button class="tpl-meta-card${isSelected?' selected':''}" onclick="selectMetaCard('${t.id}')">
-      <div class="tpl-meta-card-inner">
-        <div class="tpl-meta-bubble">
-          <div class="tpl-meta-bubble-title">${t.title}</div>
-          <div class="tpl-meta-bubble-body">${bodyHtml}</div>
-          ${footHtml}
-          <div class="tpl-meta-bubble-time">12:29 PM</div>
-          ${btnHtml}
+
+  // First non-empty group starts open (if not already set)
+  featureKeys.forEach((f,i)=>{
+    if(tplGroupOpen[f]===undefined){
+      const hasItems=(groups[f]||[]).length>0;
+      tplGroupOpen[f]=hasItems&&(i===0||(i>0&&featureKeys.slice(0,i).every(k=>(groups[k]||[]).length===0)));
+    }
+  });
+
+  const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const chevSvg=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const langName=lang?({en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati'}[lang]||lang):'';
+
+  list.innerHTML=featureKeys.map(f=>{
+    const items=groups[f]||[];
+    const label=labels[f]||f;
+    const isEmpty=items.length===0;
+    const isOpen=!isEmpty&&tplGroupOpen[f];
+    const itemsHtml=isEmpty
+      ? `<div class="tpl-group-empty-hint">No ${label.toLowerCase()} templates available in ${langName}</div>`
+      : items.map(t=>`
+      <div class="tpl-group-item${tplPickerSelected===t.id?' selected':''}" onclick="selectMetaCard('${t.id}')">
+        <span class="tpl-group-item-name">${t.title}</span>
+        <div class="tpl-item-check">${tplPickerSelected===t.id?checkSvg:''}</div>
+      </div>`).join('');
+    const countLabel=isEmpty?'0 in '+langName:items.length;
+    return `<div class="tpl-group${isEmpty?' no-match':''}">
+      <div class="tpl-group-hdr"${isEmpty?'':` onclick="toggleTplGroup('${f}')"`}>
+        <span class="tpl-group-label">${label}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="tpl-group-count">${countLabel}</span>
+          ${isEmpty?'':`<span class="tpl-group-chevron${isOpen?' open':''}" id="tpl-gchev-${f}">${chevSvg}</span>`}
         </div>
       </div>
-      <div class="tpl-meta-id-row">${t.id}</div>
-    </button>`;
+      <div class="tpl-group-body" id="tpl-gbody-${f}" style="display:${isOpen||isEmpty?'block':'none'}">${itemsHtml}</div>
+    </div>`;
   }).join('');
 }
 function selectMetaCard(id){
   tplPickerSelected=id;
   document.getElementById('tpl-picker-apply').disabled=false;
-  document.querySelectorAll('.tpl-meta-card').forEach(el=>{
-    const isThis=el.getAttribute('onclick')===`selectMetaCard('${id}')`;
-    el.classList.toggle('selected',isThis);
-  });
+  const meta=META_TEMPLATES.find(t=>t.id===id);
+  // Re-render list so selection state updates
+  filterMetaTplGrid();
+  // Update right-panel WA preview
+  if(meta){
+    const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const bodyHtml=esc(meta.body)
+      .replace(/\{\{[^}]+\}\}/g,m=>`<span style="color:#128C7E;font-weight:600">${m}</span>`)
+      .replace(/\n/g,'<br>');
+    const footHtml=meta.footer?`<div style="font-size:11px;color:#6b7280;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.1);font-style:italic">${esc(meta.footer)}</div>`:'';
+    const btnHtml=meta.button?`<div style="margin-top:8px;padding:7px 12px;border-top:1px solid rgba(0,0,0,.1);font-size:12px;font-weight:600;color:#128C7E;display:flex;align-items:center;gap:6px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(meta.button.label)}</div>`:'';
+    document.getElementById('tpl-right-bubble').innerHTML=`
+      <div style="background:#e4f7b0;border-radius:10px 2px 10px 10px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.15);width:100%">
+        <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px">${esc(meta.title)}</div>
+        <div style="font-size:12px;color:#111;line-height:1.55">${bodyHtml}</div>
+        ${footHtml}
+        <div style="font-size:10px;color:#92a88a;text-align:right;margin-top:6px">9:41 AM ✓✓</div>
+        ${btnHtml}
+      </div>`;
+    document.getElementById('tpl-right-bubble').style.display='block';
+    document.getElementById('tpl-preview-empty').style.display='none';
+  }
 }
 function applyTplSelection(){
   if(!tplPickerSelected)return;

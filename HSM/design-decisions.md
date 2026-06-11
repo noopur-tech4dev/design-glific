@@ -240,14 +240,135 @@ A living record of decisions made during the HSM Templates redesign. Updated as 
 
 ---
 
+## D-29 · AI Assist always visible in message body toolbar; hidden only in read-only view
+**Date:** 9 June 2026  
+**Decision:** The AI Assist button in the message body toolbar is always visible — it shows as soon as the form is open, not only after a language has been selected or added. It is hidden only when the form enters read-only/view mode (viewing an approved or pending language).  
+**Rationale:** Previously the button only appeared after `setupAddLangForm()` ran, which meant a PM looking at a blank form had no indication that AI assistance was available. Showing it upfront sets the right expectation and reduces abandonment on the body field.  
+**Implementation:** CSS changed from `display:none` to `display:inline-flex` on `.ai-assist-wrap`. `setFormLocked(true)` now also hides the AI Assist wrap. `clearViewMode()` no longer explicitly hides it — the form card itself is hidden on reset, so the button state doesn't matter.  
+**Applied to:** Both `add-hsm-language.html` and `hsm-create-hifi.html`.
+
+---
+
+## D-30 · AI Assist custom prompt — context-switch within the same dropdown
+**Date:** 9 June 2026  
+**Decision:** Clicking "Custom prompt" in the AI Assist dropdown does not expand the input inline beneath the option. Instead it switches the dropdown into a custom-mode state: the two preset options (Make it professional / Make it utility) and the divider hide, a "← Back" button appears at the top, and the textarea + Apply CTA fill the panel.  
+**Rationale:** The old expand-in-place behaviour made the dropdown feel like an accordion — the PM could see both the preset options and the custom input at the same time, which created visual noise and implied the options were still selectable while typing. Hiding the presets focuses attention on the task (writing a prompt) and makes the Back button the clear path to switching mode.  
+**Back behaviour:** Clicking "← Back" removes `custom-mode` from the menu. The textarea content is preserved so the PM can return to it if they change their mind.  
+**Implementation:** `.ai-assist-menu.custom-mode` CSS class toggles visibility of `.ai-main-options` (hidden) and `.ai-assist-back` (shown). `closeAiAssistMenu()` strips both `open` and `custom-mode` classes so the menu always resets fully on close.
+
+---
+
+## D-31 · HSM list — message body always 1-line clamped
+**Date:** 9 June 2026  
+**Decision:** The message body column in the HSM list always clamps to 1 line (`-webkit-line-clamp:1`), regardless of density setting. On hover, the full message text appears in a dark tooltip that follows the cursor.  
+**Rationale:** Three options were evaluated: (A) always 1 line, (B) body moved under the template ID as a subtitle with the body column removed, (C) 1 line + "show more" expand. Option A was chosen for simplicity — it keeps the column, preserves scannability, and the hover tooltip satisfies the occasional need to read the full body without adding expand/collapse complexity to the table.  
+**Implementation:** CSS `webkit-line-clamp:1` on `.body-text`. Tooltip is a `position:fixed` dark panel (`.body-tooltip`) positioned via `mousemove` listener, with smart flip logic when near screen edges. `escHtml()` sanitises body text before injecting into the tooltip.
+
+---
+
+## D-32 · 3-dot menu on HSM list — Delete removed
+**Date:** 9 June 2026  
+**Decision:** Remove the Delete option from the 3-dot overflow menu on each list row. The menu now contains only "Add new language" and "Send broadcast."  
+**Rationale:** Template deletion is a high-stakes, irreversible action. A generic delete in a row-level overflow menu has no confirmation affordance and is too easy to trigger accidentally. If deletion is needed it should be a deliberate flow accessed from the template detail page, not a one-click option in the list.
+
+---
+
+## D-33 · Language view mode — Submit CTA replaced by Delete; disabled when pending
+**Date:** 9 June 2026  
+**Decision:** When a PM views an existing language (approved or rejected), the Submit for Approval button is hidden and replaced by a "Delete this language" button. When viewing a pending/in-process language, the Delete button is visible but disabled (with a tooltip explaining the reason).  
+**Rationale:** "Submit for Approval" makes no sense in view mode — there is nothing to submit (the content is already submitted or approved). Showing it at all creates confusion about what clicking it would do. Delete is the only destructive action available in view context; making it visible-but-disabled for pending languages communicates that deletion will be possible once the review cycle completes.  
+**Rejected option:** Showing both Submit and Delete together in rejected/fix mode. Adds ambiguity — which action is primary? The fix-and-resubmit path (for rejected languages) will be a separate dedicated flow if needed in future.
+
+---
+
+## D-34 · Category counts always shown on HSM list — even single-category templates
+**Date:** 9 June 2026  
+**Decision:** Every template on the list shows a category count badge (e.g., "Utility ×1", "Marketing ×2") regardless of whether all languages share the same category. The earlier logic that showed a plain badge (no count) when all languages matched the same category is removed.  
+**Rationale:** The count conveys how many language versions exist in each category, which is directly relevant to billing (WhatsApp charges per-language per-category). A PM with one Utility language vs six should see different data. A plain "Utility" badge with no count hides information that is always meaningful.
+
+---
+
+## D-35 · Meta reclassification badge — two distinct patterns by case
+**Date:** 9 June 2026  
+**Decision:** Two distinct display patterns for Meta category changes:  
+1. **Different category** (e.g., Marketing → Utility): Show the original category as a plain badge + an amber "Utility by Meta" badge alongside. No count on the original badge. No strikethrough or arrow.  
+2. **Same category reclassification** (e.g., Meta confirmed Utility when template was already Utility): Show normal count badges only. No Meta tag. The reclassification is surfaced via the notification system (D-07) rather than inline on the list.  
+**Rationale:** The different-category case changes billing and is immediately actionable — the PM needs to see it at a glance. The same-category case is informational only (billing cycle may reset, but the category is not changing) — surfacing it inline with the same prominence as a real category change would create noise and false urgency. Notifications are the right channel for that nuance.  
+**Unified badge style:** Both same-category and different-category cases use the same amber badge when a Meta tag is shown, avoiding two competing visual treatments for what is conceptually one event type.
+
+---
+
+## D-36 · HSM list — collapsible row expansion with per-language detail
+**Date:** 11 June 2026  
+**Decision:** Each row in the HSM list is expandable via a chevron (left of title) or a click anywhere on the row. The expanded view shows flat sub-rows — one per language version — with columns aligned exactly to the outer table: message body (col 1 / Title), language tag (col 2 / Languages), category badge (col 3 / Category), last updated (col 4), and an empty col 5. A WhatsApp-format hover tooltip appears on collapsed rows (English preview only) and on each expanded sub-row (language-specific preview).  
+**Rationale:** PMs often need to see per-language status and category at a glance without opening a separate page. Expanding in-place avoids a navigation round-trip. Aligning the expand sub-rows to the outer columns makes the expansion feel like a drill-in of the existing row rather than a separate widget.  
+**Status column:** Removed entirely. Status is communicated via the coloured dot on each language chip.
+
+---
+
+## D-40 · HSM list expand rows — CSS Grid alignment (CRITICAL, do not regress)
+**Date:** 11 June 2026  
+**Decision:** Expanded sub-rows are rendered as CSS Grid divs (`.expand-sub-row`), NOT as a nested `<table>`. Column widths are set by reading the outer table's actual rendered `<th>` widths via `getBoundingClientRect()` in a `requestAnimationFrame` callback immediately after the row is shown.  
+**Rationale:** A nested `<table>` inside a `<td>` has its own independent layout engine. Even with `table-layout:fixed` and matching `<colgroup>` values on both tables, the browser renders inner and outer column widths differently — they are two separate layout contexts. Every approach to sync them statically (hardcoded pixel widths, colgroup, table-layout:fixed) produced misalignment because the outer table uses `auto` layout and sizes columns by content. CSS Grid with runtime-measured column widths is the only approach that guarantees alignment.  
+**Implementation rules — retain at all costs:**
+1. Expand sub-rows are `<div class="expand-sub-row">` with `display:grid`
+2. `gridTemplateColumns` is set via JavaScript using `th.getBoundingClientRect().width` on each outer `<th>`, run inside `requestAnimationFrame` after `row.style.display='table-row'`
+3. The last column always uses `1fr` (not a pixel value) to fill remaining space
+4. Do NOT replace with a nested `<table>` — this has been tried and failed
+5. Do NOT use static pixel values for `grid-template-columns` — outer table column widths vary by viewport and content
+
+**Pixel alignment specification:**
+- Col 1 message text starts at: `16px` (cell pad) + `28px` (chevron spacer) + `8px` (flex gap) = **52px** from col 1 left edge
+- This matches the template ID text in collapsed rows: `16px` (cell pad) + `28px` (chevron btn) + `8px` (flex gap) = **52px**
+- This matches the "Title" header: `padding-left:52px` on `thead th:first-child`
+- All other columns: `16px` left padding — same as outer `tbody td` standard padding
+- First column uses standard `16px` padding (no special first-child override) — **do not add extra left padding to the first column**
+
+---
+
+## D-37 · HSM list expand — message body uses language-specific text
+**Date:** 11 June 2026  
+**Decision:** When a row is expanded, each language sub-row shows the translated body for that language (from the `langBodies` field on the template object), not the English fallback. Where no translated body is stored, the English body is used as a fallback.  
+**Rationale:** Showing the English body for every language row defeats the purpose of expansion — the PM can't assess whether the Hindi or Marathi translation is correct if they're looking at the English text. Language-specific bodies make each row actionable (spot a typo, check length, verify variables are in place).  
+**Fallback rule:** `t.langBodies?.[l.code] || t.body`. Applied in both `renderExpandRow` (expand sub-rows) and the WA hover tooltip mousemove handler.
+
+---
+
+## D-38 · HSM list hover tooltip — media attachment preview
+**Date:** 11 June 2026  
+**Decision:** When a template has a media attachment (`t.media` field with `type` and `label`), the WA-format hover tooltip shows a media placeholder block above the message bubble. Image templates show a landscape-orientation grey rectangle with a photo icon + file label. Document templates show a document-style icon + label. The placeholder communicates "this message comes with an attachment" without needing the actual file.  
+**Rationale:** PMs reviewing templates from the list need to know which templates have media so they can assess whether the attachment is appropriate for a given broadcast campaign. A pure text preview would make media templates indistinguishable from text-only ones.  
+**Media types supported:** `image` and `document`. The media block is hidden (display:none) when the template has no `t.media` field. Tooltip height adjusts automatically when media is present (290px vs 200px) to prevent clipping.
+
+---
+
+## D-39 · "Add new language" icon — translate-style Aa+ icon
+**Date:** 11 June 2026  
+**Decision:** The "Add new language" icon button on each list row uses a custom SVG combining a Latin "A" letterform with a "+" mark — signifying "add translation." The old globe icon was replaced because a globe is too generic (used for "international", "website", "language settings" interchangeably) and doesn't communicate the specific action of adding a translated version.  
+**Rationale:** Icon affordance matters: the action is specifically "create a new language version of this template." The Aa+ motif (used in Google Translate and similar tools) is the established visual shorthand for translation and new-language creation. PMs familiar with translation tools will recognise it immediately; for those who aren't, the tooltip text "Add new language" provides the fallback.
+
+---
+
 ## Resolved decisions
 
-- ✅ **Should the form live on a separate page or in a right drawer/modal?** → Separate full page (see D-13).
-- ✅ **How should button types be differentiated in the form?** → CTA buttons use a unified add-button with inline URL/Phone type toggle per row (D-21). Quick-reply buttons have a 20-character counter per label.
+- ✅ **Should the form live on a separate page or in a right drawer/modal?** → Separate full page (see D-13).  
+  *Reason: The add-language form has the same field complexity as the create form. A drawer or modal would be too cramped, and the mental model is wrong — the PM is making a Meta submission, not a quick inline edit. A dedicated page also makes it bookmarkable and avoids state management issues when the PM navigates away mid-fill.*
+
+- ✅ **How should button types be differentiated in the form?** → CTA buttons use a unified add-button with inline URL/Phone type toggle per row (D-21). Quick-reply buttons have a 20-character counter per label.  
+  *Reason: The old layout had separate sub-sections for URL and Phone buttons, each with its own add action. This forced PMs to understand the distinction before they'd done anything. The inline toggle per row keeps the decision close to the content it affects and is consistent with how other multi-type field patterns work (e.g. button type pickers in flow builders). Quick-reply buttons don't need a type toggle since they are always text-only — the 20-char counter is sufficient to guide correct input.*
+
+---
 
 ## Pending decisions
 
-- [ ] Sample message field: keep as a separate field, or replace variables inline in the body field with placeholder values?
-- [ ] Should "Save as draft" be a V1 feature? (requires backend support for draft state)
-- [ ] What happens when a PM tries to add a language that Meta has since paused or deprecated for that template category?
-- [ ] For the 5+ language grid view — should clicking a language cell open the full language form inline, or route to the add-hsm-language page?
+- [ ] **Sample message field: keep as a separate field, or replace variables inline in the body field with placeholder values?**  
+  *Context: Meta requires a sample message showing variable placeholders filled with real example values (e.g., `Hi John` instead of `Hi {{1}}`). Currently this is a separate field below the body. An alternative is to let PMs type placeholder values directly inside the body editor that render inline (like a mail-merge preview). The inline approach is more intuitive but requires a richer editor component — beyond the current plain textarea. Deferred until the editor component decision is made.*
+
+- [ ] **Should "Save as draft" be a V1 feature?**  
+  *Context: Several PMs have asked to save a half-finished template and return to it later. This requires a backend draft state that is distinct from submitted/pending. Currently there is no draft concept in Glific's template API. Implementing it in the frontend without backend support would mean storing draft data locally (localStorage/IndexedDB), which is fragile across devices and sessions. Blocked on backend prioritisation.*
+
+- [ ] **What happens when a PM tries to add a language that Meta has since paused or deprecated for that template category?**  
+  *Context: Meta occasionally restricts certain language+category combinations (e.g., pausing marketing templates in certain locales). Glific currently has no signal from Meta about which combinations are currently permitted. The form would let a PM build and submit a template that Meta will silently reject. Needs a decision on whether to (a) surface a warning if we can detect the paused state via the API, (b) show a generic advisory note on the language picker, or (c) handle it post-rejection via the fix flow (D-25). Blocked on API capability check.*
+
+- [ ] **For the 5+ language grid view — should clicking a language cell open the full language form inline, or route to the add-hsm-language page?**  
+  *Context: In the compact language grid (activated when a template has more than 5 languages), clicking a cell needs to open the content form for that language. Two options: (a) open it inline within the same card, expanding below the grid — keeps context but causes vertical jump; (b) route to `add-hsm-language.html` pre-loaded for that language — consistent with the existing flow but loses grid context. Option (b) is the current default (consistent with D-13), but option (a) may be better UX for the rare power-user case. No implementation yet — grid view is not V1 scope.*

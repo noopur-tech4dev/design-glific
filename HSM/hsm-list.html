@@ -55,26 +55,26 @@ body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100
 /* ── TABLE WRAPPER ── */
 .table-wrap{background:#fff;border-radius:12px;border:1px solid #e5e5e0;overflow:hidden;margin-top:20px}
 table{width:100%;border-collapse:collapse}
+#tpl-table{table-layout:fixed}
 
 /* ── TABLE HEADER ── */
 thead tr{background:#f2f5f2}
 thead th{padding:12px 16px;font-size:12px;font-weight:600;color:#4b5563;text-align:left;border-bottom:1px solid #e0e4e0;white-space:nowrap}
-thead th:first-child{padding-left:20px;width:220px}
-thead th.col-body{width:auto}
+thead th:first-child{padding-left:52px;width:220px}
 thead th.col-langs{width:210px}
 thead th.col-catcost{width:180px}
-thead th.col-created{width:120px}
-thead th.col-actions{width:200px;text-align:right;padding-right:20px}
+thead th.col-created{width:130px}
+thead th.col-actions{width:120px;text-align:right;padding-right:20px}
 
 /* ── TABLE ROWS ── */
 tbody tr{border-bottom:1px solid #f0f0ee;transition:background .1s;cursor:pointer}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:#fafaf8}
 tbody td{padding:14px 16px;vertical-align:middle}
-tbody td:first-child{padding-left:20px}
 tbody td.col-actions{padding-right:20px}
 
 /* ── TITLE CELL ── */
+.title-cell-inner{display:flex;align-items:flex-start;gap:8px}
 .tpl-id{font-size:14px;font-weight:700;color:#111;margin-bottom:5px}
 .tpl-meta-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cat-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap}
@@ -118,15 +118,49 @@ tbody td.col-actions{padding-right:20px}
 .lcat-authentication{background:#fff0e8;color:#c2410c}
 .lcat-sep{font-size:10px;color:#d1d5db}
 
-/* ── BODY CELL ── */
-.body-text{font-size:13px;color:#6b7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;max-width:320px;line-height:1.5}
-.body-tooltip-wrap{position:relative;display:inline-block;max-width:100%}
-.body-tooltip{display:none;position:fixed;background:#1c1c1c;color:#f5f5f5;font-size:12px;font-family:'Heebo',sans-serif;line-height:1.6;padding:10px 14px;border-radius:9px;max-width:320px;white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 20px rgba(0,0,0,.22);z-index:9999;pointer-events:none}
-.body-tooltip-wrap:hover .body-tooltip{display:block}
+/* ── ROW HOVER TOOLTIP (EN message preview) ── */
+.row-msg-tooltip{display:none;position:fixed;background:#1c1c1c;color:#f5f5f5;font-size:12px;font-family:'Heebo',sans-serif;line-height:1.6;padding:10px 14px;border-radius:9px;max-width:360px;white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 20px rgba(0,0,0,.22);z-index:9999;pointer-events:none}
+.row-msg-tooltip-label{font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+
+/* ── EXPAND ROW — CSS Grid sub-rows ── */
+.expand-data-row{border-bottom:2px solid #e4e3de}
+.expand-data-row>td{padding:0}
+/* Main row selected state when expanded */
+tbody tr.row-expanded{background:#f0f7f3 !important;border-bottom-color:transparent}
+tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
+/* Grid: same column widths as outer table colgroup */
+.expand-sub-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;border-bottom:1px solid #eeede9;transition:background .1s;cursor:default}
+.expand-sub-row:last-child{border-bottom:none}
+.expand-sub-row:hover{background:#f5f4f0}
+.expand-sub-row>div{padding:10px 16px;display:flex;align-items:center;min-width:0;overflow:hidden}
+.expand-sub-row>div:first-child{padding-left:16px;gap:8px;align-items:flex-start}
+.expand-sub-row>div:last-child{padding-right:20px}
+.expand-sub-msg{font-size:13px;color:#6b7280;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.expand-sub-upd{font-size:12px;color:#9ca3af;white-space:nowrap}
+
+/* ── WA HOVER TOOLTIP ── */
+.wa-tip{display:none;position:fixed;z-index:9999;pointer-events:none;filter:drop-shadow(0 8px 24px rgba(0,0,0,.16))}
+.wa-tip-inner{background:#e4dcd4;border-radius:12px;padding:14px 16px;width:280px}
+.wa-tip-bubble{background:#e2ffc7;border-radius:10px 10px 2px 10px;padding:10px 13px;font-size:12.5px;line-height:1.6;color:#111}
+.wa-tip-body{white-space:pre-wrap;word-break:break-word}
+.wa-tip-var{background:rgba(17,150,86,.13);border-radius:3px;padding:0 3px;font-size:11.5px;color:#0a6630;font-weight:600}
+.wa-tip-footer{font-size:11px;color:#667781;margin-top:6px;border-top:1px solid rgba(0,0,0,.07);padding-top:5px}
+.wa-tip-btns{margin-top:7px;display:flex;flex-direction:column;gap:5px}
+.wa-tip-btn{background:#fff;border:0.5px solid #c8d3d6;border-radius:7px;padding:6px 12px;font-size:12px;color:#0a7cff;text-align:center}
+.wa-tip-time{text-align:right;font-size:10px;color:#667781;margin-top:4px}
+.wa-tip-lang{font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.wa-tip-media{background:#c5bbb4;border-radius:7px;margin:-4px -3px 8px -3px;height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#7a6e68;font-size:11px;font-weight:500}
+.wa-tip-media svg{opacity:.6}
+
+/* ── CHEVRON BUTTON ── */
+.chevron-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#9ca3af;transition:all .15s;flex-shrink:0}
+.chevron-btn:hover{background:#f3f4f6;color:#374151}
+.chevron-btn svg{transition:transform .18s}
+.chevron-btn.open svg{transform:rotate(180deg)}
 
 /* ── COMPACT VIEW ── */
 .compact tbody td{padding:7px 16px}
-.compact tbody td:first-child{padding-left:20px}
+.compact tbody td:first-child{padding-left:16px}
 .compact .body-text{-webkit-line-clamp:1;max-width:280px}
 .compact .tpl-meta-row{gap:5px}
 
@@ -173,6 +207,67 @@ tbody td.col-actions{padding-right:20px}
 
 /* ── EMPTY ── */
 .empty-row td{text-align:center;padding:60px 20px;color:#9ca3af;font-size:14px}
+
+/* ── TEMPLATE LIBRARY MODAL ── */
+.tl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998;display:none;align-items:center;justify-content:center}
+.tl-overlay.open{display:flex}
+.tl-modal{background:#fff;border-radius:20px;width:min(96vw,880px);height:min(82vh,620px);display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.22);overflow:hidden}
+/* header */
+.tl-header{padding:28px 36px 16px;flex-shrink:0}
+.tl-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.tl-title{font-size:26px;font-weight:800;color:#111;margin-bottom:6px;letter-spacing:-.3px}
+.tl-subtitle{font-size:14px;color:#6b7280;line-height:1.5}
+.tl-close{width:36px;height:36px;border-radius:8px;border:none;background:none;cursor:pointer;color:#9ca3af;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .15s}
+.tl-close:hover{color:#374151}
+/* body */
+.tl-body{display:flex;flex:1;min-height:0;padding:0 36px 20px;gap:28px}
+.tl-left{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
+.tl-right{width:260px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+/* toolbar */
+.tl-section-label{font-size:15px;font-weight:700;color:#111;margin-bottom:12px;display:block}
+.tl-search-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tl-search-wrap{position:relative;flex:1}
+.tl-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none;display:flex}
+.tl-search-inp{width:100%;height:42px;padding:0 14px 0 38px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;outline:none;background:#f9fafb;transition:border-color .15s}
+.tl-search-inp:focus{border-color:#119656;background:#fff;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
+.tl-search-inp::placeholder{color:#9ca3af}
+.tl-lang-select{height:42px;padding:0 32px 0 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#374151;background:#f9fafb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;outline:none;cursor:pointer;transition:border-color .15s;flex-shrink:0}
+.tl-lang-select:focus{border-color:#119656;background-color:#fff}
+.tl-cat-pills{display:flex;gap:8px;margin-bottom:8px}
+.tl-cat-pill{height:32px;padding:0 16px;border:1.5px solid #e5e7eb;border-radius:100px;background:#fff;color:#6b7280;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.tl-cat-pill.active{border-color:#119656;background:#f0faf4;color:#073F24}
+.tl-cat-pill:hover:not(.active){border-color:#b9e4cc;color:#374151}
+/* list */
+.tl-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.tl-list-count{font-size:12px;color:#9ca3af;margin-top:6px;flex-shrink:0}
+/* groups */
+.tl-group{border:1.5px solid #e9e8e4;border-radius:10px;overflow:hidden;flex-shrink:0}
+.tl-group-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;background:#f9f8f5;transition:background .1s;user-select:none}
+.tl-group-hdr:hover{background:#f0faf4}
+.tl-group-label{font-size:13px;font-weight:700;color:#111}
+.tl-group-count{font-size:11px;color:#6b7280;font-weight:500}
+.tl-group-chevron{color:#9ca3af;transition:transform .2s;flex-shrink:0}
+.tl-group-chevron.open{transform:rotate(180deg)}
+.tl-group-body{background:#fff}
+.tl-group-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 10px 20px;cursor:pointer;border-top:1px solid #f4f3ef;transition:background .1s}
+.tl-group-item:hover{background:#f9f8f5}
+.tl-group-item.selected{background:#f0faf4}
+.tl-group-item-name{font-size:13px;font-weight:500;color:#111;flex:1;min-width:0;padding-right:12px}
+.tl-item-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .15s}
+.tl-group-item.selected .tl-item-check{background:#119656;border-color:#119656}
+.tl-group.no-match{opacity:.42;pointer-events:none}
+.tl-group-empty-hint{font-size:12px;color:#9ca3af;font-style:italic;padding:10px 16px 12px 20px;border-top:1px solid #f4f3ef}
+/* right preview */
+.tl-preview{flex-shrink:0;height:320px;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:14px;padding:14px;overflow-y:auto;display:flex;align-items:flex-end;justify-content:flex-end;margin-bottom:12px}
+.tl-preview-empty{display:flex;flex:1;align-self:center;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:12px;font-style:italic;text-align:center;line-height:1.5}
+.tl-right-info{font-size:12px;color:#6b7280;line-height:1.6}
+/* footer */
+.tl-footer{padding:14px 36px;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-shrink:0}
+.tl-btn-cancel{height:44px;padding:0 24px;background:#fff;border:1.5px solid #d1d5db;border-radius:100px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;color:#374151;cursor:pointer;transition:all .15s}
+.tl-btn-cancel:hover{border-color:#9ca3af;color:#111}
+.tl-btn-create{height:44px;padding:0 28px;background:#119656;color:#fff;border:none;border-radius:100px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.tl-btn-create:hover{background:#0e7a47}
+.tl-btn-create.disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;pointer-events:none}
 </style>
 </head>
 <body>
@@ -233,30 +328,34 @@ tbody td.col-actions{padding-right:20px}
       <p class="page-subtitle">Please go through all the templates below</p>
     </div>
     <div class="page-header-right">
-      <button class="hbtn-text">View sample</button>
-      <button class="hbtn-outline" onclick="syncHSM(this)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
-        Sync HSM
-      </button>
-      <a href="hsm-create-hifi.html" class="hbtn-outline" style="text-decoration:none;color:#111">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Create
-      </a>
-      <button class="hbtn-green">
+      <!-- Bulk apply — outline -->
+      <button class="hbtn-outline">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
         Bulk apply
       </button>
+      <!-- Sync HSM — outline, View sample as absolute sub-label so it doesn't break row height -->
+      <div style="position:relative">
+        <button class="hbtn-outline" onclick="syncHSM(this)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+          Sync HSM
+        </button>
+        <div style="position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:11px;color:#9ca3af;white-space:nowrap;cursor:pointer">View sample</div>
+      </div>
+      <!-- Template library — opens modal -->
+      <button class="hbtn-outline" onclick="openTplLibrary()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Template library
+      </button>
+      <!-- Create — primary green, rightmost -->
+      <a href="hsm-create-hifi.html" class="hbtn-green" style="text-decoration:none">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create
+      </a>
     </div>
   </div>
 
   <!-- FILTERS BAR -->
   <div class="filters-bar">
-    <select class="filter-dropdown" id="status-filter" onchange="filterTable()">
-      <option value="">All Status</option>
-      <option value="approved">Approved</option>
-      <option value="pending">Pending</option>
-      <option value="rejected">Rejected</option>
-    </select>
     <select class="filter-dropdown" id="cat-filter" onchange="filterTable()">
       <option value="">All Categories</option>
       <option value="utility">Utility</option>
@@ -276,14 +375,20 @@ tbody td.col-actions{padding-right:20px}
   <!-- TABLE -->
   <div class="table-wrap">
     <table id="tpl-table">
+      <colgroup>
+        <col style="width:220px">
+        <col style="width:210px">
+        <col style="width:180px">
+        <col style="width:130px">
+        <col><!-- Actions: takes remaining space -->
+      </colgroup>
       <thead>
         <tr>
           <th>Title</th>
-          <th class="col-body">Body</th>
           <th class="col-langs">Languages</th>
           <th class="col-catcost">Category</th>
-          <th class="col-created">Created</th>
-          <th class="col-actions">Actions</th>
+          <th class="col-created">Last updated</th>
+          <th class="col-actions"></th>
         </tr>
       </thead>
       <tbody id="tpl-tbody"></tbody>
@@ -321,6 +426,14 @@ const TEMPLATES = [
     langCats: {EN:'utility',HI:'utility',MR:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'pending'}],
     body: 'Hi {{1}}, welcome to {{2}}! We\'re glad to have you on board.',
+    langBodies: {
+      EN: 'Hi {{1}}, welcome to {{2}}! We\'re glad to have you on board.',
+      HI: 'नमस्ते {{1}}, {{2}} में आपका स्वागत है! हमें खुशी है कि आप हमसे जुड़े।',
+      MR: 'नमस्कार {{1}}, {{2}} मध्ये आपले स्वागत आहे! तुम्ही आमच्यासोबत असल्याचा आनंद आहे।'
+    },
+    footer: 'Reply STOP to opt out',
+    buttons: ['Get started →','Learn more'],
+    langMeta: {EN:{lastUpdated:'2 weeks ago'},HI:{lastUpdated:'2 weeks ago'},MR:{lastUpdated:'3 days ago'}},
     status: 'approved',
     created: '2 weeks ago',
     tags: ['welcome','onboarding'],
@@ -333,6 +446,9 @@ const TEMPLATES = [
     langCats: {EN:'utility'},
     langs: [{code:'EN',status:'approved'}],
     body: 'Your OTP is {{1}}. Valid for 10 minutes. Do not share this code with anyone.',
+    footer: '',
+    buttons: [],
+    langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'approved',
     created: 'A week ago',
     tags: ['transactional','otp'],
@@ -346,6 +462,14 @@ const TEMPLATES = [
     langCats: {EN:'marketing',HI:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Thank you for your order #{{1}}! Your order has been confirmed and will be dispatched soon.',
+    langBodies: {
+      EN: 'Thank you for your order #{{1}}! Your order has been confirmed and will be dispatched soon.',
+      HI: 'आपके ऑर्डर #{{1}} के लिए धन्यवाद! आपका ऑर्डर कन्फर्म हो गया है और जल्द ही भेज दिया जाएगा।'
+    },
+    media: {type:'image', label:'Order summary'},
+    footer: 'Glific Commerce',
+    buttons: ['Track order','Contact support'],
+    langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
     created: '3 weeks ago',
     tags: ['order'],
@@ -360,6 +484,13 @@ const TEMPLATES = [
     langCats: {EN:'utility',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Hi {{1}}, your payment of ₹{{2}} is due on {{3}}. Please complete it to avoid service interruption.',
+    langBodies: {
+      EN: 'Hi {{1}}, your payment of ₹{{2}} is due on {{3}}. Please complete it to avoid service interruption.',
+      HI: 'नमस्ते {{1}}, आपका ₹{{2}} का भुगतान {{3}} तक देय है। सेवा बाधित होने से बचने के लिए कृपया समय पर भुगतान करें।'
+    },
+    footer: 'Glific Finance',
+    buttons: ['Pay now','Remind me later'],
+    langMeta: {EN:{lastUpdated:'5 days ago'},HI:{lastUpdated:'5 days ago'}},
     status: 'approved',
     created: '5 days ago',
     tags: ['payment','transactional'],
@@ -372,6 +503,10 @@ const TEMPLATES = [
     langCats: {EN:'utility'},
     langs: [{code:'EN',status:'pending'}],
     body: 'Great news! Your order #{{1}} has been shipped and will arrive by {{2}}.',
+    media: {type:'image', label:'Shipment photo'},
+    footer: 'Glific Logistics',
+    buttons: ['Track shipment'],
+    langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'pending',
     created: 'A week ago',
     tags: ['logistics'],
@@ -384,8 +519,17 @@ const TEMPLATES = [
     langCats: {EN:'utility',HI:'utility',MR:'marketing',TA:'marketing'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'},{code:'MR',status:'approved'},{code:'TA',status:'approved'}],
     body: 'Hi {{1}}, you have been successfully enrolled in {{2}}. Your journey begins now!',
+    langBodies: {
+      EN: 'Hi {{1}}, you have been successfully enrolled in {{2}}. Your journey begins now!',
+      HI: 'नमस्ते {{1}}, आपको {{2}} में सफलतापूर्वक नामांकित किया गया है। आपकी यात्रा अब शुरू होती है!',
+      MR: 'नमस्कार {{1}}, तुम्हाला {{2}} मध्ये यशस्वीरित्या प्रवेश मिळाला आहे. तुमचा प्रवास आता सुरू होतो!',
+      TA: 'வணக்கம் {{1}}, நீங்கள் {{2}} இல் வெற்றிகரமாக சேர்க்கப்பட்டுள்ளீர்கள். உங்கள் பயணம் இப்போது தொடங்குகிறது!'
+    },
+    footer: 'Project Tech4Dev',
+    buttons: ['View programme','Contact coordinator'],
+    langMeta: {EN:{lastUpdated:'1 month ago'},HI:{lastUpdated:'1 month ago'},MR:{lastUpdated:'3 weeks ago'},TA:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
-    created: '0 months ago',
+    created: '1 month ago',
     tags: ['enrollment','programme'],
     uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
   },
@@ -396,6 +540,14 @@ const TEMPLATES = [
     langCats: {EN:'utility',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Hi {{1}}, this is a reminder about your workshop scheduled for {{2}} at {{3}}.',
+    langBodies: {
+      EN: 'Hi {{1}}, this is a reminder about your workshop scheduled for {{2}} at {{3}}.',
+      HI: 'नमस्ते {{1}}, यह आपके {{2}} को {{3}} बजे निर्धारित कार्यशाला के बारे में एक अनुस्मारक है।'
+    },
+    media: {type:'image', label:'Workshop flyer'},
+    footer: 'Reply HELP for assistance',
+    buttons: ['Confirm attendance','View agenda'],
+    langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'}},
     status: 'approved',
     created: '3 weeks ago',
     tags: ['reminder','events'],
@@ -408,6 +560,9 @@ const TEMPLATES = [
     langCats: {EN:'marketing'},
     langs: [{code:'EN',status:'rejected'}],
     body: 'Hi {{1}}, how was your recent experience with us? We would love to hear your feedback.',
+    footer: '',
+    buttons: ['Give feedback','Skip'],
+    langMeta: {EN:{lastUpdated:'A week ago'}},
     status: 'rejected',
     created: 'A week ago',
     tags: ['feedback'],
@@ -420,8 +575,12 @@ const TEMPLATES = [
     langCats: {EN:'utility'},
     langs: [{code:'EN',status:'approved'}],
     body: 'Dear {{1}}, please submit your documents by {{2}} to complete your verification process.',
+    media: {type:'document', label:'Submission form (PDF)'},
+    footer: 'Project Tech4Dev',
+    buttons: ['Submit documents'],
+    langMeta: {EN:{lastUpdated:'1 month ago'}},
     status: 'approved',
-    created: '0 months ago',
+    created: '1 month ago',
     tags: ['documents','kyc'],
     uuid: 'b8c9d0e1-f2a3-4567-bcde-678901234567'
   },
@@ -432,12 +591,19 @@ const TEMPLATES = [
     langCats: {EN:'marketing',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Your appointment with {{1}} is confirmed for {{2}}. Please arrive 10 minutes early.',
+    langBodies: {
+      EN: 'Your appointment with {{1}} is confirmed for {{2}}. Please arrive 10 minutes early.',
+      HI: '{{1}} के साथ आपकी अपॉइंटमेंट {{2}} के लिए कन्फर्म है। कृपया 10 मिनट पहले पहुँचें।'
+    },
+    footer: 'Reply CANCEL to cancel',
+    buttons: ['Add to calendar','Get directions'],
+    langMeta: {EN:{lastUpdated:'A week ago'},HI:{lastUpdated:'5 days ago'}},
     status: 'approved',
     created: 'A week ago',
     tags: ['appointment','service'],
     uuid: 'c9d0e1f2-a3b4-5678-cdef-789012345678'
-  }  ,{
-    // GROUP: 5-7 languages (~100 templates)
+  },
+  {
     id: 'health_screening_alert',
     category: 'utility',
     categories: ['utility'],
@@ -448,13 +614,24 @@ const TEMPLATES = [
       {code:'TA',status:'approved'},{code:'BN',status:'pending'}
     ],
     body: 'Dear {{1}}, your health screening is scheduled for {{2}} at {{3}}. Please bring your ID and previous reports.',
+    langBodies: {
+      EN: 'Dear {{1}}, your health screening is scheduled for {{2}} at {{3}}. Please bring your ID and previous reports.',
+      HI: 'प्रिय {{1}}, आपकी स्वास्थ्य जांच {{2}} को {{3}} पर निर्धारित है। कृपया अपनी आईडी और पिछली रिपोर्ट साथ लाएं।',
+      MR: 'प्रिय {{1}}, तुमची आरोग्य तपासणी {{2}} रोजी {{3}} वाजता आहे. कृपया तुमचे ओळखपत्र व मागील अहवाल आणा.',
+      TE: 'ప్రియమైన {{1}}, మీ ఆరోగ్య పరీక్ష {{2}} న {{3}} వద్ద షెడ్యూల్ చేయబడింది. దయచేసి మీ ID మరియు మునుపటి నివేదికలు తీసుకురండి.',
+      TA: 'அன்பான {{1}}, உங்கள் உடல்நல பரிசோதனை {{2}} அன்று {{3}} மணிக்கு திட்டமிடப்பட்டுள்ளது. உங்கள் அடையாள அட்டை மற்றும் முந்தைய அறிக்கைகளை கொண்டு வாருங்கள்.',
+      BN: 'প্রিয় {{1}}, আপনার স্বাস্থ্য পরীক্ষা {{2}} তারিখে {{3}} এ নির্ধারিত আছে। অনুগ্রহ করে আপনার পরিচয়পত্র এবং আগের রিপোর্ট সাথে আনুন।'
+    },
+    media: {type:'document', label:'Health screening form'},
+    footer: 'Health Dept · Reply HELP for info',
+    buttons: ['Confirm attendance','Reschedule'],
+    langMeta: {EN:{lastUpdated:'2 weeks ago'},HI:{lastUpdated:'2 weeks ago'},MR:{lastUpdated:'2 weeks ago'},TE:{lastUpdated:'10 days ago'},TA:{lastUpdated:'10 days ago'},BN:{lastUpdated:'3 days ago'}},
     status: 'approved',
     created: '2 weeks ago',
     tags: ['health'],
     uuid: 'd1e2f3a4-b5c6-7890-defa-123456789abc'
   },
   {
-    // GROUP: 10+ languages (<50 templates)
     id: 'national_programme_update',
     category: 'utility',
     categories: ['utility','marketing'],
@@ -468,6 +645,23 @@ const TEMPLATES = [
       {code:'UR',status:'pending'},{code:'OD',status:'rejected'}
     ],
     body: 'Hi {{1}}, important update on the {{2}} programme. Please check your portal for details and next steps.',
+    langBodies: {
+      EN: 'Hi {{1}}, important update on the {{2}} programme. Please check your portal for details and next steps.',
+      HI: 'नमस्ते {{1}}, {{2}} कार्यक्रम पर महत्वपूर्ण अपडेट। विवरण और अगले चरणों के लिए अपना पोर्टल देखें।',
+      MR: 'नमस्कार {{1}}, {{2}} कार्यक्रमावर महत्त्वाची अपडेट. तपशील आणि पुढील चरणांसाठी कृपया पोर्टल तपासा.',
+      TE: '{{1}} నమస్కారం, {{2}} కార్యక్రమంపై ముఖ్యమైన నవీకరణ. వివరాలు మరియు తదుపరి దశల కోసం మీ పోర్టల్ చూడండి.',
+      TA: 'வணக்கம் {{1}}, {{2}} திட்டத்தில் முக்கியமான புதுப்பிப்பு. விவரங்கள் மற்றும் அடுத்த படிகளுக்கு உங்கள் போர்டலை சரிபார்க்கவும்.',
+      BN: 'নমস্কার {{1}}, {{2}} প্রোগ্রামে গুরুত্বপূর্ণ আপডেট। বিস্তারিত এবং পরবর্তী পদক্ষেপের জন্য আপনার পোর্টাল দেখুন।',
+      GU: 'નમસ્તે {{1}}, {{2}} કાર્યક્રમ પર મહત્ત્વનો અપડેટ. વિગતો અને આગળના પગલાં માટે તમારું પોર્ટલ તપાસો.',
+      PA: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ {{1}}, {{2}} ਪ੍ਰੋਗਰਾਮ ਬਾਰੇ ਮਹੱਤਵਪੂਰਨ ਅੱਪਡੇਟ। ਵੇਰਵਿਆਂ ਲਈ ਆਪਣਾ ਪੋਰਟਲ ਦੇਖੋ।',
+      KN: 'ನಮಸ್ಕಾರ {{1}}, {{2}} ಕಾರ್ಯಕ್ರಮದ ಬಗ್ಗೆ ಪ್ರಮುಖ ನವೀಕರಣ. ವಿವರಗಳಿಗಾಗಿ ನಿಮ್ಮ ಪೋರ್ಟಲ್ ಪರಿಶೀಲಿಸಿ.',
+      ML: 'നമസ്കാരം {{1}}, {{2}} പരിപാടിയിൽ പ്രധാനപ്പെട്ട അപ്ഡേറ്റ്. വിവരങ്ങൾക്കായി നിങ്ങളുടെ പോർട്ടൽ പരിശോദിക്കുക.',
+      UR: 'السلام علیکم {{1}}، {{2}} پروگرام پر اہم اپڈیٹ۔ تفصیلات کے لیے اپنا پورٹل دیکھیں۔',
+      OD: 'ନମସ୍କାର {{1}}, {{2}} କାର୍ଯ୍ୟକ୍ରମ ଉପରେ ଗୁରୁତ୍ୱପୂର୍ଣ ଅଦ୍ୟତନ। ବିବରଣୀ ପାଇଁ ଆପଣଙ୍କ ପୋର୍ଟାଲ ଦେଖନ୍ତୁ।'
+    },
+    footer: 'National Programme Office',
+    buttons: ['View update','Contact office'],
+    langMeta: {EN:{lastUpdated:'3 weeks ago'},HI:{lastUpdated:'3 weeks ago'},MR:{lastUpdated:'3 weeks ago'},TE:{lastUpdated:'3 weeks ago'},TA:{lastUpdated:'2 weeks ago'},BN:{lastUpdated:'2 weeks ago'},GU:{lastUpdated:'2 weeks ago'},PA:{lastUpdated:'2 weeks ago'},KN:{lastUpdated:'2 weeks ago'},ML:{lastUpdated:'4 days ago'},UR:{lastUpdated:'4 days ago'},OD:{lastUpdated:'1 week ago'}},
     status: 'approved',
     created: '3 weeks ago',
     tags: ['programme'],
@@ -558,16 +752,6 @@ function expandLangs(i,e){
 function truncate(str,max=72){return str.length>max?str.slice(0,max)+'…':str;}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// Tooltip mouse tracking
-document.addEventListener('mousemove',e=>{
-  const tip=e.target.closest('.body-tooltip-wrap')?.querySelector('.body-tooltip');
-  if(tip){
-    const x=e.clientX+14, y=e.clientY+14;
-    const tipW=320, tipH=80;
-    tip.style.left=(x+tipW>window.innerWidth?e.clientX-tipW-8:x)+'px';
-    tip.style.top=(y+tipH>window.innerHeight?e.clientY-tipH-8:y)+'px';
-  }
-});
 
 function copyUUID(uuid, e){
   e.stopPropagation();
@@ -579,15 +763,168 @@ function copyUUID(uuid, e){
 
 function getFiltered(){
   const q=(document.getElementById('search-inp').value||'').toLowerCase();
-  const sf=document.getElementById('status-filter').value;
   const cf=document.getElementById('cat-filter').value;
   return TEMPLATES.filter(t=>{
-    if(sf && t.status!==sf) return false;
     if(cf){const cats=t.categories||[t.category];if(!cats.includes(cf))return false;}
     if(q && !t.id.includes(q) && !t.body.toLowerCase().includes(q)) return false;
     return true;
   });
 }
+
+// Render expanded row — CSS Grid sub-rows aligned to outer table colgroup
+function renderExpandRow(t){
+  const rows = t.langs.map((l)=>{
+    const cat = (t.langCats&&t.langCats[l.code])||t.category||'utility';
+    const lastUpd = (t.langMeta&&t.langMeta[l.code]?.lastUpdated)||t.created;
+    const langBody = (t.langBodies&&t.langBodies[l.code])||t.body;
+    const bodyHtml = escHtml(langBody).replace(/\{\{(\d+)\}\}/g,'<span style="background:rgba(17,150,86,.1);border-radius:3px;padding:0 3px;font-size:11.5px;color:#0a6630;font-weight:600">{{$1}}</span>');
+    const dotClass = l.status==='approved'?'dot-g':l.status==='pending'?'dot-a':'dot-r';
+    return `<div class="expand-sub-row" data-wa-tid="${t.id}" data-wa-lang="${l.code}">
+      <div>
+        <span style="width:28px;flex-shrink:0"></span>
+        <div class="expand-sub-msg">${bodyHtml}</div>
+      </div>
+      <div><span class="lc ${l.status}"><span class="lc-dot ${dotClass}"></span>${l.code}</span></div>
+      <div><span class="cat-badge ${catClass(cat)}" style="font-size:11px">${catLabel(cat)}</span></div>
+      <div><span class="expand-sub-upd">${escHtml(lastUpd)}</span></div>
+      <div></div>
+    </div>`;
+  }).join('');
+
+  return `<div>${rows}</div>`;
+}
+
+function toggleExpand(idx, tid, e){
+  const row = document.getElementById('expand-row-'+idx);
+  const btn = document.getElementById('chevron-btn-'+idx);
+  if(!row) return;
+  const isOpen = row.style.display==='table-row';
+  document.querySelectorAll('.expand-data-row').forEach(r=>r.style.display='none');
+  document.querySelectorAll('.chevron-btn').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('tbody tr.row-expanded').forEach(r=>r.classList.remove('row-expanded'));
+  if(!isOpen){
+    const t = TEMPLATES.find(x=>x.id===tid);
+    if(t){
+      row.querySelector('td').innerHTML = renderExpandRow(t);
+      row.style.display='table-row';
+      btn.classList.add('open');
+      const mainTr = row.previousElementSibling;
+      if(mainTr) mainTr.classList.add('row-expanded');
+      // Sync grid columns to the outer table's actual rendered TH widths
+      requestAnimationFrame(()=>{
+        const ths = document.querySelectorAll('#tpl-table thead th');
+        const cols = Array.from(ths).map((th,i)=>
+          i < ths.length-1 ? Math.round(th.getBoundingClientRect().width)+'px' : '1fr'
+        ).join(' ');
+        row.querySelectorAll('.expand-sub-row').forEach(r=>r.style.gridTemplateColumns=cols);
+      });
+    }
+  }
+}
+
+// ── ROW HOVER TOOLTIP (EN message, plain) ──
+const _rowTooltip = document.createElement('div');
+_rowTooltip.className='row-msg-tooltip';
+_rowTooltip.innerHTML='<div class="row-msg-tooltip-label">EN · Message preview</div><div id="rtt-body"></div>';
+document.body.appendChild(_rowTooltip);
+let _tooltipHideTimer;
+
+// ── WA HOVER TOOLTIP (WhatsApp format, on expanded sub-rows) ──
+const _waTip = document.createElement('div');
+_waTip.className='wa-tip';
+_waTip.innerHTML=`<div class="wa-tip-inner">
+  <div class="wa-tip-lang" id="wat-lang"></div>
+  <div class="wa-tip-bubble">
+    <div class="wa-tip-media" id="wat-media" style="display:none"></div>
+    <div class="wa-tip-body" id="wat-body"></div>
+    <div class="wa-tip-footer" id="wat-footer" style="display:none"></div>
+    <div class="wa-tip-time">12:30 ✓✓</div>
+  </div>
+  <div class="wa-tip-btns" id="wat-btns"></div>
+</div>`;
+document.body.appendChild(_waTip);
+let _waTipTimer;
+
+function bodyWithVars(body){
+  return escHtml(body).replace(/\{\{(\d+)\}\}/g,'<span class="wa-tip-var">{{$1}}</span>');
+}
+
+document.addEventListener('mousemove',e=>{
+  // Plain EN tooltip on main rows
+  const mainRow=e.target.closest('tr[data-body]');
+  // WA tooltip on expanded sub-rows
+  const subRow=e.target.closest('[data-wa-tid]');
+
+  if(subRow){
+    clearTimeout(_waTipTimer);
+    clearTimeout(_tooltipHideTimer);
+    _rowTooltip.style.display='none';
+    const tid=subRow.dataset.waTid, lang=subRow.dataset.waLang;
+    const t=TEMPLATES.find(x=>x.id===tid);
+    if(t){
+      document.getElementById('wat-lang').textContent=lang+' · '+catLabel((t.langCats&&t.langCats[lang])||t.category||'utility');
+      const langBody=(t.langBodies&&t.langBodies[lang])||t.body;
+      document.getElementById('wat-body').innerHTML=bodyWithVars(langBody);
+      const ftEl=document.getElementById('wat-footer');
+      if(t.footer){ftEl.textContent=t.footer;ftEl.style.display='';}else{ftEl.style.display='none';}
+      const btEl=document.getElementById('wat-btns');
+      btEl.innerHTML=(t.buttons&&t.buttons.length)?t.buttons.map(b=>`<div class="wa-tip-btn">${escHtml(b)}</div>`).join(''):'';
+      const mediaEl=document.getElementById('wat-media');
+      if(t.media){
+        const isDoc=t.media.type==='document';
+        mediaEl.style.display='flex';
+        mediaEl.innerHTML=isDoc
+          ?`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>${escHtml(t.media.label)}</span>`
+          :`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>${escHtml(t.media.label)}</span>`;
+      } else {
+        mediaEl.style.display='none';
+      }
+    }
+    const tipW=296, tipH=t&&t.media?290:180;
+    const x=e.clientX+18, y=e.clientY+12;
+    _waTip.style.left=(x+tipW>window.innerWidth?e.clientX-tipW-10:x)+'px';
+    _waTip.style.top=(y+tipH>window.innerHeight?e.clientY-tipH-10:y)+'px';
+    _waTip.style.display='block';
+  } else if(mainRow && !e.target.closest('.actions-cell-inner')){
+    // Only show WA tooltip when row is NOT expanded
+    const expandRow=document.getElementById('expand-row-'+mainRow.dataset.idx);
+    const isExpanded=expandRow&&expandRow.style.display==='table-row';
+    clearTimeout(_waTipTimer);
+    _rowTooltip.style.display='none';
+    if(!isExpanded){
+      const t=TEMPLATES.find(x=>x.id===mainRow.dataset.tid);
+      if(t){
+        document.getElementById('wat-lang').textContent='EN · '+catLabel((t.langCats&&t.langCats['EN'])||t.category||'utility');
+        const enBody=(t.langBodies&&t.langBodies['EN'])||t.body;
+        document.getElementById('wat-body').innerHTML=bodyWithVars(enBody);
+        const ftEl=document.getElementById('wat-footer');
+        if(t.footer){ftEl.textContent=t.footer;ftEl.style.display='';}else{ftEl.style.display='none';}
+        const btEl=document.getElementById('wat-btns');
+        btEl.innerHTML=(t.buttons&&t.buttons.length)?t.buttons.map(b=>`<div class="wa-tip-btn">${escHtml(b)}</div>`).join(''):'';
+        const mediaEl=document.getElementById('wat-media');
+        if(t.media){
+          const isDoc=t.media.type==='document';
+          mediaEl.style.display='flex';
+          mediaEl.innerHTML=isDoc
+            ?`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>${escHtml(t.media.label)}</span>`
+            :`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>${escHtml(t.media.label)}</span>`;
+        } else {
+          mediaEl.style.display='none';
+        }
+        const tipW=296, tipH=t.media?290:200;
+        const x=e.clientX+18, y=e.clientY+12;
+        _waTip.style.left=(x+tipW>window.innerWidth?e.clientX-tipW-10:x)+'px';
+        _waTip.style.top=(y+tipH>window.innerHeight?e.clientY-tipH-10:y)+'px';
+        _waTip.style.display='block';
+      }
+    } else {
+      _waTip.style.display='none';
+    }
+  } else {
+    _tooltipHideTimer=setTimeout(()=>{_rowTooltip.style.display='none';},80);
+    _waTipTimer=setTimeout(()=>{_waTip.style.display='none';},80);
+  }
+});
 
 function renderTable(){
   const data=getFiltered();
@@ -595,40 +932,56 @@ function renderTable(){
   document.getElementById('page-range').textContent=`01–${data.length} of ${data.length}`;
 
   if(!data.length){
-    tbody.innerHTML=`<tr class="empty-row"><td colspan="6">No templates match your filters.</td></tr>`;
+    tbody.innerHTML=`<tr class="empty-row"><td colspan="5">No templates match your filters.</td></tr>`;
     return;
   }
 
   tbody.innerHTML=data.map((t,i)=>`
-    <tr onclick="window.location.href='hsm-create-hifi.html?template=${t.id}'">
+    <tr data-body="${escHtml(t.body)}" data-tid="${t.id}" data-idx="${i}" onclick="toggleExpand(${i},'${t.id}',event)" style="cursor:pointer">
       <td>
-        <div class="tpl-id">${t.id}</div>
-        <div class="tpl-meta-row">
-          <button class="copy-uuid" onclick="copyUUID('${t.uuid}',event)" title="Copy UUID">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy UUID
+        <div class="title-cell-inner">
+          <button class="chevron-btn" id="chevron-btn-${i}" onclick="event.stopPropagation();toggleExpand(${i},'${t.id}',event)" title="Expand preview" aria-label="Expand row" style="margin-top:1px;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
+          <div>
+            <div class="tpl-id">${t.id}</div>
+            <div class="tpl-meta-row">
+              <button class="copy-uuid" onclick="copyUUID('${t.uuid}',event)" title="Copy UUID">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy UUID
+              </button>
+            </div>
+          </div>
         </div>
       </td>
-      <td><div class="body-tooltip-wrap"><div class="body-text">${escHtml(t.body)}</div><div class="body-tooltip">${escHtml(t.body)}</div></div></td>
       <td>${langCell(t.langs,i,t)}</td>
       <td>${catCostHTML(t)}</td>
       <td class="created-cell">${t.created}</td>
       <td class="col-actions">
         <div class="actions-cell-inner" onclick="event.stopPropagation()">
-          <button class="dots-btn" title="View template" style="color:#9ca3af" onclick="event.stopPropagation();viewTemplate('${t.id}')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <button class="dots-btn" title="Add new language" onclick="event.stopPropagation();addLanguage('${t.id}')">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Capital A — source language -->
+              <path d="M1 13.5 L4 5 L7 13.5"/>
+              <line x1="2.2" y1="10.5" x2="5.8" y2="10.5"/>
+              <!-- Lowercase a — target/translated language -->
+              <circle cx="11.5" cy="11.5" r="2"/>
+              <line x1="13.5" y1="11.5" x2="13.5" y2="14"/>
+              <!-- Plus — add new -->
+              <line x1="11.5" y1="1" x2="11.5" y2="4.5"/>
+              <line x1="9.75" y1="2.75" x2="13.25" y2="2.75"/>
+            </svg>
           </button>
-          <button class="dots-btn" title="Duplicate" style="color:#9ca3af" onclick="event.stopPropagation()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <button class="dots-btn" title="View template" onclick="event.stopPropagation();viewTemplate('${t.id}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
           <button class="dots-btn" onclick="toggleMenu('menu-${i}',event)" title="More options">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
           </button>
           <div class="dots-menu" id="menu-${i}">
-            <button class="dots-menu-item" onclick="addLanguage('${t.id}')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><line x1="19" y1="5" x2="19" y2="5.01"/><line x1="17" y1="3" x2="21" y2="7"/></svg>
-              Add new language
+            <button class="dots-menu-item" onclick="event.stopPropagation();copyUUID('${t.uuid}',event)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Duplicate template
             </button>
             <button class="dots-menu-item">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -637,6 +990,9 @@ function renderTable(){
           </div>
         </div>
       </td>
+    </tr>
+    <tr class="expand-data-row" id="expand-row-${i}" style="display:none">
+      <td colspan="5"></td>
     </tr>
   `).join('');
 }

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template Library — Glific</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{font-size:14px}
+body{font-family:'Heebo',sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:180px;min-height:100vh;background:#fff;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:16px 14px 10px}
+.logo-badge{background:#073F24;color:#fff;font-size:13px;font-weight:700;padding:5px 10px;border-radius:6px;letter-spacing:-.3px}
+.wallet-card{margin:6px 10px 12px;background:#f0faf4;border:1px solid #c8e6d0;border-radius:8px;padding:10px 12px}
+.wallet-label{font-size:11px;color:#555;margin-bottom:3px;font-weight:500}
+.wallet-amount{font-size:16px;font-weight:700;color:#119656}
+.nav-section{padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#9ca3af}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 14px;font-size:13px;font-weight:500;color:#4b5563;text-decoration:none;cursor:pointer;border-radius:6px;margin:1px 8px;transition:all .13s}
+.nav-item:hover{background:#f3f4f6;color:#111}
+.nav-item.active{background:#e8f5ee;color:#073F24;font-weight:600}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.nav-item.active svg{opacity:1}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:28px 40px 0;flex-shrink:0}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#6b7280;text-decoration:none;margin-bottom:14px;transition:color .15s}
+.back-link:hover{color:#111}
+.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.page-title{font-size:26px;font-weight:800;color:#111;letter-spacing:-.3px;margin-bottom:3px}
+.page-subtitle{font-size:13px;color:#6b7280}
+
+/* ── CONTENT AREA ── */
+.content-area{flex:1;display:flex;gap:0;overflow:hidden;padding:0 40px 32px}
+
+/* ── LEFT BROWSE PANEL ── */
+.browse-panel{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;background:#fff;border-radius:14px;border:1px solid #e5e5e0;overflow:hidden}
+.browse-toolbar{padding:16px 20px 12px;border-bottom:1px solid #f0f0ee;flex-shrink:0}
+.search-lang-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.search-wrap{position:relative;flex:1}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af;pointer-events:none;display:flex}
+.search-inp{width:100%;height:40px;padding:0 14px 0 38px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:14px;color:#111;outline:none;background:#f9fafb;transition:border-color .15s}
+.search-inp:focus{border-color:#119656;background:#fff;box-shadow:0 0 0 3px rgba(17,150,86,.08)}
+.search-inp::placeholder{color:#9ca3af}
+.lang-select{height:40px;padding:0 32px 0 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;color:#374151;background:#f9fafb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;outline:none;cursor:pointer;transition:border-color .15s;flex-shrink:0}
+.lang-select:focus{border-color:#119656;background-color:#fff}
+.cat-pills{display:flex;gap:8px}
+.cat-pill{height:32px;padding:0 16px;border:1.5px solid #e5e7eb;border-radius:100px;background:#fff;color:#6b7280;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.cat-pill.active{border-color:#119656;background:#f0faf4;color:#073F24}
+.cat-pill:hover:not(.active){border-color:#b9e4cc;color:#374151}
+.browse-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.list-count{font-size:12px;color:#9ca3af;padding:8px 20px;border-top:1px solid #f0f0ee;flex-shrink:0}
+
+/* ── ACCORDION GROUPS ── */
+.tpl-group{border:1.5px solid #e9e8e4;border-radius:10px;overflow:hidden;flex-shrink:0}
+.tpl-group-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:#f9f8f5;transition:background .1s;user-select:none}
+.tpl-group-hdr:hover{background:#f0faf4}
+.tpl-group-label{font-size:13px;font-weight:700;color:#111}
+.tpl-group-count{font-size:11px;color:#6b7280;font-weight:500}
+.tpl-group-chevron{color:#9ca3af;transition:transform .2s;flex-shrink:0}
+.tpl-group-chevron.open{transform:rotate(180deg)}
+.tpl-group-body{background:#fff}
+.tpl-group-item{display:flex;align-items:center;justify-content:space-between;padding:11px 16px 11px 20px;cursor:pointer;border-top:1px solid #f4f3ef;transition:background .1s}
+.tpl-group-item:hover{background:#f9f8f5}
+.tpl-group-item.selected{background:#f0faf4}
+.tpl-group-item-name{font-size:13px;font-weight:500;color:#111;flex:1;min-width:0;padding-right:12px}
+.tpl-item-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .15s}
+.tpl-group-item.selected .tpl-item-check{background:#119656;border-color:#119656}
+.tpl-group.no-match{opacity:.42;pointer-events:none}
+.tpl-group-empty-hint{font-size:12px;color:#9ca3af;font-style:italic;padding:10px 16px 12px 20px;border-top:1px solid #f4f3ef}
+
+/* ── RIGHT PREVIEW PANEL ── */
+.preview-panel{width:380px;flex-shrink:0;display:flex;flex-direction:column;margin-left:20px;min-height:0}
+.preview-phone{flex-shrink:0;background:linear-gradient(160deg,#1a7a65 0%,#0a5742 100%);border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;justify-content:flex-end;min-height:360px;overflow-y:auto;margin-bottom:16px}
+.preview-empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;opacity:.5;padding:40px 0}
+.preview-empty-icon{color:rgba(255,255,255,.4)}
+.preview-empty-text{font-size:13px;color:rgba(255,255,255,.4);font-style:italic;line-height:1.5}
+.wa-bubble{background:#e4f7b0;border-radius:10px 2px 10px 10px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.wa-bubble-title{font-size:13px;font-weight:700;color:#111;margin-bottom:5px}
+.wa-bubble-body{font-size:13px;color:#111;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.wa-bubble-footer{font-size:11px;color:#6b7280;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.09);font-style:italic}
+.wa-bubble-btn{margin-top:8px;padding:8px 12px;border-top:1px solid rgba(0,0,0,.09);font-size:12px;font-weight:600;color:#128C7E;display:flex;align-items:center;gap:6px}
+.wa-bubble-time{font-size:10px;color:#92a88a;text-align:right;margin-top:6px}
+
+/* ── TEMPLATE DETAIL CARD ── */
+.tpl-detail-card{background:#fff;border-radius:14px;border:1px solid #e5e5e0;padding:20px;flex-shrink:0}
+.tpl-detail-empty{font-size:13px;color:#9ca3af;text-align:center;padding:20px 0;font-style:italic}
+.tpl-detail-name{font-size:16px;font-weight:800;color:#111;margin-bottom:8px;line-height:1.3}
+.tpl-detail-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.cat-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:700}
+.cat-utility{background:#e8f5ee;color:#119656}
+.cat-authentication{background:#fff0e8;color:#c2410c}
+.lang-badge{font-size:11px;font-weight:600;color:#6b7280;background:#f0f0ec;border-radius:4px;padding:2px 7px}
+.tpl-detail-divider{border:none;border-top:1px solid #f0f0ee;margin:12px 0}
+.tpl-detail-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#9ca3af;margin-bottom:6px}
+.tpl-detail-langs{display:flex;gap:5px;flex-wrap:wrap}
+.tpl-lang-chip{font-size:11px;font-weight:600;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:5px;padding:2px 8px}
+.tpl-detail-actions{margin-top:16px;display:flex;gap:10px}
+.btn-use-template{flex:1;height:40px;background:#119656;color:#fff;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;transition:background .15s}
+.btn-use-template:hover{background:#0e7a47}
+.btn-use-template.disabled{background:#d1d5db;color:#9ca3af;cursor:default;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><span class="logo-badge">Glific</span></div>
+  <div class="wallet-card">
+    <div class="wallet-label">Wallet balance</div>
+    <div class="wallet-amount">$10</div>
+  </div>
+  <div class="nav-section">Quick tools</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Interactive msg
+  </a>
+  <a class="nav-item active" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>Templates
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>Triggers
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Searches
+  </a>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Speed sends
+  </a>
+  <div class="nav-section" style="margin-top:auto">Account</div>
+  <a class="nav-item" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile
+  </a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <a class="back-link" href="hsm-list.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Templates
+    </a>
+    <div class="page-header-row">
+      <div>
+        <div class="page-title">Template Library</div>
+        <div class="page-subtitle">Browse all pre-approved WhatsApp message templates — select one to use as a starting point</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- LEFT: Browse list -->
+    <div class="browse-panel">
+      <div class="browse-toolbar">
+        <div class="search-lang-row">
+          <div class="search-wrap">
+            <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input class="search-inp" id="lib-search" type="text" placeholder="Search by template name…" oninput="filterLib()" autocomplete="off">
+          </div>
+          <select class="lang-select" id="lib-lang" onchange="filterLib()">
+            <option value="">All languages</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="mr">Marathi</option>
+            <option value="te">Telugu</option>
+            <option value="ta">Tamil</option>
+            <option value="bn">Bengali</option>
+            <option value="gu">Gujarati</option>
+          </select>
+        </div>
+        <div class="cat-pills">
+          <button class="cat-pill active" id="lib-cat-utility" onclick="setCat('utility',this)">Utility</button>
+          <button class="cat-pill" id="lib-cat-authentication" onclick="setCat('authentication',this)">Authentication</button>
+        </div>
+      </div>
+      <div class="browse-list" id="lib-list"></div>
+      <div class="list-count" id="lib-count"></div>
+    </div>
+
+    <!-- RIGHT: Preview + detail -->
+    <div class="preview-panel">
+      <!-- WA phone preview -->
+      <div class="preview-phone" id="lib-preview-phone">
+        <div class="preview-empty-state" id="lib-preview-empty">
+          <div class="preview-empty-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="preview-empty-text">Select a template<br>to see a preview</div>
+        </div>
+        <div id="lib-bubble" style="display:none"></div>
+      </div>
+
+      <!-- Template detail card -->
+      <div class="tpl-detail-card" id="lib-detail-card">
+        <div class="tpl-detail-empty" id="lib-detail-empty">No template selected</div>
+        <div id="lib-detail-content" style="display:none">
+          <div class="tpl-detail-name" id="lib-detail-name"></div>
+          <div class="tpl-detail-meta" id="lib-detail-meta"></div>
+          <hr class="tpl-detail-divider">
+          <div class="tpl-detail-label">Available in</div>
+          <div class="tpl-detail-langs" id="lib-detail-langs"></div>
+          <div class="tpl-detail-actions">
+            <a class="btn-use-template" id="lib-use-btn" href="hsm-create-hifi.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              Use this template
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const FEATURE_LABELS={
+  utility:{
+    account_updates:'Account updates',
+    order_management:'Order management',
+    event_reminder:'Event reminders',
+    payments:'Payments',
+    customer_feedback:'Customer feedback',
+    group_invite:'Group invites',
+    public_disruption:'Public disruption'
+  },
+  authentication:{
+    otp:'OTP / Verification',
+    security:'Security alerts'
+  }
+};
+
+const LANG_NAMES={en:'English',hi:'Hindi',mr:'Marathi',te:'Telugu',ta:'Tamil',bn:'Bengali',gu:'Gujarati'};
+
+const META_TEMPLATES=[
+  {id:'account_creation_confirmation_3',title:'Finalize account set-up',category:'utility',feature:'account_updates',
+    langs:['en','hi','mr','te','ta','bn'],
+    body:'Hi {{text}},\n\nYour new account has been created successfully.\n\nPlease verify {{text}} to complete your profile.',
+    footer:'',button:{label:'Verify account'},vars:['name','verification_link']},
+  {id:'address_update',title:'Address update',category:'utility',feature:'account_updates',
+    langs:['en','hi','te','ta'],
+    body:'Hi {{text}}, your delivery address has been successfully updated to {{text}}. Contact {{text}} for any inquiries.',
+    footer:'',button:null,vars:['name','address','support_number']},
+  {id:'appointment_cancelled_v1',title:'Your appointment was canceled',category:'utility',feature:'event_reminder',
+    langs:['en','hi','mr'],
+    body:'Hello {{text}},\n\nYour upcoming appointment with {{business name}} on {{date}} at {{text}} has been canceled.\n\nLet us know if you have any questions or need to reschedule.',
+    footer:'',button:null,vars:['name','time']},
+  {id:'appointment_cancelled',title:'Appointment cancelled',category:'utility',feature:'event_reminder',
+    langs:['en','hi','te','ta','bn','gu'],
+    body:'Hi {{text}},\nYour appointment on {{text}} has been cancelled. We hope to see you another time.',
+    footer:'',button:null,vars:['name','date']},
+  {id:'order_shipped_notification',title:'Order shipped',category:'utility',feature:'order_management',
+    langs:['en','hi','mr','te','ta','bn','gu'],
+    body:'Hi {{text}}, your order #{{text}} has been shipped!\n\nTrack your package with ID {{text}}.\nExpected delivery: {{text}}.',
+    footer:'',button:{label:'Track order'},vars:['name','order_id','tracking_id','delivery_date']},
+  {id:'payment_confirmation',title:'Payment confirmation',category:'utility',feature:'payments',
+    langs:['en','hi','te','ta'],
+    body:"Hi {{text}}, we've received your payment of {{text}} on {{text}}.\n\nTransaction ID: {{text}}. Keep this for your records.",
+    footer:'',button:null,vars:['name','amount','date','transaction_id']},
+  {id:'event_registration_confirmed',title:'Event registration confirmed',category:'utility',feature:'event_reminder',
+    langs:['en','hi','mr','te'],
+    body:"Hello {{text}}!\n\nYour registration for {{text}} on {{text}} at {{text}} is confirmed.\n\nWe look forward to seeing you there.",
+    footer:'Reply CANCEL to unregister',button:{label:'Add to calendar'},vars:['name','event_name','date','venue']},
+  {id:'document_verification_required',title:'Document verification required',category:'utility',feature:'account_updates',
+    langs:['en','hi'],
+    body:"Dear {{text}},\n\nTo complete your profile, please submit the following documents by {{text}}:\n\n• Government-issued ID\n• Proof of address",
+    footer:'',button:{label:'Submit documents'},vars:['name','deadline']},
+  {id:'programme_welcome',title:'Programme welcome',category:'utility',feature:'account_updates',
+    langs:['en','hi','mr','te','ta','bn','gu'],
+    body:"Hi {{text}}, welcome to the {{text}} programme!\n\nYour registration is confirmed. We'll share more details soon.",
+    footer:'',button:{label:'Learn more'},vars:['name','programme_name']},
+  {id:'feedback_survey_request',title:'Share your feedback',category:'utility',feature:'customer_feedback',
+    langs:['en','hi','te'],
+    body:"Hi {{text}},\n\nWe hope your recent experience with {{text}} was positive! Help us improve — take our 2-minute survey.",
+    footer:'',button:{label:'Start survey'},vars:['name','programme_name']},
+  {id:'group_community_invite',title:'Community group invite',category:'utility',feature:'group_invite',
+    langs:['en','hi','mr','te','ta','bn'],
+    body:"Hi {{text}},\n\nYou've been invited to join the {{text}} WhatsApp group.\n\nClick the link to join the community.",
+    footer:'',button:{label:'Join group'},vars:['name','group_name']},
+  {id:'service_disruption_alert',title:'Service disruption notice',category:'utility',feature:'public_disruption',
+    langs:['en','hi'],
+    body:"Dear {{text}},\n\nWe're experiencing temporary disruption to {{text}} services. Our team is working to resolve this.\n\nExpected restoration: {{text}}.",
+    footer:'Apologies for any inconvenience.',button:null,vars:['name','service_name','restore_time']},
+  {id:'payment_reminder',title:'Payment reminder',category:'utility',feature:'payments',
+    langs:['en','hi','mr','te','ta'],
+    body:"Hi {{text}}, this is a reminder that your payment of {{text}} is due on {{text}}.\n\nPlease complete the payment to avoid any interruption.",
+    footer:'',button:{label:'Pay now'},vars:['name','amount','due_date']},
+  {id:'order_cancellation',title:'Order cancelled',category:'utility',feature:'order_management',
+    langs:['en','hi','te','ta'],
+    body:"Hi {{text}}, your order #{{text}} has been cancelled as requested.\n\nRefund of {{text}} will be processed within 5–7 business days.",
+    footer:'',button:null,vars:['name','order_id','amount']},
+  {id:'otp_login_verification',title:'Login verification code',category:'authentication',feature:'otp',
+    langs:['en','hi','mr','te','ta','bn','gu'],
+    body:'{{text}} is your verification code.\n\nDo not share this code with anyone. This code expires in 10 minutes.',
+    footer:'',button:{label:'Verify now'},vars:['otp']},
+  {id:'account_security_alert',title:'Security alert',category:'authentication',feature:'security',
+    langs:['en','hi'],
+    body:"Hi {{text}}, we noticed a sign-in attempt to your account from {{text}}.\n\nIf this wasn't you, please secure your account immediately.",
+    footer:'',button:{label:'Secure account'},vars:['name','device_location']},
+  {id:'password_reset',title:'Password reset',category:'authentication',feature:'otp',
+    langs:['en','hi','te'],
+    body:"Hi {{text}},\n\nYour password reset code is {{text}}.\n\nThis code is valid for 15 minutes. If you didn't request this, please ignore.",
+    footer:'',button:null,vars:['name','otp']},
+];
+
+let selectedId=null;
+const groupOpen={};
+
+function filterLib(){
+  const q=(document.getElementById('lib-search').value||'').toLowerCase();
+  const lang=document.getElementById('lib-lang').value;
+  const activeCat=document.querySelector('.cat-pill.active');
+  const cat=activeCat?activeCat.id.replace('lib-cat-',''):'utility';
+
+  let filtered=META_TEMPLATES.filter(t=>t.category===cat);
+  if(lang) filtered=filtered.filter(t=>t.langs&&t.langs.includes(lang));
+  if(q) filtered=filtered.filter(t=>t.title.toLowerCase().includes(q));
+
+  const total=META_TEMPLATES.filter(t=>t.category===cat).length;
+  document.getElementById('lib-count').textContent=`Showing ${filtered.length} of ${total} templates`;
+  renderList(filtered, cat, lang);
+}
+
+function setCat(cat, btn){
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  // reset group open states for new category
+  Object.keys(groupOpen).forEach(k=>delete groupOpen[k]);
+  filterLib();
+}
+
+function toggleGroup(feature){
+  groupOpen[feature]=!groupOpen[feature];
+  const body=document.getElementById('lib-gbody-'+feature);
+  const chev=document.getElementById('lib-gchev-'+feature);
+  if(body) body.style.display=groupOpen[feature]?'block':'none';
+  if(chev) chev.classList.toggle('open',groupOpen[feature]);
+}
+
+function renderList(templates, cat, lang){
+  const list=document.getElementById('lib-list');
+  const labels=FEATURE_LABELS[cat]||{};
+  const allFeatures=Object.keys(labels);
+
+  // group filtered templates
+  const groups={};
+  templates.forEach(t=>{
+    const f=t.feature||'other';
+    if(!groups[f]) groups[f]=[];
+    groups[f].push(t);
+  });
+
+  const featureKeys=lang?allFeatures:Object.keys(groups);
+  if(!featureKeys.length){
+    list.innerHTML=`<div style="padding:60px 0;text-align:center;font-size:13px;color:#9ca3af">No templates match your search</div>`;
+    return;
+  }
+
+  // open first non-empty group if not already tracked
+  featureKeys.forEach((f,i)=>{
+    if(groupOpen[f]===undefined){
+      const hasItems=(groups[f]||[]).length>0;
+      groupOpen[f]=hasItems&&featureKeys.slice(0,i).every(k=>(groups[k]||[]).length===0);
+    }
+  });
+
+  const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const chevSvg=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const langName=lang?(LANG_NAMES[lang]||lang):'';
+
+  list.innerHTML=featureKeys.map(f=>{
+    const items=groups[f]||[];
+    const label=labels[f]||f;
+    const isEmpty=items.length===0;
+    const isOpen=!isEmpty&&groupOpen[f];
+    const countLabel=isEmpty?`0 in ${langName}`:items.length;
+
+    const itemsHtml=isEmpty
+      ?`<div class="tpl-group-empty-hint">No ${label.toLowerCase()} templates in ${langName}</div>`
+      :items.map(t=>`
+        <div class="tpl-group-item${selectedId===t.id?' selected':''}" onclick="selectTemplate('${t.id}')">
+          <span class="tpl-group-item-name">${t.title}</span>
+          <div class="tpl-item-check">${selectedId===t.id?checkSvg:''}</div>
+        </div>`).join('');
+
+    return `<div class="tpl-group${isEmpty?' no-match':''}">
+      <div class="tpl-group-hdr"${isEmpty?'':` onclick="toggleGroup('${f}')"`}>
+        <span class="tpl-group-label">${label}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="tpl-group-count">${countLabel}</span>
+          ${isEmpty?'':`<span class="tpl-group-chevron${isOpen?' open':''}" id="lib-gchev-${f}">${chevSvg}</span>`}
+        </div>
+      </div>
+      <div class="tpl-group-body" id="lib-gbody-${f}" style="display:${isOpen||isEmpty?'block':'none'}">${itemsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectTemplate(id){
+  selectedId=id;
+  filterLib(); // re-render to update selection state
+
+  const t=META_TEMPLATES.find(m=>m.id===id);
+  if(!t) return;
+
+  // WA bubble
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const bodyHtml=esc(t.body)
+    .replace(/\{\{[^}]+\}\}/g,m=>`<span style="color:#128C7E;font-weight:600">${m}</span>`)
+    .replace(/\n/g,'<br>');
+  const footHtml=t.footer?`<div class="wa-bubble-footer">${esc(t.footer)}</div>`:'';
+  const btnHtml=t.button?`<div class="wa-bubble-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(t.button.label)}</div>`:'';
+
+  document.getElementById('lib-bubble').innerHTML=`
+    <div class="wa-bubble">
+      <div class="wa-bubble-title">${esc(t.title)}</div>
+      <div class="wa-bubble-body">${bodyHtml}</div>
+      ${footHtml}
+      <div class="wa-bubble-time">9:41 AM ✓✓</div>
+      ${btnHtml}
+    </div>`;
+  document.getElementById('lib-bubble').style.display='block';
+  document.getElementById('lib-preview-empty').style.display='none';
+
+  // Detail card
+  const catLabel=t.category==='utility'?'Utility':'Authentication';
+  const catClass=t.category==='utility'?'cat-utility':'cat-authentication';
+  document.getElementById('lib-detail-name').textContent=t.title;
+  document.getElementById('lib-detail-meta').innerHTML=`<span class="cat-badge ${catClass}">${catLabel}</span>`;
+  document.getElementById('lib-detail-langs').innerHTML=
+    (t.langs||[]).map(l=>`<span class="tpl-lang-chip">${LANG_NAMES[l]||l}</span>`).join('');
+  document.getElementById('lib-detail-empty').style.display='none';
+  document.getElementById('lib-detail-content').style.display='block';
+}
+
+// Init
+filterLib();
+</script>
+</body>
+</html>
