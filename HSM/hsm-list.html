@@ -408,7 +408,6 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
         <col style="width:220px">
         <col style="width:210px">
         <col style="width:160px">
-        <col style="width:150px">
         <col style="width:130px">
         <col><!-- Actions: takes remaining space -->
       </colgroup>
@@ -417,7 +416,6 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
           <th>Title</th>
           <th class="col-langs">Languages</th>
           <th class="col-catcost">Category</th>
-          <th class="col-tags">Tags</th>
           <th class="col-created">Last updated</th>
           <th class="col-actions"></th>
         </tr>
@@ -819,7 +817,6 @@ function renderExpandRow(t){
       </div>
       <div><span class="lc ${l.status}"><span class="lc-dot ${dotClass}"></span>${l.code}</span></div>
       <div><span class="cat-badge ${catClass(cat)}" style="font-size:11px">${catLabel(cat)}</span></div>
-      <div>${t.tag?`<span class="tag-pill">${t.tag}</span>`:''}</div>
       <div><span class="expand-sub-upd">${escHtml(lastUpd)}</span></div>
       <div></div>
     </div>`;
@@ -965,7 +962,7 @@ function renderTable(){
   document.getElementById('page-range').textContent=`01–${data.length} of ${data.length}`;
 
   if(!data.length){
-    tbody.innerHTML=`<tr class="empty-row"><td colspan="6">No templates match your filters.</td></tr>`;
+    tbody.innerHTML=`<tr class="empty-row"><td colspan="5">No templates match your filters.</td></tr>`;
     return;
   }
 
@@ -979,17 +976,13 @@ function renderTable(){
           <div>
             <div class="tpl-id">${t.id}</div>
             <div class="tpl-meta-row">
-              <button class="copy-uuid" onclick="copyUUID('${t.uuid}',event)" title="Copy UUID">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                Copy UUID
-              </button>
+              ${t.tag?`<span class="tag-pill">${t.tag}</span>`:''}
             </div>
           </div>
         </div>
       </td>
       <td>${langCell(t.langs,i,t)}</td>
       <td>${catCostHTML(t)}</td>
-      <td class="col-tags"><div class="tags-cell">${t.tag?`<span class="tag-pill">${t.tag}</span>`:''}</div></td>
       <td class="created-cell">${t.created}</td>
       <td class="col-actions">
         <div class="actions-cell-inner" onclick="event.stopPropagation()">
@@ -1015,6 +1008,10 @@ function renderTable(){
           <div class="dots-menu" id="menu-${i}">
             <button class="dots-menu-item" onclick="event.stopPropagation();copyUUID('${t.uuid}',event)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy UUID
+            </button>
+            <button class="dots-menu-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="14" height="14" rx="2"/><rect x="7" y="7" width="14" height="14" rx="2"/></svg>
               Duplicate template
             </button>
             <button class="dots-menu-item">
@@ -1026,7 +1023,7 @@ function renderTable(){
       </td>
     </tr>
     <tr class="expand-data-row" id="expand-row-${i}" style="display:none">
-      <td colspan="6"></td>
+      <td colspan="5"></td>
     </tr>
   `).join('');
 }
