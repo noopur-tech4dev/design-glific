@@ -26,16 +26,19 @@ HSM (Highly Structured Message) templates are pre-approved WhatsApp message form
 
 ### 2.1 Table layout
 
-The main table has six columns:
+The main table has five columns:
 
 | Column | Content |
 |---|---|
-| Title | Template ID + Copy UUID action |
+| Title | Template ID, tag pill (if present) below it |
 | Languages | Language chips (up to 4 shown, +N overflow), status summary line |
 | Category | Category badge(s) with count when >1 per category |
-| Tags | Single tag pill |
 | Last updated | Most recent submission date |
-| Actions | Eye (view), Aa+ (add language), 3-dot menu |
+| Actions | Aa+ (add language), Eye (view), 3-dot menu |
+
+**Title cell structure**
+- Line 1: Template ID in bold (`tpl-id`)
+- Line 2: Tag pill in green if the template has a tag — shows inline below the ID, no separate column
 
 ### 2.2 Row interactions
 
@@ -67,16 +70,22 @@ The main table has six columns:
 
 Three controls in the filters bar:
 - **All Categories** dropdown — filters by template category (Utility / Marketing)
-- **All Tags** dropdown — filters by single tag, exact match
+- **All Tags** dropdown — filters by single tag, exact match (tag column is removed but this filter remains fully functional)
 - **Search input** — matches against template ID and message body text
 
 All three filters compose (AND logic). Clearing any filter re-renders the full unfiltered list.
 
 ### 2.5 Actions column
 
-- **Eye icon** → routes to `add-hsm-language.html?template={id}&action=view` (read-only language view)
-- **Aa+ icon** → routes to `add-hsm-language.html?template={id}` (add new language)
-- **3-dot menu** → "Add new language" and "Send broadcast" (Delete is intentionally absent)
+All three buttons use CSS `data-tip` tooltips (appear immediately on hover, dark pill style with arrow) — not native browser `title` tooltips.
+
+- **Aa+ icon** — "Add new language" tooltip → routes to `add-hsm-language.html?template={id}`
+- **Eye icon** — "View template" tooltip → routes to `add-hsm-language.html?template={id}&action=view` (read-only language view)
+- **3-dot menu** — "More options" tooltip → opens dropdown with three items:
+  - **Copy UUID** — copies the template's UUID to clipboard; shows a brief toast confirmation
+  - **Duplicate template** — creates a copy of the template (prototype: no-op placeholder)
+  - **Send broadcast** — routes to broadcast flow (prototype: no-op placeholder)
+  - Delete is intentionally absent — see D-32
 
 ### 2.6 Template library modal (on HSM list)
 

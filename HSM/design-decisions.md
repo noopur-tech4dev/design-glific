@@ -438,6 +438,28 @@ A living record of decisions made during the HSM Templates redesign. Updated as 
 
 ---
 
+## D-53 · Tag shown as a pill under the template ID — Tags column removed
+**Date:** 15 June 2026  
+**Decision:** The organisational tag is no longer a separate column in the HSM list table. It is displayed as a green pill directly below the template ID in the Title cell, in the same position previously occupied by the "Copy UUID" button. The Tags column (`col-tags`, 150px) is removed from the thead, colgroup, row render, expand sub-rows, and empty-state colspan.  
+**Rationale:** A full 150px column for a single short pill wasted horizontal space. The tag is supplementary identity metadata — it belongs beside the template name, not in its own column. Placing it under the ID keeps it contextually grouped with the template's identity without occupying table real estate. The tag filter in the filters bar is retained, so filtering by tag still works.  
+**Supersedes:** D-48 (which introduced the Tags column). The tag filter dropdown introduced in D-48 is kept; only the column display is changed.
+
+---
+
+## D-54 · Copy UUID and Duplicate template both live in the 3-dot menu
+**Date:** 15 June 2026  
+**Decision:** The inline "Copy UUID" button that previously sat below the template ID in the Title cell is removed. Both "Copy UUID" and "Duplicate template" are now items in the 3-dot overflow menu on each row. The 3-dot menu now has three items: Copy UUID, Duplicate template, Send broadcast.  
+**Rationale:** "Copy UUID" is an infrequent, utility-level action — PMs rarely need it except when debugging or handing off IDs to engineering. Putting it inline in every row added visual noise to the most-scanned part of the table (the title cell). The 3-dot menu is the established location for secondary row actions; grouping Copy UUID there alongside Duplicate template and Send broadcast is consistent with the menu's purpose (low-frequency, non-destructive actions). The title cell is now clean: template ID on line 1, tag pill on line 2 (if present).
+
+---
+
+## D-55 · Action button tooltips — CSS data-tip, not native browser title
+**Date:** 15 June 2026  
+**Decision:** The three icon buttons in the actions column (Add new language, View template, More options) use `data-tip` CSS pseudo-element tooltips instead of the native HTML `title` attribute. Tooltip appears on hover via `::after` (dark pill, white text, arrow, Heebo font) and `::before` (arrow pointer). Both show and hide via `opacity` transition.  
+**Rationale:** Native `title` tooltips have a ~1 second browser delay before appearing and cannot be styled. PMs reported the icon buttons appeared to have no tooltip at all (the delay made them think the feature didn't exist). CSS `data-tip` tooltips appear immediately on hover, are visually consistent with the rest of the page (same dark background and font as other tooltips), and do not conflict with the existing JavaScript mouse-event handlers on the row.
+
+---
+
 ## Resolved decisions
 
 - ✅ **Should the form live on a separate page or in a right drawer/modal?** → Separate full page (see D-13).  
