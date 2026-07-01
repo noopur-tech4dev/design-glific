@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Glific — Flow Canvas · Node Interactions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Heebo', 'Segoe UI', system-ui, sans-serif; display: flex; height: 100vh; overflow: hidden; background: #f3f4f6; color: #111827; font-size: 13px; }
+
+/* ── Sidebar nav — collapsed / icon-only in flow editor ── */
+.sidebar { width: 52px; min-width: 52px; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; overflow: hidden; flex-shrink: 0; }
+.logo-mark { width: 30px; height: 30px; border-radius: 8px; background: #119656; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 15px; cursor: pointer; flex-shrink: 0; }
+.sidebar-logo { padding: 12px 0 10px; border-bottom: 1px solid #f3f4f6; width: 100%; display: flex; justify-content: center; }
+.msg-balance-chip { margin: 8px 0; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 4px 6px; font-size: 9.5px; font-weight: 700; color: #119656; text-align: center; width: 40px; cursor: default; white-space: nowrap; overflow: hidden; }
+.nav-icons { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; padding: 4px 0; }
+.nav-icon-item { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; position: relative; transition: background 0.12s; color: #6b7280; }
+.nav-icon-item:hover { background: #f3f4f6; }
+.nav-icon-item.active { background: #f0fdf4; }
+.nav-icon-item .ni-badge { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: #119656; border: 1.5px solid #fff; }
+.nav-icon-item .ni-new { position: absolute; top: 3px; right: 2px; background: #119656; color: white; font-size: 7px; font-weight: 800; padding: 1px 3px; border-radius: 4px; line-height: 1.3; }
+.nav-divider { height: 1px; background: #f3f4f6; margin: 4px 6px; width: calc(100% - 12px); }
+.sidebar-bottom { margin-top: auto; padding: 10px 0 12px; border-top: 1px solid #f3f4f6; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.ask-glific-icon { width: 32px; height: 32px; border-radius: 50%; background: #119656; color: white; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; }
+.user-av { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: #6b7280; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── Topbar ── */
+.topbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.back-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #e5e7eb; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6b7280; font-size: 14px; flex-shrink: 0; }
+.flow-meta { flex: 1; min-width: 0; }
+.flow-name-input { font-size: 15px; font-weight: 700; color: #111827; border: none; outline: none; background: transparent; width: 220px; font-family: inherit; }
+.flow-status { font-size: 10.5px; color: #9ca3af; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #fbbf24; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.btn-ghost { padding: 7px 12px; border-radius: 8px; border: 1.5px solid #e5e7eb; background: #fff; color: #374151; font-size: 12.5px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.btn-ghost:hover { background: #f9fafb; }
+.btn-primary { padding: 7px 16px; border-radius: 8px; background: #119656; border: none; color: white; font-size: 12.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.btn-primary:hover { background: #0f7d49; }
+
+/* ── Config strip ── */
+.flow-config-strip { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 24px; display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+.config-field { display: flex; align-items: center; gap: 8px; }
+.config-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+.config-input { padding: 5px 10px; border-radius: 6px; border: 1.5px solid #e5e7eb; font-size: 12.5px; color: #374151; outline: none; background: #fafafa; font-family: inherit; }
+.config-input:focus { border-color: #119656; }
+.config-input::placeholder { color: #d1d5db; }
+.config-sep { width: 1px; height: 20px; background: #e5e7eb; }
+.config-hint { margin-left: auto; font-size: 11px; color: #9ca3af; }
+
+/* ── Content area ── */
+.content-area { flex: 1; display: flex; overflow: hidden; position: relative; }
+
+/* ── LEFT edit panel ── */
+.edit-panel {
+  width: 0;
+  overflow: hidden;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.22s ease;
+  flex-shrink: 0;
+  order: 2; /* right of canvas */
+}
+.edit-panel.open { width: 360px; }
+
+.edit-panel-header { padding: 14px 16px 12px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; }
+.edit-panel-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 1px; }
+.edit-panel-sub { font-size: 11px; color: #9ca3af; }
+.panel-close { width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; flex-shrink: 0; }
+.panel-close:hover { background: #f3f4f6; }
+
+/* Type pills */
+.type-pills-wrap { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; flex-shrink: 0; }
+.ep-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #9ca3af; margin-bottom: 7px; }
+.type-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+.type-pill { padding: 5px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 500; border: 1.5px solid #e5e7eb; background: #f9fafb; color: #6b7280; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+.type-pill:hover { border-color: #d1d5db; color: #374151; }
+.type-pill.active-msg { background: #f0fdf4; border-color: #119656; color: #119656; font-weight: 600; }
+.type-pill.active-outreach { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; font-weight: 600; }
+.type-pill.active-interactive { background: #faf5ff; border-color: #8b5cf6; color: #6d28d9; font-weight: 600; }
+
+/* Panel body */
+.edit-panel-body { flex: 1; overflow-y: auto; }
+.body-section { display: none; padding: 16px; }
+.body-section.visible { display: block; }
+
+/* ── Composer (Message) ── */
+.wa-composer { border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+.composer-toolbar { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; background: #fafafa; display: flex; align-items: center; gap: 2px; }
+.tb { width: 28px; height: 28px; border-radius: 5px; border: none; background: transparent; color: #6b7280; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.tb:hover { background: #f3f4f6; }
+.tb-sep { width: 1px; height: 16px; background: #e5e7eb; margin: 0 3px; }
+.composer-area { padding: 10px 12px; background: #fffef0; }
+.composer-area textarea { width: 100%; border: none; outline: none; font-size: 13px; color: #374151; line-height: 1.6; background: transparent; resize: none; font-family: inherit; min-height: 80px; }
+.composer-footer { padding: 6px 12px; background: #fafafa; border-top: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; }
+.char-count { font-size: 10.5px; color: #9ca3af; }
+.attach-btn { font-size: 11px; color: #6b7280; border: none; background: none; cursor: pointer; }
+.attach-btn:hover { color: #119656; }
+
+/* WA preview */
+.ep-preview { background: #128C7E; border-radius: 10px; padding: 12px 14px; margin-bottom: 4px; }
+.ep-preview-label { font-size: 9.5px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.wa-bubble { background: #e4f7b0; border-radius: 8px 8px 8px 2px; padding: 8px 10px; font-size: 12.5px; color: #111; line-height: 1.5; display: inline-block; max-width: 100%; }
+
+/* ── List picker (Interactive + HSM) ── */
+.list-search { width: 100%; padding: 8px 10px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 12.5px; color: #374151; outline: none; font-family: inherit; background: #fafafa; margin-bottom: 10px; }
+.list-search:focus { border-color: #119656; }
+
+.create-btn-full { width: 100%; padding: 10px; border-radius: 8px; background: #f0fdf4; border: 1.5px dashed #119656; color: #119656; font-size: 12.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 16px; transition: background 0.12s; }
+.create-btn-full:hover { background: #dcfce7; }
+
+.list-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #9ca3af; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.list-section-label span { background: #f3f4f6; padding: 1px 6px; border-radius: 8px; font-size: 9.5px; color: #6b7280; }
+
+.template-card { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.12s; background: #fff; }
+.template-card:hover { border-color: #d1d5db; background: #f9fafb; }
+.template-card.selected { border-color: #119656; background: #f0fdf4; }
+.template-card.selected-purple { border-color: #8b5cf6; background: #faf5ff; }
+
+.tc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.tc-name { font-size: 12.5px; font-weight: 600; color: #111; }
+.tc-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tc-tag { font-size: 9.5px; font-weight: 600; padding: 1px 7px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+.tag-qr { background: #ede9fe; color: #6d28d9; }
+.tag-list { background: #e0f2fe; color: #0369a1; }
+.tag-approved { background: #dcfce7; color: #166534; }
+.tag-utility { background: #fef3c7; color: #92400e; }
+.tag-marketing { background: #fce7f3; color: #9d174d; }
+.tag-hindi { background: #f3f4f6; color: #374151; }
+.tc-preview { font-size: 11.5px; color: #6b7280; line-height: 1.4; }
+.tc-meta { font-size: 10.5px; color: #9ca3af; margin-top: 3px; }
+
+/* HSM info note */
+.info-note { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 9px 12px; margin-bottom: 12px; }
+.info-note p { font-size: 11.5px; color: #1e40af; line-height: 1.5; }
+.info-note strong { font-weight: 700; }
+
+/* Selected preview footer (inside body) */
+.selected-preview-strip { margin-top: 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; display: none; }
+.selected-preview-strip.visible { display: block; }
+.spstrip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #9ca3af; margin-bottom: 6px; }
+.spstrip-content { font-size: 12.5px; color: #374151; line-height: 1.5; }
+.spstrip-btns { display: flex; gap: 6px; margin-top: 10px; }
+.spstrip-btn { flex: 1; padding: 6px; border-radius: 8px; background: #f3f4f6; border: 1.5px solid #e5e7eb; font-size: 11.5px; font-weight: 600; color: #374151; text-align: center; cursor: pointer; }
+.spstrip-btn:hover { border-color: #9ca3af; }
+
+/* Variable fill (HSM selected) */
+.var-fill { margin-top: 10px; }
+.var-fill-label { font-size: 10.5px; font-weight: 700; color: #374151; margin-bottom: 5px; }
+.var-fill input { width: 100%; padding: 7px 10px; border: 1.5px solid #e5e7eb; border-radius: 7px; font-size: 12.5px; color: #374151; outline: none; font-family: inherit; margin-bottom: 6px; }
+.var-fill input:focus { border-color: #3b82f6; }
+
+/* ── Wait config ── */
+.config-row { margin-bottom: 14px; }
+.config-row label { display: block; font-size: 11px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+.config-row input, .config-row select { width: 100%; padding: 8px 10px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 12.5px; color: #374151; outline: none; font-family: inherit; background: #fff; }
+.config-row input:focus, .config-row select:focus { border-color: #119656; }
+.config-row .input-hint { font-size: 10.5px; color: #9ca3af; margin-top: 4px; }
+.timeout-row { display: flex; gap: 8px; }
+.timeout-row input { flex: 1; }
+.timeout-row select { width: 100px; flex-shrink: 0; }
+
+/* ── Edit panel footer ── */
+.edit-panel-footer { padding: 14px 16px; border-top: 1px solid #f3f4f6; display: flex; gap: 8px; flex-shrink: 0; }
+.btn-save { flex: 1; padding: 9px; border-radius: 8px; background: #119656; border: none; color: white; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-save:hover { background: #0f7d49; }
+.btn-save:disabled { background: #d1fae5; color: #6b7280; cursor: default; }
+.btn-cancel { padding: 9px 14px; border-radius: 8px; border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280; font-size: 13px; cursor: pointer; }
+.btn-cancel:hover { background: #f9fafb; }
+
+/* ── Canvas ── */
+.canvas { flex: 1; overflow: auto; background-color: #f9fafb; background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px); background-size: 22px 22px; position: relative; cursor: grab; padding: 0; }
+.canvas.panning { cursor: grabbing; user-select: none; }
+#canvas-content { position: relative; min-width: 3000px; min-height: 900px; }
+#conn-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.flow-entry { position: absolute; display: flex; align-items: center; }
+.flow-start-label { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; color: #9ca3af; text-transform: uppercase; white-space: nowrap; }
+.entry-dot { width: 10px; height: 10px; border-radius: 50%; background: #119656; border: 2px solid #119656; flex-shrink: 0; }
+
+/* ── Flow node ── */
+.flow-node { width: 240px; border-radius: 12px; background: #fff; border: 1.5px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.07); position: absolute; transition: box-shadow 0.15s, border-color 0.15s; cursor: pointer; }
+.flow-node:hover { border-color: #c8d0de; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.flow-node.editing { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.flow-node.node-dragging { cursor: grabbing; z-index: 100; box-shadow: 0 10px 32px rgba(0,0,0,0.14); transition: none; }
+/* Bar classes kept for JS compatibility but visually neutral */
+.flow-node.bar-green-node, .flow-node.bar-grey-node, .flow-node.bar-blue-node,
+.flow-node.bar-purple-node, .flow-node.bar-amber-node, .flow-node.bar-pink-node { border-left: none; }
+.node-top-bar { display: none; }
+
+/* ── Node icon (carries the color identity) ── */
+.node-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.icon-green  { background: #119656; color: #fff; }
+.icon-slate  { background: #475569; color: #fff; }
+.icon-amber  { background: #d97706; color: #fff; }
+.icon-purple { background: #8b5cf6; color: #fff; }
+.icon-pink   { background: #db2777; color: #fff; }
+
+/* ── Node header: icon + UPPERCASE title ── */
+.node-header { padding: 10px 12px; display: flex; align-items: center; gap: 9px; }
+.node-title  { font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #111827; flex: 1; }
+.node-divider { height: 1px; background: #f3f4f6; }
+
+/* ── Hover controls above node ── */
+.node-hover-controls { position: absolute; top: -36px; right: 0; display: flex; gap: 3px; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+.flow-node.node-hovered .node-hover-controls { opacity: 1; pointer-events: all; }
+.nhc-btn { padding: 5px 8px; border-radius: 7px; border: 1px solid #e5e7eb; background: #fff; color: #6b7280; font-size: 12px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.nhc-btn:hover { background: #f9fafb; color: #374151; }
+.nhc-btn.nhc-del:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+
+/* ── + button on right edge of node ── */
+.node-add-btn { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; background: #3b82f6; border: 2px solid #fff; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.12s, transform 0.12s; z-index: 3; box-shadow: 0 2px 6px rgba(59,130,246,0.4); }
+.flow-node.node-hovered .node-add-btn { opacity: 1; pointer-events: all; }
+.node-add-btn:hover { background: #2563eb; transform: translateY(-50%) scale(1.12); }
+
+/* ── Node content ── */
+.node-content { padding: 8px 12px 12px; }
+.node-msg-preview { font-size: 12.5px; color: #374151; line-height: 1.55; font-weight: 400; }
+.node-meta { font-size: 10px; color: #9ca3af; margin-top: 5px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.node-meta .meta-tag { background: #f3f4f6; padding: 1px 6px; border-radius: 4px; }
+
+/* Button pills (interactive message buttons on canvas) */
+.node-btn-pills { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.node-btn-pill  { font-size: 11.5px; padding: 5px 10px; border-radius: 6px; border: 1.5px solid #d1d5db; color: #374151; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.06); white-space: nowrap; text-align: center; cursor: default; }
+
+/* Legacy selectors kept for compat */
+.node-type-badge { display: none; }
+.node-type-label { display: none; }
+.node-controls { display: none; }
+
+.add-step-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px dashed #d1d5db; background: #fff; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 16px; cursor: pointer; transition: all 0.15s; }
+.add-step-btn:hover, .add-step-btn.active { border-color: #119656; color: #119656; border-style: solid; background: #f0fdf4; }
+
+/* ── Popover — single-column category list ── */
+.popover { position: fixed; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.14); width: 248px; z-index: 99999; display: none; overflow: hidden; }
+.popover-header { padding: 10px 14px 9px; border-bottom: 1px solid #f3f4f6; }
+.popover-title { font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Search bar */
+.pop-search-wrap { padding: 8px 10px 7px; border-bottom: 1px solid #f3f4f6; position: relative; display: flex; align-items: center; }
+.pop-search-icon { position: absolute; left: 18px; font-size: 11px; color: #9ca3af; pointer-events: none; line-height: 1; top: 50%; transform: translateY(-50%); }
+.pop-search { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 7px; padding: 6px 8px 6px 26px; font-size: 12.5px; color: #1f2937; outline: none; background: #f9fafb; transition: border-color 0.15s, background 0.15s; }
+.pop-search::placeholder { color: #c4c9d4; }
+.pop-search:focus { border-color: #a5b4fc; background: #fff; }
+
+/* Frequently used */
+.pop-freq { padding: 4px 0 2px; }
+.pop-freq-label { font-size: 9px; font-weight: 700; color: #c4c9d4; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px 3px; }
+.freq-item { display: flex; align-items: center; gap: 8px; padding: 6px 14px; cursor: pointer; font-size: 12.5px; font-weight: 500; color: #374151; transition: background 0.08s; border-radius: 0; }
+.freq-item:hover { background: #f5f3ff; color: #1f2937; }
+.freq-icon { font-size: 14px; flex-shrink: 0; width: 20px; text-align: center; }
+.pop-divider { height: 1px; background: #f3f4f6; margin: 3px 0; }
+
+/* Search results */
+.pop-search-results { padding: 4px 0; }
+.pop-search-empty { padding: 18px 14px; font-size: 12px; color: #9ca3af; text-align: center; }
+.sr-cat-chip { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
+.chip-send { background: #f0fdf4; color: #119656; }
+.chip-wait { background: #f3f4f6; color: #6b7280; }
+.chip-branch { background: #fffbeb; color: #b45309; }
+.chip-act { background: #ede9fe; color: #6d28d9; }
+
+/* Act sub-group headers inside flyout */
+.flyout-group-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #c4c9d4; padding: 10px 16px 3px; }
+
+.pop-body { padding: 6px 0; }
+.pop-cat { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background 0.1s; user-select: none; position: relative; }
+.pop-cat:hover, .pop-cat.hovered { background: #f5f3ff; }
+.pop-cat-text { flex: 1; min-width: 0; }
+.pop-cat-name { font-size: 13px; font-weight: 500; color: #1f2937; }
+.pop-cat-desc { font-size: 10.5px; color: #9ca3af; margin-top: 1px; }
+.pop-cat-chevron { font-size: 12px; color: #c4c9d4; flex-shrink: 0; }
+.pop-cat:hover .pop-cat-chevron, .pop-cat.hovered .pop-cat-chevron { color: #6366f1; }
+
+/* ── Flyout — appears to the right of hovered category ── */
+.pop-flyout { position: fixed; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.14); width: 270px; z-index: 99999; display: none; padding: 6px 0; max-height: 80vh; overflow-y: auto; }
+.flyout-panel { display: none; }
+.flyout-panel.active { display: block; }
+.pop-sub-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 16px; cursor: pointer; transition: background 0.08s; }
+.pop-sub-item:hover { background: #f9fafb; }
+.psi-icon { font-size: 17px; flex-shrink: 0; width: 24px; text-align: center; margin-top: 1px; }
+.psi-name { font-size: 13px; font-weight: 500; color: #1f2937; }
+.psi-desc { font-size: 11px; color: #9ca3af; margin-top: 2px; line-height: 1.4; }
+
+/* Legend */
+.bottom-bar { position: fixed; bottom: 20px; left: 68px; display: flex; align-items: center; gap: 8px; z-index: 10; }
+.node-legend { background: rgba(255,255,255,0.95); border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); font-size: 11px; }
+.legend-label { font-weight: 600; color: #9ca3af; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+.legend-item { display: flex; align-items: center; gap: 5px; color: #374151; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+.ld-send  { background: #119656; }
+.ld-grey  { background: #475569; }
+
+/* overlay removed — close handled via document click listener */
+
+/* ── Zoom ── */
+.flow-row { transform-origin: left center; transition: transform 0.15s ease; }
+.zoom-controls { background: rgba(255,255,255,0.96); border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; gap: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; }
+.zoom-btn { width: 30px; height: 30px; border: none; background: transparent; color: #374151; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.1s; flex-shrink: 0; }
+.zoom-btn:hover { background: #f3f4f6; }
+.zoom-sep { width: 1px; height: 18px; background: #e5e7eb; }
+.zoom-label { font-size: 11.5px; font-weight: 600; color: #6b7280; padding: 0 8px; min-width: 38px; text-align: center; cursor: pointer; user-select: none; }
+.zoom-label:hover { color: #111; }
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar nav — collapsed icon-only (flow editor context) ── -->
+<aside class="sidebar" title="Sidebar is compressed while editing a flow">
+  <div class="sidebar-logo"><div class="logo-mark">G</div></div>
+  <div class="msg-balance-chip" title="Message balance $112.42">$112</div>
+  <div class="nav-icons">
+    <div class="nav-icon-item" title="Chats">💬</div>
+    <div class="nav-icon-item" title="WhatsApp Groups">👥</div>
+    <div class="nav-icon-item active" title="Flows (current)">⚡</div>
+    <div class="nav-divider"></div>
+    <div class="nav-icon-item" title="Quick tools">🔧</div>
+    <div class="nav-icon-item" title="AI toolkit" style="position:relative;">✨<span class="ni-new">New</span></div>
+    <div class="nav-icon-item" title="Notifications" style="position:relative;">🔔<span class="ni-badge"></span></div>
+    <div class="nav-icon-item" title="Manage">⚙️</div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="ask-glific-icon" title="Ask Glific">G</div>
+    <div class="user-av" title="Noopur Varma · Admin">NV</div>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<div class="main">
+
+  <header class="topbar">
+    <button class="back-btn">←</button>
+    <div class="flow-meta">
+      <input class="flow-name-input" value="Registration flow" />
+      <div class="flow-status"><span class="status-dot"></span> Draft · Not published</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-ghost">More ▾</button>
+      <button class="btn-ghost">⚡ Translate</button>
+      <button class="btn-ghost">▶ Preview</button>
+      <button class="btn-primary">✓ Publish</button>
+    </div>
+  </header>
+
+  <div class="flow-config-strip">
+    <div class="config-field">
+      <span class="config-label">Triggered by</span>
+      <input class="config-input" style="width:180px;" value="hello" />
+    </div>
+    <div class="config-sep"></div>
+    <div class="config-field">
+      <span class="config-label">Description</span>
+      <input class="config-input" style="width:260px;" placeholder="What does this flow do?" />
+    </div>
+    <div class="config-hint">Contact enrolls when they send "hello"</div>
+  </div>
+
+  <div class="content-area">
+
+    <!-- ── LEFT PANEL ── -->
+    <div class="edit-panel" id="edit-panel">
+
+      <!-- ══ SEND MESSAGE panel ══ -->
+      <div id="ep-message" style="display:none; flex-direction:column; height:100%;">
+        <div class="edit-panel-header">
+          <div>
+            <div style="margin-bottom:4px;">
+              <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;background:#f0fdf4;color:#119656;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">
+                ● Send
+              </span>
+            </div>
+            <div class="edit-panel-title">Edit message</div>
+            <div class="edit-panel-sub">Changes apply to this node only</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+            <button class="panel-close" title="Change node type" onclick="openReplacePopoverFromPanel(this); event.stopPropagation();" style="color:#6366f1;border-color:#c7d2fe;">⇄</button>
+            <button class="panel-close" onclick="closeEdit()">✕</button>
+          </div>
+        </div>
+
+        <!-- Type pills -->
+        <div class="type-pills-wrap">
+          <div class="ep-label">Message type</div>
+          <div class="type-pills">
+            <div class="type-pill active-msg" onclick="setMsgType(this,'msg','active-msg')">💬 Message</div>
+            <div class="type-pill" onclick="setMsgType(this,'outreach','active-outreach')">📤 Outreach template <span style="font-size:9px;opacity:0.7;">(HSM)</span></div>
+            <div class="type-pill" onclick="setMsgType(this,'interactive','active-interactive')">🔘 Interactive</div>
+          </div>
+        </div>
+
+        <!-- Body sections (swap on type switch) -->
+        <div class="edit-panel-body">
+
+          <!-- Body: plain message -->
+          <div class="body-section visible" id="body-msg">
+            <div class="info-note" style="background:#f0fdf4;border-color:#bbf7d0;">
+              <p style="color:#166534;">Send a text or media message to the contact. Works only within the <strong>24-hour messaging window</strong> — after the contact last sent you a message.</p>
+            </div>
+            <div class="ep-label" style="margin-bottom:8px;">Message content</div>
+            <div class="wa-composer">
+              <div class="composer-toolbar">
+                <button class="tb"><b>B</b></button>
+                <button class="tb"><i>I</i></button>
+                <button class="tb"><s>S</s></button>
+                <div class="tb-sep"></div>
+                <button class="tb">😊</button>
+                <button class="tb" title="Attach media">📎</button>
+              </div>
+              <div class="composer-area">
+                <textarea id="msg-textarea" rows="4" oninput="updatePreview(this.value)">Hello 👋 Welcome to Glific! We're glad you're here.</textarea>
+              </div>
+              <div class="composer-footer">
+                <span class="char-count" id="char-count">50 / 4096</span>
+                <button class="attach-btn">📎 Add attachment</button>
+              </div>
+            </div>
+            <div class="ep-label" style="margin-bottom:8px;">Preview</div>
+            <div class="ep-preview">
+              <div class="ep-preview-label">📱 What the contact sees</div>
+              <div class="wa-bubble" id="ep-bubble">Hello 👋 Welcome to Glific! We're glad you're here.</div>
+            </div>
+          </div>
+
+          <!-- Body: interactive messages -->
+          <div class="body-section" id="body-interactive">
+            <div class="info-note" style="background:#faf5ff;border-color:#ede9fe;">
+              <p style="color:#5b21b6;">Interactive messages let contacts reply by <strong>tapping a button or picking from a list</strong> — no typing needed. Best for structured inputs like choosing a language, selecting a district, or giving feedback.</p>
+            </div>
+            <input class="list-search" placeholder="🔍  Search interactive messages…" />
+            <button class="create-btn-full" onclick="showCreateInteractive()">+ Create new interactive message</button>
+
+            <!-- Create form (hidden by default) -->
+            <div id="create-interactive-form" style="display:none; margin-bottom:16px; border:1.5px solid #ede9fe; border-radius:10px; padding:12px; background:#faf5ff;">
+              <div style="font-size:12px;font-weight:700;color:#6d28d9;margin-bottom:10px;">New interactive message</div>
+              <div class="config-row">
+                <label style="color:#374151;">Title</label>
+                <input type="text" placeholder="e.g. Language preference" style="border-color:#ede9fe;" />
+              </div>
+              <div class="config-row">
+                <label style="color:#374151;">Type</label>
+                <select style="border-color:#ede9fe;">
+                  <option>Quick reply (buttons)</option>
+                  <option>List message</option>
+                </select>
+              </div>
+              <div class="config-row">
+                <label style="color:#374151;">Body text</label>
+                <textarea rows="2" style="width:100%;padding:7px 10px;border:1.5px solid #ede9fe;border-radius:7px;font-family:inherit;font-size:12.5px;color:#374151;resize:none;outline:none;" placeholder="Which language would you like to use?"></textarea>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:4px;">
+                <button onclick="hideCreateInteractive()" style="flex:1;padding:7px;border-radius:7px;border:1.5px solid #e5e7eb;background:#fff;font-size:12px;cursor:pointer;color:#6b7280;">Cancel</button>
+                <button style="flex:1;padding:7px;border-radius:7px;background:#8b5cf6;border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Create</button>
+              </div>
+            </div>
+
+            <div class="list-section-label">Your messages <span id="interactive-count">4</span></div>
+
+            <div class="template-card" onclick="selectInteractive(this, 'Feedback Survey', 'Quick reply · 3 buttons', 'How was your experience today?', ['Excellent 🌟', 'It was OK', 'Needs improvement'])">
+              <div class="tc-top">
+                <div class="tc-name">Feedback Survey</div>
+                <div class="tc-tags"><span class="tc-tag tag-qr">Quick reply</span></div>
+              </div>
+              <div class="tc-preview">"How was your experience today?"</div>
+              <div class="tc-meta">3 buttons</div>
+            </div>
+
+            <div class="template-card" onclick="selectInteractive(this, 'District Selection', 'List message · 8 options', 'Which district are you in?', ['Pune', 'Mumbai', 'Nashik', '+ 5 more…'])">
+              <div class="tc-top">
+                <div class="tc-name">District Selection</div>
+                <div class="tc-tags"><span class="tc-tag tag-list">List message</span></div>
+              </div>
+              <div class="tc-preview">"Which district are you in?"</div>
+              <div class="tc-meta">8 options</div>
+            </div>
+
+            <div class="template-card" onclick="selectInteractive(this, 'Language Preference', 'Quick reply · 3 buttons', 'Which language do you prefer?', ['English', 'हिंदी', 'मराठी'])">
+              <div class="tc-top">
+                <div class="tc-name">Language Preference</div>
+                <div class="tc-tags"><span class="tc-tag tag-qr">Quick reply</span></div>
+              </div>
+              <div class="tc-preview">"Which language do you prefer?"</div>
+              <div class="tc-meta">3 buttons</div>
+            </div>
+
+            <div class="template-card" onclick="selectInteractive(this, 'Consent Form', 'Quick reply · 2 buttons', 'Do you agree to share your data for this programme?', ['Yes, I agree ✓', 'No, skip'])">
+              <div class="tc-top">
+                <div class="tc-name">Consent Form</div>
+                <div class="tc-tags"><span class="tc-tag tag-qr">Quick reply</span></div>
+              </div>
+              <div class="tc-preview">"Do you agree to share your data…?"</div>
+              <div class="tc-meta">2 buttons</div>
+            </div>
+
+            <!-- Selected preview -->
+            <div class="selected-preview-strip" id="interactive-preview" style="border-color:#8b5cf6;background:#faf5ff;">
+              <div class="spstrip-label" style="color:#8b5cf6;">Selected</div>
+              <div class="spstrip-content" id="interactive-preview-text"></div>
+              <div class="spstrip-btns" id="interactive-preview-btns"></div>
+            </div>
+          </div>
+
+          <!-- Body: outreach / HSM templates -->
+          <div class="body-section" id="body-outreach">
+            <div class="info-note">
+              <p><strong>Outreach templates</strong> are pre-approved by WhatsApp. Use these to reach contacts who haven't messaged you in the last 24 hours.</p>
+            </div>
+
+            <input class="list-search" placeholder="🔍  Search templates…" />
+            <button class="create-btn-full" style="border-color:#3b82f6;color:#1d4ed8;background:#eff6ff;" onclick="alert('Opens template request wizard')">+ Request a new template</button>
+
+            <div class="list-section-label">Approved templates <span id="hsm-count">4</span></div>
+
+            <div class="template-card" onclick="selectHSM(this, 'welcome_message', 'Hello {{name}}, welcome to the {{programme}} programme! Reply with any question to get started.', ['name', 'programme'])">
+              <div class="tc-top">
+                <div class="tc-name">welcome_message</div>
+                <div class="tc-tags">
+                  <span class="tc-tag tag-utility">Utility</span>
+                  <span class="tc-tag tag-approved">✓ Approved</span>
+                </div>
+              </div>
+              <div class="tc-preview">"Hello {{name}}, welcome to the {{programme}} programme…"</div>
+              <div class="tc-meta">English · 2 variables</div>
+            </div>
+
+            <div class="template-card" onclick="selectHSM(this, 'health_reminder', 'नमस्ते {{name}}, आपकी अगली स्वास्थ्य जांच {{date}} को है। क्या आप आ सकते हैं?', ['name', 'date'])">
+              <div class="tc-top">
+                <div class="tc-name">health_reminder</div>
+                <div class="tc-tags">
+                  <span class="tc-tag tag-utility">Utility</span>
+                  <span class="tc-tag tag-hindi">हिंदी</span>
+                  <span class="tc-tag tag-approved">✓ Approved</span>
+                </div>
+              </div>
+              <div class="tc-preview">"नमस्ते {{name}}, आपकी अगली स्वास्थ्य जांच…"</div>
+              <div class="tc-meta">Hindi · 2 variables</div>
+            </div>
+
+            <div class="template-card" onclick="selectHSM(this, 'survey_invite', 'Hi {{name}}, we\'d love your feedback on {{programme}}. It only takes 2 minutes. Reply YES to begin.', ['name', 'programme'])">
+              <div class="tc-top">
+                <div class="tc-name">survey_invite</div>
+                <div class="tc-tags">
+                  <span class="tc-tag tag-marketing">Marketing</span>
+                  <span class="tc-tag tag-approved">✓ Approved</span>
+                </div>
+              </div>
+              <div class="tc-preview">"Hi {{name}}, we'd love your feedback on {{programme}}…"</div>
+              <div class="tc-meta">English · 2 variables</div>
+            </div>
+
+            <div class="template-card" onclick="selectHSM(this, 'registration_confirm', 'Dear {{name}}, your registration for {{programme}} is confirmed. Your ID is {{id}}.', ['name', 'programme', 'id'])">
+              <div class="tc-top">
+                <div class="tc-name">registration_confirm</div>
+                <div class="tc-tags">
+                  <span class="tc-tag tag-utility">Utility</span>
+                  <span class="tc-tag tag-approved">✓ Approved</span>
+                </div>
+              </div>
+              <div class="tc-preview">"Dear {{name}}, your registration for {{programme}} is confirmed…"</div>
+              <div class="tc-meta">English · 3 variables</div>
+            </div>
+
+            <!-- Selected HSM: variable fill -->
+            <div class="selected-preview-strip" id="hsm-preview" style="border-color:#3b82f6;background:#eff6ff;">
+              <div class="spstrip-label" style="color:#1d4ed8;">Fill in variables</div>
+              <div class="spstrip-content" id="hsm-preview-text" style="font-family:monospace;font-size:11.5px;color:#374151;margin-bottom:10px;"></div>
+              <div class="var-fill" id="hsm-var-fields"></div>
+            </div>
+          </div>
+
+        </div><!-- /edit-panel-body -->
+
+        <div class="edit-panel-footer">
+          <button class="btn-cancel" onclick="closeEdit()">Cancel</button>
+          <button class="btn-save" id="msg-save-btn" onclick="saveMessage()">Save changes</button>
+        </div>
+      </div><!-- /ep-message -->
+
+      <!-- ══ WAIT panel ══ -->
+      <div id="ep-wait" style="display:none; flex-direction:column; height:100%;">
+        <div class="edit-panel-header">
+          <div>
+            <div style="margin-bottom:4px;">
+              <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;background:#f3f4f6;color:#6b7280;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">
+                ○ Wait
+              </span>
+            </div>
+            <div class="edit-panel-title">Wait for reply</div>
+            <div class="edit-panel-sub">Flow pauses until the contact responds</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+            <button class="panel-close" title="Change node type" onclick="openReplacePopoverFromPanel(this); event.stopPropagation();" style="color:#6366f1;border-color:#c7d2fe;">⇄</button>
+            <button class="panel-close" onclick="closeEdit()">✕</button>
+          </div>
+        </div>
+        <div class="edit-panel-body">
+          <div style="padding:16px;">
+            <div class="config-row">
+              <label>Save their reply as</label>
+              <input type="text" value="result_1" placeholder="e.g. name, district, answer_1" />
+              <div class="input-hint">Use this later in the flow as @results.result_1</div>
+            </div>
+            <div class="config-row">
+              <label>If no reply after…</label>
+              <div class="timeout-row">
+                <input type="number" value="24" min="1" />
+                <select><option>minutes</option><option selected>hours</option><option>days</option></select>
+              </div>
+              <div class="input-hint">Flow takes the "No response" path after this time</div>
+            </div>
+            <div class="config-row">
+              <label>Accept</label>
+              <select>
+                <option>Any reply</option>
+                <option>Numbers only</option>
+                <option>Specific keywords</option>
+              </select>
+              <div class="input-hint">Restrict what type of reply advances the flow</div>
+            </div>
+          </div>
+        </div>
+        <div class="edit-panel-footer">
+          <button class="btn-cancel" onclick="closeEdit()">Cancel</button>
+          <button class="btn-save" onclick="closeEdit()">Save changes</button>
+        </div>
+      </div><!-- /ep-wait -->
+
+    </div><!-- /edit-panel -->
+
+    <!-- ── Canvas ── -->
+    <div class="canvas" id="canvas">
+      <div id="canvas-content">
+        <svg id="conn-layer"></svg>
+
+        <!-- Flow start dot -->
+        <div class="flow-entry" id="flow-entry">
+          <div class="flow-start-label">Flow start</div>
+          <div class="entry-dot"></div>
+        </div>
+
+        <!-- Node 1: Send Message -->
+        <div class="flow-node bar-green-node" id="node-1">
+          <div class="node-hover-controls">
+            <button class="nhc-btn" onclick="openEdit('message','node-1'); event.stopPropagation();">✎ Edit</button>
+            <button class="nhc-btn" onclick="openReplacePopover(this); event.stopPropagation();">⇄</button>
+            <button class="nhc-btn nhc-del" onclick="confirmDelete(event)">⊘</button>
+          </div>
+          <div class="node-header">
+            <div class="node-icon icon-green">💬</div>
+            <span class="node-title">Message</span>
+          </div>
+          <div class="node-divider"></div>
+          <div class="node-content">
+            <div class="node-msg-preview" id="node-1-preview">Hello 👋 Welcome to Glific! We're glad you're here.</div>
+            <div class="node-meta" id="node-1-meta"></div>
+            <div class="node-btn-pills" id="node-1-btn-pills"></div>
+          </div>
+          <button class="node-add-btn" onclick="openPopoverFromNode(this); event.stopPropagation();">+</button>
+        </div>
+
+        <!-- Add step (hidden — + is now on each node) -->
+        <div class="add-step-wrap" id="add-step-wrap" style="display:none;">
+          <button class="add-step-btn" id="add-btn">+</button>
+        </div>
+      </div>
+    </div><!-- /canvas -->
+
+  </div><!-- /content-area -->
+</div><!-- /main -->
+
+<!-- Legend -->
+<div class="bottom-bar">
+  <div class="node-legend">
+    <span class="legend-label">Colour</span>
+    <div class="legend-item"><div class="legend-dot ld-send"></div> Send</div>
+    <div class="legend-item"><div class="legend-dot ld-grey"></div> Wait / Branch / Act</div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="zoomOut()" title="Zoom out (Ctrl+−)">−</button>
+    <div class="zoom-sep"></div>
+    <span class="zoom-label" id="zoom-label" onclick="zoomReset()" title="Reset to 100%">100%</span>
+    <div class="zoom-sep"></div>
+    <button class="zoom-btn" onclick="zoomIn()" title="Zoom in (Ctrl+=)">+</button>
+  </div>
+</div>
+
+<!-- Popover: single-column category list -->
+<div class="popover" id="popover" onmouseleave="scheduleFlyoutHide()">
+  <div class="popover-header"><div class="popover-title" id="popover-title">Add new node</div></div>
+
+  <!-- Search bar -->
+  <div class="pop-search-wrap">
+    <span class="pop-search-icon">⌕</span>
+    <input class="pop-search" id="pop-search" type="text" placeholder="Search nodes…" autocomplete="off" oninput="handleNodeSearch(this.value)" onclick="event.stopPropagation()" />
+  </div>
+
+  <!-- Frequently used (hidden during search) -->
+  <div class="pop-freq" id="pop-freq">
+    <div class="pop-freq-label">Frequently used</div>
+    <div class="freq-item" onclick="addNode('icon-green','💬','Message','Tap to write message content…','#9ca3af','message')"><span class="freq-icon">💬</span> Message</div>
+    <div class="freq-item" onclick="addNode('icon-green','🔘','Interactive','Select an interactive message…','#9ca3af','message')"><span class="freq-icon">🔘</span> Interactive message</div>
+    <div class="freq-item" onclick="addNode('icon-slate','⌨️','Wait for reply','Waiting for contact to reply…','#6b7280','wait')"><span class="freq-icon">⌨️</span> Wait for reply</div>
+    <div class="freq-item" onclick="addNode('icon-amber','↩️','Branch','Route by expression…','#6b7280')"><span class="freq-icon">↩️</span> Branch by expression</div>
+    <div class="freq-item" onclick="addNode('icon-purple','✏️','Update contact','Update a contact field…','#6b7280')"><span class="freq-icon">✏️</span> Update contact</div>
+  </div>
+  <div class="pop-divider" id="pop-divider"></div>
+
+  <!-- Category list (hidden during search) -->
+  <div class="pop-body" id="pop-body">
+    <div class="pop-cat" id="cat-send" onmouseenter="showFlyout(this,'send')">
+      <div class="pop-cat-text">
+        <div class="pop-cat-name">Send</div>
+        <div class="pop-cat-desc">Message the contact</div>
+      </div>
+      <span class="pop-cat-chevron">›</span>
+    </div>
+    <div class="pop-cat" id="cat-wait" onmouseenter="showFlyout(this,'wait')">
+      <div class="pop-cat-text">
+        <div class="pop-cat-name">Wait</div>
+        <div class="pop-cat-desc">Pause the flow</div>
+      </div>
+      <span class="pop-cat-chevron">›</span>
+    </div>
+    <div class="pop-cat" id="cat-branch" onmouseenter="showFlyout(this,'branch')">
+      <div class="pop-cat-text">
+        <div class="pop-cat-name">Branch</div>
+        <div class="pop-cat-desc">Route on a condition</div>
+      </div>
+      <span class="pop-cat-chevron">›</span>
+    </div>
+    <div class="pop-cat" id="cat-act" onmouseenter="showFlyout(this,'act')">
+      <div class="pop-cat-text">
+        <div class="pop-cat-name">Act</div>
+        <div class="pop-cat-desc">Update data or integrations</div>
+      </div>
+      <span class="pop-cat-chevron">›</span>
+    </div>
+  </div>
+
+  <!-- Search results (shown during search) -->
+  <div class="pop-search-results" id="pop-search-results" style="display:none;"></div>
+</div>
+
+<!-- Flyout: appears to the right of the hovered category -->
+<div class="pop-flyout" id="pop-flyout" onmouseenter="cancelFlyoutHide()" onmouseleave="scheduleFlyoutHide()">
+  <!-- Send -->
+  <div class="flyout-panel" id="flyout-send">
+    <div class="pop-sub-item" onclick="addNode('icon-green','💬','Message','Tap to write message content…','#9ca3af','message')"><span class="psi-icon">💬</span><div><div class="psi-name">Message</div><div class="psi-desc">Send text, an image, video or document</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-green','🔘','Interactive','Select an interactive message…','#9ca3af','message')"><span class="psi-icon">🔘</span><div><div class="psi-name">Interactive message</div><div class="psi-desc">Let the contact tap a button or pick from a list</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-green','📤','HSM','Select an outreach template…','#9ca3af','message')"><span class="psi-icon">📤</span><div><div class="psi-name">Outreach template <span style="font-size:10px;color:#9ca3af;">(HSM)</span></div><div class="psi-desc">Reach contacts who haven't messaged in 24 hrs</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-green','🧑‍💼','Staff note','Notify a staff member…','#9ca3af','message')"><span class="psi-icon">🧑‍💼</span><div><div class="psi-name">Staff notification</div><div class="psi-desc">Alert a team member — not visible to the contact</div></div></div>
+  </div>
+  <!-- Wait -->
+  <div class="flyout-panel" id="flyout-wait">
+    <div class="pop-sub-item" onclick="addNode('icon-slate','⌨️','Wait for reply','Waiting for contact to reply…','#6b7280','wait')"><span class="psi-icon">⌨️</span><div><div class="psi-name">For a reply</div><div class="psi-desc">Pause until the contact sends a message</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-slate','⏱️','Wait','Waiting 24 hours…','#6b7280')"><span class="psi-icon">⏱️</span><div><div class="psi-name">For a set time</div><div class="psi-desc">Wait a fixed number of minutes, hours or days</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-slate','🔄','Wait for result','Waiting for external system…','#6b7280')"><span class="psi-icon">🔄</span><div><div class="psi-name">For a result</div><div class="psi-desc">Resume once an external system responds</div></div></div>
+  </div>
+  <!-- Branch -->
+  <div class="flyout-panel" id="flyout-branch">
+    <div class="pop-sub-item" onclick="addNode('icon-amber','↩️','Branch','Route by expression…','#6b7280')"><span class="psi-icon">↩️</span><div><div class="psi-name">Branch by expression</div><div class="psi-desc">Match a keyword, number or button they tapped</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-amber','👤','Branch','Route by contact field…','#6b7280')"><span class="psi-icon">👤</span><div><div class="psi-name">Branch by contact field</div><div class="psi-desc">Check a contact variable value to route the flow</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-amber','👥','Branch','Route by collection…','#6b7280')"><span class="psi-icon">👥</span><div><div class="psi-name">Branch by collection</div><div class="psi-desc">Check if the contact belongs to a collection</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-amber','📋','Branch','Route by flow result…','#6b7280')"><span class="psi-icon">📋</span><div><div class="psi-name">Branch by flow result</div><div class="psi-desc">Route based on a saved result from earlier in the flow</div></div></div>
+  </div>
+  <!-- Act -->
+  <div class="flyout-panel" id="flyout-act">
+    <!-- Contact -->
+    <div class="flyout-group-label">Contact</div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','✏️','Update contact','Update a contact field…','#6b7280')"><span class="psi-icon">✏️</span><div><div class="psi-name">Update contact</div><div class="psi-desc">Write a value to a contact field or variable</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','👤','Manage profile','Update contact profile…','#6b7280')"><span class="psi-icon">👤</span><div><div class="psi-name">Manage profile</div><div class="psi-desc">Opt a contact in/out or update their profile data</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','➕','Add to collection','Select a collection…','#6b7280')"><span class="psi-icon">➕</span><div><div class="psi-name">Add to collection</div><div class="psi-desc">Add this contact to a group or collection</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','➖','Remove from collection','Select a collection…','#6b7280')"><span class="psi-icon">➖</span><div><div class="psi-name">Remove from collection</div><div class="psi-desc">Remove this contact from a group or collection</div></div></div>
+    <!-- Track response -->
+    <div class="flyout-group-label" style="margin-top:4px;">Track response</div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','🏷️','Label message','Label the incoming message…','#6b7280')"><span class="psi-icon">🏷️</span><div><div class="psi-name">Label incoming message</div><div class="psi-desc">Tag this message for analytics and reporting</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','💾','Save result','Save a result for this flow…','#6b7280')"><span class="psi-icon">💾</span><div><div class="psi-name">Save result for this flow</div><div class="psi-desc">Store a value to use later in this flow</div></div></div>
+    <!-- Integrations -->
+    <div class="flyout-group-label" style="margin-top:4px;">Integrations</div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','🔗','Webhook','Call a webhook…','#6b7280')"><span class="psi-icon">🔗</span><div><div class="psi-name">Call a webhook</div><div class="psi-desc">Send or fetch data from an external API</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','📊','Google Sheets','Link to Google Sheets…','#6b7280')"><span class="psi-icon">📊</span><div><div class="psi-name">Link Google Sheets</div><div class="psi-desc">Read a row or write contact data to a sheet</div></div></div>
+    <!-- Flow -->
+    <div class="flyout-group-label" style="margin-top:4px;">Flow</div>
+    <div class="pop-sub-item" onclick="addNode('icon-pink','⚡','Enter a Flow','Select a flow to enter…','#6b7280')"><span class="psi-icon">⚡</span><div><div class="psi-name">Enter another flow</div><div class="psi-desc">Hand this contact off to a different flow</div></div></div>
+    <div class="pop-sub-item" onclick="addNode('icon-pink','👥','Start in a Flow','Select a contact or collection…','#6b7280')"><span class="psi-icon">👥</span><div><div class="psi-name">Start somebody else in a flow</div><div class="psi-desc">Trigger a flow for another contact or collection</div></div></div>
+    <!-- Ask for help -->
+    <div class="flyout-group-label" style="margin-top:4px;">Ask for help</div>
+    <div class="pop-sub-item" onclick="addNode('icon-purple','🎫','Support ticket','Open a support ticket…','#6b7280')"><span class="psi-icon">🎫</span><div><div class="psi-name">Open a support ticket</div><div class="psi-desc">Flag this contact for a staff member to follow up</div></div></div>
+  </div>
+</div>
+
+<script>
+/* ── Popover ── */
+var popoverAnchorBtn = null; // the + button that opened the popover
+
+function openPopoverFromNode(btn) {
+  popoverAnchorBtn = btn;
+  var pop = document.getElementById('popover');
+  var r = btn.getBoundingClientRect();
+  positionPopover(pop, r, 10);
+  pop.style.display = 'block';
+  document.getElementById('popover-title').textContent = 'Add new node';
+}
+
+function openPopover() { /* legacy — no-op; use openPopoverFromNode */ }
+function closePopover() {
+  document.getElementById('popover').style.display = 'none';
+  document.getElementById('pop-flyout').style.display = 'none';
+  document.querySelectorAll('.pop-cat').forEach(function(c) { c.classList.remove('hovered'); });
+  popoverAnchorBtn = null;
+  replaceTargetId = null;
+  var t = document.getElementById('popover-title');
+  if (t) t.textContent = 'Add new node';
+  // Reset search
+  var searchEl = document.getElementById('pop-search');
+  if (searchEl) searchEl.value = '';
+  handleNodeSearch('');
+}
+
+/* ── Node search ── */
+var ALL_NODES = [
+  { icon:'icon-green', emoji:'💬', title:'Message',              preview:'Tap to write message content…',      panelType:'message', name:'Message',                    desc:'Send text, an image, video or document',              cat:'send' },
+  { icon:'icon-green', emoji:'🔘', title:'Interactive',          preview:'Select an interactive message…',     panelType:'message', name:'Interactive message',         desc:'Let the contact tap a button or pick from a list',    cat:'send' },
+  { icon:'icon-green', emoji:'📤', title:'HSM',                  preview:'Select an outreach template…',       panelType:'message', name:'Outreach template (HSM)',     desc:'Reach contacts who haven\'t messaged in 24 hrs',       cat:'send' },
+  { icon:'icon-green', emoji:'🧑‍💼', title:'Staff note',         preview:'Notify a staff member…',             panelType:'message', name:'Staff notification',         desc:'Alert a team member — not visible to the contact',    cat:'send' },
+  { icon:'icon-slate', emoji:'⌨️', title:'Wait for reply',       preview:'Waiting for contact to reply…',      panelType:'wait',    name:'Wait for a reply',           desc:'Pause until the contact sends a message',             cat:'wait' },
+  { icon:'icon-slate', emoji:'⏱️', title:'Wait',                 preview:'Waiting…',                           panelType:'',        name:'Wait for a set time',        desc:'Wait a fixed number of minutes, hours or days',       cat:'wait' },
+  { icon:'icon-slate', emoji:'🔄', title:'Wait for result',      preview:'Waiting for external system…',       panelType:'',        name:'Wait for a result',          desc:'Resume once an external system responds',             cat:'wait' },
+  { icon:'icon-amber', emoji:'↩️', title:'Branch',               preview:'Route by expression…',               panelType:'',        name:'Branch by expression',       desc:'Match a keyword, number or button they tapped',       cat:'branch' },
+  { icon:'icon-amber', emoji:'👤', title:'Branch',               preview:'Route by contact field…',            panelType:'',        name:'Branch by contact field',    desc:'Check a contact variable value to route the flow',    cat:'branch' },
+  { icon:'icon-amber', emoji:'👥', title:'Branch',               preview:'Route by collection…',               panelType:'',        name:'Branch by collection',       desc:'Check if the contact belongs to a collection',        cat:'branch' },
+  { icon:'icon-amber', emoji:'📋', title:'Branch',               preview:'Route by flow result…',              panelType:'',        name:'Branch by flow result',      desc:'Route based on a saved result from earlier',          cat:'branch' },
+  { icon:'icon-purple',emoji:'🏷️', title:'Label message',        preview:'Label the incoming message…',        panelType:'',        name:'Label incoming message',     desc:'Tag this message for analytics and reporting',        cat:'act' },
+  { icon:'icon-purple',emoji:'➕', title:'Add to collection',    preview:'Select a collection…',               panelType:'',        name:'Add to collection',          desc:'Add this contact to a group or collection',           cat:'act' },
+  { icon:'icon-purple',emoji:'➖', title:'Remove from collection',preview:'Select a collection…',              panelType:'',        name:'Remove from collection',     desc:'Remove this contact from a group or collection',      cat:'act' },
+  { icon:'icon-purple',emoji:'✏️', title:'Update contact',       preview:'Update a contact field…',            panelType:'',        name:'Update contact',             desc:'Write a value to a contact field or variable',        cat:'act' },
+  { icon:'icon-purple',emoji:'💾', title:'Save result',          preview:'Save a result for this flow…',       panelType:'',        name:'Save result for this flow',  desc:'Store a value to use later in this flow',             cat:'act' },
+  { icon:'icon-purple',emoji:'🔗', title:'Webhook',              preview:'Call a webhook…',                    panelType:'',        name:'Call a webhook',             desc:'Send or fetch data from an external API',             cat:'act' },
+  { icon:'icon-purple',emoji:'📊', title:'Google Sheets',        preview:'Link to Google Sheets…',             panelType:'',        name:'Link Google Sheets',         desc:'Read a row or write contact data to a sheet',         cat:'act' },
+  { icon:'icon-pink',  emoji:'⚡', title:'Enter a Flow',         preview:'Select a flow to enter…',            panelType:'',        name:'Enter another flow',         desc:'Hand this contact off to a different flow',           cat:'act' },
+  { icon:'icon-pink',  emoji:'👥', title:'Start in a Flow',      preview:'Select a contact or collection…',    panelType:'',        name:'Start somebody else in a flow',desc:'Trigger a flow for another contact or collection',  cat:'act' },
+  { icon:'icon-purple',emoji:'🎫', title:'Support ticket',       preview:'Open a support ticket…',             panelType:'',        name:'Open a support ticket',      desc:'Flag this contact for a staff member to follow up',   cat:'act' },
+  { icon:'icon-purple',emoji:'👤', title:'Manage profile',       preview:'Update contact profile…',            panelType:'',        name:'Manage profile',             desc:'Opt a contact in/out or update their profile data',   cat:'act' },
+];
+
+var catChip = { send:'<span class="sr-cat-chip chip-send">Send</span>', wait:'<span class="sr-cat-chip chip-wait">Wait</span>', branch:'<span class="sr-cat-chip chip-branch">Branch</span>', act:'<span class="sr-cat-chip chip-act">Act</span>' };
+
+function handleNodeSearch(q) {
+  q = (q || '').toLowerCase().trim();
+  var resultsEl = document.getElementById('pop-search-results');
+  var bodyEl    = document.getElementById('pop-body');
+  var freqEl    = document.getElementById('pop-freq');
+  var divEl     = document.getElementById('pop-divider');
+  if (!q) {
+    resultsEl.style.display = 'none';
+    bodyEl.style.display    = 'block';
+    freqEl.style.display    = 'block';
+    divEl.style.display     = 'block';
+    document.getElementById('pop-flyout').style.display = 'none';
+    document.querySelectorAll('.pop-cat').forEach(function(c) { c.classList.remove('hovered'); });
+    return;
+  }
+  bodyEl.style.display  = 'none';
+  freqEl.style.display  = 'none';
+  divEl.style.display   = 'none';
+  document.getElementById('pop-flyout').style.display = 'none';
+  var matches = ALL_NODES.filter(function(n) {
+    return n.name.toLowerCase().indexOf(q) !== -1 || n.desc.toLowerCase().indexOf(q) !== -1 || n.cat.toLowerCase().indexOf(q) !== -1;
+  });
+  if (!matches.length) {
+    resultsEl.innerHTML = '<div class="pop-search-empty">No nodes match "<strong>' + q + '</strong>"</div>';
+  } else {
+    resultsEl.innerHTML = matches.map(function(n) {
+      var args = "'" + n.icon + "','" + n.emoji + "','" + n.title.replace(/'/g,"\\'") + "','" + n.preview.replace(/'/g,"\\'") + "','#6b7280','" + (n.panelType||'') + "'";
+      return '<div class="pop-sub-item" onclick="addNode(' + args + ')">' +
+        '<span class="psi-icon">' + n.emoji + '</span>' +
+        '<div><div class="psi-name">' + n.name + catChip[n.cat] + '</div>' +
+        '<div class="psi-desc">' + n.desc + '</div></div></div>';
+    }).join('');
+  }
+  resultsEl.style.display = 'block';
+}
+
+/* ── Node hover controls — JS-driven so there's no dead gap between controls and node ── */
+function initNodeHover(nodeEl) {
+  var hideTimer = null;
+  function show() {
+    clearTimeout(hideTimer);
+    nodeEl.classList.add('node-hovered');
+  }
+  function scheduleHide() {
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(function() {
+      nodeEl.classList.remove('node-hovered');
+    }, 180);
+  }
+  // Watch the node AND its absolutely-positioned controls (which sit outside the node box)
+  nodeEl.addEventListener('mouseenter', show);
+  nodeEl.addEventListener('mouseleave', scheduleHide);
+  var controls = nodeEl.querySelector('.node-hover-controls');
+  if (controls) {
+    controls.addEventListener('mouseenter', show);
+    controls.addEventListener('mouseleave', scheduleHide);
+  }
+  var addBtn = nodeEl.querySelector('.node-add-btn');
+  if (addBtn) {
+    addBtn.addEventListener('mouseenter', show);
+    addBtn.addEventListener('mouseleave', scheduleHide);
+  }
+}
+
+/* ── Position popover within viewport — flips up/left if it would be clipped ── */
+function positionPopover(pop, r, gap, pw) {
+  pw = pw || 248;
+  gap = gap || 8;
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  // Temporarily show off-screen to measure height
+  pop.style.visibility = 'hidden';
+  pop.style.display = 'block';
+  var ph = pop.offsetHeight;
+  pop.style.display = 'none';
+  pop.style.visibility = '';
+
+  // Horizontal: prefer to the right of the button, clamp to viewport
+  var idealLeft = r.right + gap;
+  if (idealLeft + pw > vw - 8) idealLeft = r.left - pw - gap; // flip left
+  var left = Math.min(Math.max(idealLeft, 8), vw - pw - 8);
+
+  // Vertical: prefer below button, flip up if not enough room
+  var idealTop = r.bottom + gap;
+  if (idealTop + ph > vh - 8) idealTop = Math.max(r.top - ph - gap, 8); // flip up
+
+  pop.style.top  = idealTop + 'px';
+  pop.style.left = left + 'px';
+  pop.style.transform = 'none';
+}
+
+/* ── Flyout: show sub-options to the right on hover ── */
+var flyoutTimer = null;
+
+function showFlyout(catEl, cat) {
+  cancelFlyoutHide();
+  // Highlight hovered category
+  document.querySelectorAll('.pop-cat').forEach(function(c) { c.classList.remove('hovered'); });
+  catEl.classList.add('hovered');
+  // Show correct flyout panel
+  document.querySelectorAll('.flyout-panel').forEach(function(p) { p.style.display = 'none'; });
+  var panel = document.getElementById('flyout-' + cat);
+  if (panel) panel.style.display = 'block';
+  // Position flyout to the right of popover
+  var flyout = document.getElementById('pop-flyout');
+  var popRect = document.getElementById('popover').getBoundingClientRect();
+  var catRect = catEl.getBoundingClientRect();
+  var fw = 270;
+  var vw = window.innerWidth;
+  var flyLeft = popRect.right + 6;
+  if (flyLeft + fw > vw - 8) flyLeft = popRect.left - fw - 6; // flip left if no room
+  flyout.style.left = flyLeft + 'px';
+  var vh = window.innerHeight;
+  var fh = flyout.scrollHeight;
+  var idealTop = catRect.top;
+  if (idealTop + fh > vh - 8) idealTop = Math.max(vh - fh - 8, 8); // push up if clipped
+  flyout.style.top = idealTop + 'px';
+  flyout.style.display = 'block';
+}
+
+function scheduleFlyoutHide() {
+  flyoutTimer = setTimeout(function() {
+    document.getElementById('pop-flyout').style.display = 'none';
+    document.querySelectorAll('.pop-cat').forEach(function(c) { c.classList.remove('hovered'); });
+  }, 400);
+}
+
+function cancelFlyoutHide() {
+  clearTimeout(flyoutTimer);
+}
+
+/* ── Replace node (open popover anchored to the ⇄ button) ── */
+var replaceTargetId = null; // set when popover is opened for replace, null for add
+
+function openReplacePopoverFromPanel(btn) { openReplacePopover(btn); }
+
+function openReplacePopover(btn) {
+  // Determine which node is the target — from hover controls (child of node) or edit panel (use currentEditId)
+  var nodeEl = btn.closest('.flow-node');
+  replaceTargetId = nodeEl ? nodeEl.id : currentEditId;
+
+  var pop = document.getElementById('popover');
+  var r = btn.getBoundingClientRect();
+  positionPopover(pop, r, 6, 248);
+  pop.style.display = 'block';
+  document.getElementById('popover-title').textContent = 'Change node type';
+}
+
+/* ── Replace an existing node's type in-place ── */
+function replaceNode(id, iconClass, iconEmoji, titleText, defaultPreview, previewColor, panelType) {
+  var node = document.getElementById(id);
+  if (!node) return;
+
+  var iconEl = node.querySelector('.node-icon');
+  if (iconEl) { iconEl.className = 'node-icon ' + iconClass; iconEl.textContent = iconEmoji; }
+
+  var titleEl = node.querySelector('.node-title');
+  if (titleEl) titleEl.textContent = titleText;
+
+  var previewEl = node.querySelector('.node-msg-preview');
+  if (previewEl) { previewEl.textContent = defaultPreview; previewEl.style.color = previewColor || '#9ca3af'; }
+
+  var pillsEl = node.querySelector('.node-btn-pills');
+  if (pillsEl) pillsEl.innerHTML = '';
+  var metaEl = node.querySelector('.node-meta');
+  if (metaEl) metaEl.innerHTML = '';
+
+  // Re-wire the Edit button so it opens the right panel type
+  var editBtn = node.querySelector('.nhc-btn');
+  if (editBtn) editBtn.setAttribute('onclick', "openEdit('" + (panelType||'none') + "','" + id + "'); event.stopPropagation();");
+
+  if (panelType === 'message' || panelType === 'wait') openEdit(panelType, id);
+}
+
+/* ── Node state ── */
+var currentEditId = 'node-1';
+var nodeCount = 2; // node-1 and node-2 are pre-existing
+
+/* ── Add a new node to the canvas (or replace existing if replaceTargetId is set) ── */
+// signature: addNode(iconClass, iconEmoji, titleText, defaultPreview, previewColor, panelType)
+function addNode(iconClass, iconEmoji, titleText, defaultPreview, previewColor, panelType) {
+  var targetId = replaceTargetId; // capture before closePopover resets it
+  closePopover();
+
+  if (targetId) {
+    replaceNode(targetId, iconClass, iconEmoji, titleText, defaultPreview, previewColor, panelType);
+    return;
+  }
+
+  nodeCount++;
+  var id = 'dyn-node-' + nodeCount;
+
+  // Position: to the right of the last logical node (not add-step-wrap)
+  var nodeIds = nodeOrder.filter(function(n) { return n !== 'add-step-wrap'; });
+  var lastId  = nodeIds[nodeIds.length - 1];
+  var lastEl  = lastId ? document.getElementById(lastId) : null;
+  var newLeft = lastEl ? lastEl.offsetLeft + lastEl.offsetWidth + 60 : 200;
+  var newTop  = lastEl ? lastEl.offsetTop : 305;
+
+  var node = document.createElement('div');
+  node.className = 'flow-node';
+  node.id = id;
+  node.style.left = newLeft + 'px';
+  node.style.top  = newTop  + 'px';
+  node.innerHTML =
+    '<div class="node-hover-controls">' +
+      '<button class="nhc-btn" onclick="openEdit(\'' + (panelType||'none') + '\',\'' + id + '\'); event.stopPropagation();">✎ Edit</button>' +
+      '<button class="nhc-btn" onclick="openReplacePopover(this); event.stopPropagation();">⇄</button>' +
+      '<button class="nhc-btn nhc-del" onclick="deleteNode(this,event)">⊘</button>' +
+    '</div>' +
+    '<div class="node-header">' +
+      '<div class="node-icon ' + iconClass + '">' + iconEmoji + '</div>' +
+      '<span class="node-title">' + titleText + '</span>' +
+    '</div>' +
+    '<div class="node-divider"></div>' +
+    '<div class="node-content">' +
+      '<div class="node-msg-preview" id="' + id + '-preview" style="color:' + (previewColor||'#9ca3af') + ';">' + defaultPreview + '</div>' +
+      '<div class="node-meta" id="' + id + '-meta"></div>' +
+      '<div class="node-btn-pills" id="' + id + '-btn-pills"></div>' +
+    '</div>' +
+    '<button class="node-add-btn" onclick="openPopoverFromNode(this); event.stopPropagation();">+</button>';
+
+  document.getElementById('canvas-content').appendChild(node);
+  nodeOrder.splice(nodeOrder.length - 1, 0, id); // insert before add-step-wrap
+
+  makeNodeDraggable(node, panelType);
+  initNodeHover(node);
+  drawConnections();
+
+  setTimeout(function() {
+    node.scrollIntoView({ behavior: 'smooth', inline: 'nearest' });
+    if (panelType === 'message' || panelType === 'wait') openEdit(panelType, id);
+  }, 60);
+}
+
+/* ── Delete a dynamically added node ── */
+function deleteNode(btn, e) {
+  e.stopPropagation();
+  if (!confirm('Delete this node? This cannot be undone.')) return;
+  var node = btn.closest('.flow-node');
+  if (!node) return;
+  var id = node.id;
+  var idx = nodeOrder.indexOf(id);
+  if (idx !== -1) nodeOrder.splice(idx, 1);
+  if (currentEditId === id) closeEdit();
+  node.remove();
+  drawConnections();
+}
+
+/* ── Edit panel ── */
+function openEdit(type, nodeId) {
+  currentEditId = nodeId || 'node-1';
+  const panel = document.getElementById('edit-panel');
+  panel.classList.add('open');
+  document.getElementById('ep-message').style.display = 'none';
+  document.getElementById('ep-wait').style.display = 'none';
+
+  // Clear editing state from all nodes
+  document.querySelectorAll('.flow-node').forEach(function(n) { n.classList.remove('editing'); });
+  var target = document.getElementById(currentEditId);
+  if (target) target.classList.add('editing');
+
+  if (type === 'message') {
+    document.getElementById('ep-message').style.display = 'flex';
+  } else if (type === 'wait') {
+    document.getElementById('ep-wait').style.display = 'flex';
+  } else {
+    // No dedicated panel — close the panel (node just gets the editing ring)
+    panel.classList.remove('open');
+  }
+}
+
+function closeEdit() {
+  document.getElementById('edit-panel').classList.remove('open');
+  document.querySelectorAll('.flow-node').forEach(function(n) { n.classList.remove('editing'); });
+  drawConnections();
+}
+
+/* ── Type pills ── */
+function setMsgType(btn, type, cls) {
+  document.querySelectorAll('#ep-message .type-pill').forEach(p => p.className = 'type-pill');
+  btn.className = 'type-pill ' + cls;
+  ['body-msg', 'body-interactive', 'body-outreach'].forEach(id => {
+    document.getElementById(id).classList.remove('visible');
+  });
+  document.getElementById('body-' + type).classList.add('visible');
+}
+
+/* ── Composer ── */
+function updatePreview(val) {
+  document.getElementById('ep-bubble').textContent = val;
+  document.getElementById('char-count').textContent = val.length + ' / 4096';
+}
+function saveMessage() {
+  const node = document.getElementById(currentEditId);
+  if (!node) { closeEdit(); return; }
+  const badge = node.querySelector('.node-type-badge'); // legacy, may be null
+  const titleEl = node.querySelector('.node-title');
+  const iconEl  = node.querySelector('.node-icon');
+  const preview = document.getElementById(currentEditId + '-preview');
+  const meta = document.getElementById(currentEditId + '-meta');
+  const pills = document.getElementById(currentEditId + '-btn-pills');
+
+  // Determine active type pill
+  const activePill = document.querySelector('#ep-message .type-pill.active-msg') ? 'msg'
+    : document.querySelector('#ep-message .type-pill.active-interactive') ? 'interactive'
+    : document.querySelector('#ep-message .type-pill.active-outreach') ? 'outreach'
+    : 'msg';
+
+  // Clear all bar color classes
+  node.classList.remove('bar-green-node','bar-grey-node','bar-blue-node','bar-purple-node','bar-amber-node','bar-pink-node');
+  pills.innerHTML = '';
+
+  if (activePill === 'msg') {
+    const text = document.getElementById('msg-textarea').value || '(no message)';
+    if (titleEl) titleEl.textContent = 'Message';
+    if (iconEl)  { iconEl.className = 'node-icon icon-green'; iconEl.textContent = '💬'; }
+    preview.textContent = text;
+    preview.style.color = '#374151';
+    meta.innerHTML = '';
+
+  } else if (activePill === 'interactive') {
+    const selected = document.querySelector('#body-interactive .template-card.selected-purple');
+    if (titleEl) titleEl.textContent = 'Interactive';
+    if (iconEl)  { iconEl.className = 'node-icon icon-green'; iconEl.textContent = '🔘'; }
+    if (selected) {
+      const bodyText = selected.querySelector('.tc-preview').textContent.replace(/^"|"$/g, '');
+      preview.textContent = bodyText;
+      preview.style.color = '#374151';
+      meta.innerHTML = '';
+      const btnEls = document.querySelectorAll('#interactive-preview-btns .spstrip-btn');
+      btnEls.forEach(function(b) {
+        const pill = document.createElement('div');
+        pill.className = 'node-btn-pill';
+        pill.textContent = b.textContent;
+        pills.appendChild(pill);
+      });
+    } else {
+      preview.textContent = 'No interactive message selected';
+      preview.style.color = '#9ca3af';
+      meta.innerHTML = '';
+    }
+
+  } else if (activePill === 'outreach') {
+    const selected = document.querySelector('#body-outreach .template-card.selected');
+    if (titleEl) titleEl.textContent = 'HSM';
+    if (iconEl)  { iconEl.className = 'node-icon icon-green'; iconEl.textContent = '📤'; }
+    if (selected) {
+      const previewText = selected.querySelector('.tc-preview').textContent.replace(/^"|"$/g, '');
+      preview.textContent = previewText;
+      preview.style.color = '#374151';
+    } else {
+      preview.textContent = 'No template selected';
+      preview.style.color = '#9ca3af';
+    }
+    meta.innerHTML = '';
+  }
+
+  closeEdit();
+}
+
+/* ── Interactive message selection ── */
+function selectInteractive(card, title, meta, body, buttons) {
+  document.querySelectorAll('#body-interactive .template-card').forEach(c => {
+    c.classList.remove('selected', 'selected-purple');
+  });
+  card.classList.add('selected-purple');
+
+  const preview = document.getElementById('interactive-preview');
+  preview.classList.add('visible');
+  document.getElementById('interactive-preview-text').innerHTML =
+    '<strong style="font-size:12px;">' + title + '</strong><br>' +
+    '<span style="font-size:10.5px;color:#9ca3af;">' + meta + '</span><br><br>' +
+    '"' + body + '"';
+
+  const btnsEl = document.getElementById('interactive-preview-btns');
+  btnsEl.innerHTML = buttons.map(b =>
+    '<div class="spstrip-btn" style="border-color:#ede9fe;color:#6d28d9;background:#faf5ff;font-size:11px;">' + b + '</div>'
+  ).join('');
+}
+
+function showCreateInteractive() {
+  document.getElementById('create-interactive-form').style.display = 'block';
+}
+function hideCreateInteractive() {
+  document.getElementById('create-interactive-form').style.display = 'none';
+}
+
+/* ── HSM template selection ── */
+function selectHSM(card, name, body, variables) {
+  document.querySelectorAll('#body-outreach .template-card').forEach(c => {
+    c.classList.remove('selected', 'selected-purple');
+  });
+  card.classList.add('selected');
+
+  const preview = document.getElementById('hsm-preview');
+  preview.classList.add('visible');
+
+  // Show template body
+  let highlighted = body;
+  variables.forEach(v => {
+    highlighted = highlighted.replace(new RegExp('{{' + v + '}}', 'g'),
+      '<span style="background:#bfdbfe;padding:1px 4px;border-radius:3px;font-size:11px;">{{' + v + '}}</span>');
+  });
+  document.getElementById('hsm-preview-text').innerHTML = highlighted;
+
+  // Variable input fields
+  const fieldsEl = document.getElementById('hsm-var-fields');
+  fieldsEl.innerHTML = variables.map(v =>
+    '<div class="var-fill-label">{{' + v + '}}</div>' +
+    '<input type="text" placeholder="Enter value for ' + v + '" />'
+  ).join('');
+}
+
+/* ── Wire up events ── */
+document.addEventListener('DOMContentLoaded', function() {
+
+  // ── Set initial absolute positions ──
+  var entry = document.getElementById('flow-entry');
+  entry.style.left = '60px';  entry.style.top = '350px';
+
+  var n1 = document.getElementById('node-1');
+  n1.style.left = '120px';  n1.style.top = '305px';
+
+  // ── Wire up dragging and hover for pre-existing nodes ──
+  makeNodeDraggable(n1, 'message');
+  initNodeHover(n1);
+
+  // ── Draw initial connections ──
+  drawConnections();
+
+  // Close edit panel when clicking canvas background (not after pan or node drag)
+  document.getElementById('canvas').addEventListener('click', function(e) {
+    if (panMoved || nodeDragMoved) { panMoved = false; nodeDragMoved = false; return; }
+    if (!e.target.closest('.flow-node')) closeEdit();
+  });
+
+  // Close popover on outside click
+  document.addEventListener('click', function(e) {
+    var pop = document.getElementById('popover');
+    if (pop.style.display === 'block') {
+      if (!e.target.closest('#popover') && !e.target.closest('.node-add-btn')) {
+        closePopover();
+      }
+    }
+  });
+});
+
+function confirmDelete(e) {
+  e.stopPropagation();
+  if (confirm('Delete this node? This cannot be undone.')) { /* demo — static nodes not removed */ }
+}
+
+/* ── Pan ── */
+var isPanning = false;
+var panMoved  = false;
+var panStartX, panStartY, scrollStartX, scrollStartY;
+
+(function() {
+  var canvas = document.getElementById('canvas');
+
+  canvas.addEventListener('mousedown', function(e) {
+    // Only pan on canvas background — not on nodes, buttons, or controls
+    if (e.target.closest('.flow-node') || e.target.closest('.add-step-wrap') ||
+        e.target.closest('.flow-entry') || e.button !== 0) return;
+    isPanning   = true;
+    panMoved    = false;
+    panStartX   = e.clientX;
+    panStartY   = e.clientY;
+    scrollStartX = canvas.scrollLeft;
+    scrollStartY = canvas.scrollTop;
+    canvas.classList.add('panning');
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!isPanning) return;
+    var dx = e.clientX - panStartX;
+    var dy = e.clientY - panStartY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) panMoved = true;
+    canvas.scrollLeft = scrollStartX - dx;
+    canvas.scrollTop  = scrollStartY - dy;
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (!isPanning) return;
+    isPanning = false;
+    canvas.classList.remove('panning');
+  });
+})();
+
+/* ── Node order (logical) and connection drawing ── */
+var nodeOrder = ['flow-entry', 'node-1', 'add-step-wrap'];
+var nodeDragMoved = false;
+
+function drawConnections() {
+  var svg = document.getElementById('conn-layer');
+  if (!svg) return;
+  var paths = '';
+  var dots  = '';
+
+  // Only draw between flow-nodes (not entry dot or add-step-wrap)
+  var nodeIds = nodeOrder.filter(function(id) {
+    if (id === 'add-step-wrap') return false;
+    var el = document.getElementById(id);
+    return el && el.style.display !== 'none';
+  });
+
+  for (var i = 0; i < nodeIds.length - 1; i++) {
+    var fromEl = document.getElementById(nodeIds[i]);
+    var toEl   = document.getElementById(nodeIds[i + 1]);
+    if (!fromEl || !toEl) continue;
+
+    var fx = fromEl.offsetLeft + fromEl.offsetWidth;
+    var fy = fromEl.offsetTop  + fromEl.offsetHeight / 2;
+    var tx = toEl.offsetLeft;
+    var ty = toEl.offsetTop   + toEl.offsetHeight / 2;
+    var gap = Math.max(40, Math.abs(tx - fx) * 0.4);
+
+    paths += '<path d="M' + fx + ',' + fy +
+             ' C' + (fx + gap) + ',' + fy +
+             ' ' + (tx - gap) + ',' + ty +
+             ' ' + tx + ',' + ty + '" />';
+
+    // Small square dots at connection endpoints
+    dots += '<rect x="' + (fx - 3) + '" y="' + (fy - 3) + '" width="6" height="6" rx="1.5" />';
+    dots += '<rect x="' + (tx - 3) + '" y="' + (ty - 3) + '" width="6" height="6" rx="1.5" />';
+  }
+
+  svg.innerHTML =
+    '<g stroke="#3b82f6" stroke-width="1.5" fill="none">' + paths + '</g>' +
+    '<g fill="#3b82f6">' + dots + '</g>';
+}
+
+/* ── Free-drag a node anywhere on the canvas ── */
+function makeNodeDraggable(nodeEl, panelType) {
+  var startX, startY, origLeft, origTop, active = false;
+
+  nodeEl.addEventListener('mousedown', function(e) {
+    if (e.button !== 0 || e.target.closest('.node-controls') || e.target.closest('button')) return;
+    active = true;
+    nodeDragMoved = false;
+    startX   = e.clientX;
+    startY   = e.clientY;
+    origLeft = nodeEl.offsetLeft;
+    origTop  = nodeEl.offsetTop;
+    nodeEl.classList.add('node-dragging');
+    e.stopPropagation(); // prevent canvas pan
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!active) return;
+    var dx = e.clientX - startX;
+    var dy = e.clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) nodeDragMoved = true;
+    nodeEl.style.left = (origLeft + dx) + 'px';
+    nodeEl.style.top  = (origTop  + dy) + 'px';
+    drawConnections();
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (!active) return;
+    active = false;
+    nodeEl.classList.remove('node-dragging');
+    drawConnections();
+  });
+
+  // Click (without drag) → open edit panel
+  nodeEl.addEventListener('click', function(e) {
+    if (nodeDragMoved) { nodeDragMoved = false; e.stopPropagation(); return; }
+    if (!e.target.closest('.node-controls')) {
+      openEdit(panelType || 'none', nodeEl.id);
+      e.stopPropagation();
+    }
+  });
+}
+
+/* ── Zoom ── */
+var zoomLevel = 1.0;
+
+function setZoom(level) {
+  zoomLevel = Math.min(Math.max(level, 0.25), 1.5);
+  var cc = document.getElementById('canvas-content');
+  cc.style.transformOrigin = '0 0';
+  cc.style.transform = 'scale(' + zoomLevel + ')';
+  document.getElementById('zoom-label').textContent = Math.round(zoomLevel * 100) + '%';
+}
+function zoomIn()    { setZoom(Math.round((zoomLevel + 0.1) * 10) / 10); }
+function zoomOut()   { setZoom(Math.round((zoomLevel - 0.1) * 10) / 10); }
+function zoomReset() { setZoom(1.0); }
+
+// Ctrl+scroll to zoom
+document.getElementById('canvas').addEventListener('wheel', function(e) {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    e.deltaY < 0 ? zoomIn() : zoomOut();
+  }
+}, { passive: false });
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === '=' || e.key === '+') { e.preventDefault(); zoomIn(); }
+    if (e.key === '-')                  { e.preventDefault(); zoomOut(); }
+    if (e.key === '0')                  { e.preventDefault(); zoomReset(); }
+  }
+});
+</script>
+</body>
+</html>
