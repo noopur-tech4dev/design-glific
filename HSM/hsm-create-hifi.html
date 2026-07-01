@@ -1933,23 +1933,18 @@ function updateCustomRunBtn(){
 function runAiAssist(type){
   const ta=document.getElementById('body');
   const body=ta.value;
-<<<<<<< Updated upstream
   if(!body.trim()){
     closeAiAssistMenu();
     ta.placeholder='Type your message first, then use AI Assist to refine it.';
     ta.focus();
     return;
   }
-=======
-  if(!body.trim()){closeAiAssistMenu();return;}
->>>>>>> Stashed changes
   const btn=document.getElementById('ai-assist-btn');
   closeAiAssistMenu();
   const origHTML=btn.innerHTML;
   btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .7s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Working…';
   btn.disabled=true;
   setTimeout(()=>{
-<<<<<<< Updated upstream
     let suggestion='';
     if(type==='custom'){
       const prompt=document.getElementById('ai-custom-inp').value.trim();
@@ -1964,16 +1959,6 @@ function runAiAssist(type){
         : '✓ Text already meets this tone — no changes needed.';
       ta.value=body+'\n\n── AI Suggestion ──\n'+note;
     }
-=======
-    let newBody=body;
-    if(type==='custom'){
-      const prompt=document.getElementById('ai-custom-inp').value.trim();
-      newBody=rewriteBody(body,t=>t.length>60?t.slice(0,60)+'…':t);
-    } else if(AI_TRANSFORMS[type]){
-      newBody=rewriteBody(body,AI_TRANSFORMS[type].fn);
-    }
-    ta.value=newBody;
->>>>>>> Stashed changes
     btn.innerHTML=origHTML;
     btn.disabled=false;
     updatePreview();checkValidity();updateBodyCounter();checkVarMismatch();
