@@ -62,12 +62,18 @@ thead tr{background:#f2f5f2}
 thead th{padding:12px 16px;font-size:12px;font-weight:600;color:#4b5563;text-align:left;border-bottom:1px solid #e0e4e0;white-space:nowrap}
 thead th:first-child{padding-left:52px;width:220px}
 thead th.col-langs{width:210px}
+<<<<<<< Updated upstream
 thead th.col-catcost{width:160px}
 thead th.col-tags{width:150px}
 thead th.col-created{width:130px}
 thead th.col-actions{width:120px;text-align:right;padding-right:20px}
 .tag-pill{display:inline-flex;align-items:center;background:#f0faf4;border:1px solid #c8e6d0;border-radius:100px;padding:2px 8px;font-size:11px;font-weight:500;color:#0e6640;white-space:nowrap}
 .tags-cell{display:flex;flex-wrap:wrap;gap:4px}
+=======
+thead th.col-catcost{width:180px}
+thead th.col-created{width:120px}
+thead th.col-actions{width:200px;text-align:right;padding-right:20px}
+>>>>>>> Stashed changes
 
 /* ── TABLE ROWS ── */
 tbody tr{border-bottom:1px solid #f0f0ee;transition:background .1s;cursor:pointer}
@@ -121,6 +127,7 @@ tbody td.col-actions{padding-right:20px}
 .lcat-authentication{background:#fff0e8;color:#c2410c}
 .lcat-sep{font-size:10px;color:#d1d5db}
 
+<<<<<<< Updated upstream
 /* ── ROW HOVER TOOLTIP (EN message preview) ── */
 .row-msg-tooltip{display:none;position:fixed;background:#1c1c1c;color:#f5f5f5;font-size:12px;font-family:'Heebo',sans-serif;line-height:1.6;padding:10px 14px;border-radius:9px;max-width:360px;white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 20px rgba(0,0,0,.22);z-index:9999;pointer-events:none}
 .row-msg-tooltip-label{font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
@@ -160,6 +167,13 @@ tbody tr.row-expanded td:first-child{box-shadow:inset 3px 0 0 #119656}
 .chevron-btn:hover{background:#f3f4f6;color:#374151}
 .chevron-btn svg{transition:transform .18s}
 .chevron-btn.open svg{transform:rotate(180deg)}
+=======
+/* ── BODY CELL ── */
+.body-text{font-size:13px;color:#6b7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;max-width:320px;line-height:1.5}
+.body-tooltip-wrap{position:relative;display:inline-block;max-width:100%}
+.body-tooltip{display:none;position:fixed;background:#1c1c1c;color:#f5f5f5;font-size:12px;font-family:'Heebo',sans-serif;line-height:1.6;padding:10px 14px;border-radius:9px;max-width:320px;white-space:pre-wrap;word-break:break-word;box-shadow:0 6px 20px rgba(0,0,0,.22);z-index:9999;pointer-events:none}
+.body-tooltip-wrap:hover .body-tooltip{display:block}
+>>>>>>> Stashed changes
 
 /* ── COMPACT VIEW ── */
 .compact tbody td{padding:7px 16px}
@@ -513,6 +527,7 @@ const TEMPLATES = [
     langCats: {EN:'utility',HI:'utility'},
     langs: [{code:'EN',status:'approved'},{code:'HI',status:'approved'}],
     body: 'Hi {{1}}, your payment of ₹{{2}} is due on {{3}}. Please complete it to avoid service interruption.',
+<<<<<<< Updated upstream
     langBodies: {
       EN: 'Hi {{1}}, your payment of ₹{{2}} is due on {{3}}. Please complete it to avoid service interruption.',
       HI: 'नमस्ते {{1}}, आपका ₹{{2}} का भुगतान {{3}} तक देय है। सेवा बाधित होने से बचने के लिए कृपया समय पर भुगतान करें।'
@@ -523,6 +538,11 @@ const TEMPLATES = [
     status: 'approved',
     created: '5 days ago',
     tag: 'payment',
+=======
+    status: 'approved',
+    created: '5 days ago',
+    tags: ['payment','transactional'],
+>>>>>>> Stashed changes
     uuid: 'e5f6a7b8-c9d0-1234-efab-345678901234'
   },
   {
@@ -731,7 +751,11 @@ function catCostHTML(t){
   if(t.langCats && t.langs && t.langs.length > 0){
     const counts={};
     t.langs.forEach(l=>{const c=t.langCats[l.code]||t.category||'utility';counts[c]=(counts[c]||0)+1;});
+<<<<<<< Updated upstream
     const parts=Object.entries(counts).map(([c,n])=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)}${n>1?` <span style="opacity:.7;font-weight:500">×${n}</span>`:''}</span>`);
+=======
+    const parts=Object.entries(counts).map(([c,n])=>`<span class="cat-badge ${catClass(c)}">${catLabel(c)} <span style="opacity:.7;font-weight:500">×${n}</span></span>`);
+>>>>>>> Stashed changes
     // Different-category Meta change: plain original category badge + Meta badge
     if(t.metaCategory && t.metaCategory !== t.category){
       return `<div class="cat-badges-row"><span class="cat-badge ${catClass(t.category)}">${catLabel(t.category)}</span>${metaTagHTML(t)}</div>`;
@@ -781,6 +805,19 @@ function expandLangs(i,e){
 function truncate(str,max=72){return str.length>max?str.slice(0,max)+'…':str;}
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+<<<<<<< Updated upstream
+=======
+// Tooltip mouse tracking
+document.addEventListener('mousemove',e=>{
+  const tip=e.target.closest('.body-tooltip-wrap')?.querySelector('.body-tooltip');
+  if(tip){
+    const x=e.clientX+14, y=e.clientY+14;
+    const tipW=320, tipH=80;
+    tip.style.left=(x+tipW>window.innerWidth?e.clientX-tipW-8:x)+'px';
+    tip.style.top=(y+tipH>window.innerHeight?e.clientY-tipH-8:y)+'px';
+  }
+});
+>>>>>>> Stashed changes
 
 function copyUUID(uuid, e){
   e.stopPropagation();
@@ -981,6 +1018,10 @@ function renderTable(){
           </div>
         </div>
       </td>
+<<<<<<< Updated upstream
+=======
+      <td><div class="body-tooltip-wrap"><div class="body-text">${escHtml(t.body)}</div><div class="body-tooltip">${escHtml(t.body)}</div></div></td>
+>>>>>>> Stashed changes
       <td>${langCell(t.langs,i,t)}</td>
       <td>${catCostHTML(t)}</td>
       <td class="created-cell">${t.created}</td>

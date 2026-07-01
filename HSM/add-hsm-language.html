@@ -523,6 +523,13 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
             <div class="field" style="margin-bottom:0">
               <label class="field-label">Language<span class="req">*</span></label>
               <select id="new-lang-select" class="inp" onchange="onNewLangSelect(this.value)"></select>
+<<<<<<< Updated upstream
+=======
+              <button type="button" class="green-pill-btn" id="picker-autotranslate-btn" onclick="aiTranslate()" style="display:none;margin-top:10px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                Auto-translate
+              </button>
+>>>>>>> Stashed changes
             </div>
           </div>
 
@@ -1236,8 +1243,15 @@ function showLangView(code){
   const aiWrap=document.getElementById('ai-assist-wrap');
   if(aiWrap)aiWrap.style.display='none';
   closeAiAssistMenu();
+<<<<<<< Updated upstream
 
   // 11. CTAs: all states show Delete only; Submit shown only when entering edit mode via openForReapply
+=======
+  const aiLbl=document.getElementById('ai-translate-label');
+  if(aiLbl) aiLbl.textContent='AI Translate';
+
+  // 11. Swap CTA: hide Submit, show Delete (disabled when pending)
+>>>>>>> Stashed changes
   const submitBtn=document.getElementById('submit-btn');
   const deleteBtn=document.getElementById('delete-lang-btn');
   if(submitBtn) submitBtn.style.display='none';
@@ -1246,6 +1260,7 @@ function showLangView(code){
     deleteBtn.disabled=(lang.status==='pending');
     deleteBtn.title=lang.status==='pending'?'Cannot delete a language that is pending Meta approval':'';
   }
+<<<<<<< Updated upstream
 }
 
 // Called only from the "Reapply" inline CTA in the language list
@@ -1317,6 +1332,8 @@ function openForReapply(code){
   // Scroll to form
   const formCard=document.getElementById('lang-form-card');
   if(formCard) setTimeout(()=>formCard.scrollIntoView({behavior:'smooth',block:'start'}),60);
+=======
+>>>>>>> Stashed changes
 }
 
 function setFormLocked(lock){
@@ -1418,7 +1435,10 @@ function clearViewMode(){
   document.getElementById('rej-notice-strip').classList.remove('visible');
   document.getElementById('method-picker-section').classList.remove('visible');
   const _patBtn2=document.getElementById('picker-autotranslate-btn');if(_patBtn2)_patBtn2.style.display='none';
+<<<<<<< Updated upstream
   const _eb=document.getElementById('banner-edit-btn');if(_eb)_eb.style.display='none';
+=======
+>>>>>>> Stashed changes
   // Hide reference strips and AI assist button
   const refStrip=document.getElementById('ref-strip');
   if(refStrip)refStrip.style.display='none';
@@ -1429,7 +1449,11 @@ function clearViewMode(){
   if(rn)rn.style.display='none';
   // Restore Submit / hide Delete
   const _sb=document.getElementById('submit-btn');const _db=document.getElementById('delete-lang-btn');
+<<<<<<< Updated upstream
   if(_sb){_sb.style.display='';_sb.disabled=true;const _sl=document.getElementById('submit-btn-label');if(_sl)_sl.textContent='Submit for Approval';}
+=======
+  if(_sb){_sb.style.display='';_sb.disabled=true;}
+>>>>>>> Stashed changes
   if(_db){_db.style.display='none';_db.disabled=false;}
   setFormLocked(false);
   document.getElementById('body').value='';
@@ -1731,6 +1755,7 @@ const AI_TRANSFORMS = {
 function runAiAssist(type){
   const bodyEl=document.getElementById('body');
   const currentBody=bodyEl.value;
+<<<<<<< Updated upstream
   if(!currentBody.trim()&&type!=='custom'){
     closeAiAssistMenu();
     // Give visible feedback instead of silent no-op
@@ -1739,6 +1764,9 @@ function runAiAssist(type){
     bodyEl2.focus();
     return;
   }
+=======
+  if(!currentBody.trim()&&type!=='custom'){closeAiAssistMenu();return;}
+>>>>>>> Stashed changes
 
   const btn=document.getElementById('ai-translate-btn');
   const lbl=document.getElementById('ai-translate-label');
@@ -1750,21 +1778,37 @@ function runAiAssist(type){
   closeAiAssistMenu();
 
   setTimeout(()=>{
+<<<<<<< Updated upstream
     let suggestion='';
 
     if(type==='professional'||type==='utility'){
       const t=AI_TRANSFORMS[type];
       suggestion=rewriteBody(currentBody, t.fn);
+=======
+    let newBody=currentBody;
+
+    if(type==='professional'||type==='utility'){
+      const t=AI_TRANSFORMS[type];
+      newBody=rewriteBody(currentBody, t.fn);
+>>>>>>> Stashed changes
 
     } else if(type==='custom'){
       const prompt=(document.getElementById('ai-custom-inp').value||'').trim();
       if(prompt){
+<<<<<<< Updated upstream
         suggestion=rewriteBody(currentBody, text=>text.trim());
+=======
+        // Prototype: prepend the custom instruction as a note, preserve vars
+        newBody=rewriteBody(currentBody, text=>text.trim());
+        // Simulate applying the prompt by noting it below the content
+        newBody=newBody+'\n\n[AI applied: "'+prompt+'"]';
+>>>>>>> Stashed changes
       }
       document.getElementById('ai-custom-inp').value='';
       updateCustomRunBtn();
     }
 
+<<<<<<< Updated upstream
     // Append suggestion below original — always give visible feedback
     if(suggestion){
       const note = suggestion!==currentBody
@@ -1772,6 +1816,9 @@ function runAiAssist(type){
         : '✓ Text already meets this tone — no changes needed.';
       bodyEl.value=currentBody+'\n\n── AI Suggestion ──\n'+note;
     }
+=======
+    bodyEl.value=newBody;
+>>>>>>> Stashed changes
     if(btn) btn.disabled=false;
     if(lbl) lbl.textContent=origLbl;
     updatePreview();checkValidity();updateBodyCounter();
